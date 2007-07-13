@@ -1,0 +1,54 @@
+.links-row {
+    text-align: right;
+    border-top: 1px solid white;
+}
+
+.header {
+    background-color: rgb(48, 39, 152);
+}
+
+.general-table {
+    border: 2px solid rgb(48, 39, 152);
+    padding: 30px;
+    padding-bottom: 5px;
+}
+
+.items-table-title {
+    font-weight: bold;
+    color: rgb(0, 108, 0);
+}
+
+.item-title {
+    font-weight: bold;
+    font-size: 20;
+    padding-top: 30px;
+}
+
+.chooser {
+    padding-left: 30px;
+}
+
+.item-row {
+    border-top: 2px solid rgb(100, 129, 255);
+    border-bottom: 2px solid rgb(100, 129, 255);
+}
+
+.submit-button {
+    margin: 5px;
+}
+
+.footer {
+    border-top: 2px solid rgb(100, 129, 255);
+}
+
+.title-link {
+    color: white;
+}
+
+.ok-button {
+    margin: 0px;
+    padding: 0px;
+    border: 1px solid rgb(100, 129, 255);
+    color: rgb(0, 108, 0);
+    background-color: white;
+}

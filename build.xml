@@ -1,0 +1,73 @@
+<project name="basket" default="build">
+    <target name="init">
+        <property file="build.properties"/>
+
+        <property name="src.dir" location="${project.dir}/src/java"/>
+
+        <property name="tomcat.project.dir" location="${tomcat.dir}/webapps/${project.dir}"/>
+
+        <property name="build.dir" location="${project.dir}/bin"/>
+        <property name="build.classes.dir" location="${build.dir}/classes"/>
+
+        <fileset id="libs" dir="${core.dir}/lib">
+            <include name="**/*.jar"/>
+            <exclude name="servlet-api.jar"/>
+            <exclude name="junit*.jar"/>
+        </fileset>
+
+        <fileset id="project-libs" dir="${project.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+
+        <fileset id="framework" dir="${core.dir}/bin" includes="*.jar"/>
+
+        <path id="project.classpath">
+            <fileset refid="libs"/>
+            <fileset refid="framework"/>
+            <fileset refid="project-libs"/>
+        </path>
+
+        <property name="src.web.dir" location="${src.dir}/web"/>
+        <property name="resources.dir" location="src/web/resources"/>
+
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.classes.dir}"/>
+    </target>
+
+    <target name="build" depends="copy-classes, copy-view, copy-config, copy-jars"/>
+
+    <target name="compile" depends="init">
+        <javac destdir="${build.classes.dir}"
+               classpathref="project.classpath"
+               debug="on"
+               srcdir="${src.dir}">
+        </javac>
+    </target>
+
+    <target name="copy-view" depends="init">
+        <copy todir="${tomcat.dir}/webapps/ROOT" overwrite="true">
+            <fileset dir="${project.dir}/src/web/resources"/>
+        </copy>
+    </target>
+
+    <target name="copy-classes" depends="compile">
+        <copy todir="${tomcat.dir}/webapps/ROOT/WEB-INF/classes">
+            <fileset dir="${build.classes.dir}"/>
+        </copy>
+    </target>
+
+    <target name="copy-config" depends="init">
+        <copy todir="${tomcat.dir}/webapps/ROOT/WEB-INF" overwrite="true">
+            <fileset dir="${project.dir}/src/web/WEB-INF"/>
+        </copy>
+    </target>
+
+    <target name="copy-jars" depends="init">
+        <copy todir="${tomcat.dir}/webapps/ROOT/WEB-INF/lib" flatten="true">
+            <fileset refid="libs"/>
+            <fileset refid="project-libs"/>
+            <fileset refid="framework"/>
+        </copy>
+    </target>
+
+</project>

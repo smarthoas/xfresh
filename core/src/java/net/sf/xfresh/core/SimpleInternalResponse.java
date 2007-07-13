@@ -28,9 +28,11 @@ package net.sf.xfresh.core;
 
 import org.apache.log4j.Logger;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Map;
 import java.io.Writer;
 import java.io.IOException;
 
@@ -89,5 +91,11 @@ class SimpleInternalResponse implements InternalResponse {
 
     public void addError(ErrorInfo errorInfo) {
         errors.add(errorInfo);
+    }
+
+    public void setCookies(Map<String, String> cookies) {
+        for (Map.Entry<String, String> cookie : cookies.entrySet()) {
+            httpResponse.addCookie(new Cookie(cookie.getKey(), cookie.getValue()));
+        }
     }
 }

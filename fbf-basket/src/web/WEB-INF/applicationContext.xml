@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+ "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="byName">
+	<!--Spring helpers-->
+    <bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor"/>
+
+	<!--Fresh core beans-->
+    <bean id="yaletSupport" class="ru.yandex.fresh.core.DefaultYaletSupport"/>
+    <bean id="yaletResolver" class="ru.yandex.fresh.core.SpringYaletResolver"/>
+
+	<!--Yalets-->
+    <bean id="showMarketItemYalet" class="ru.yandex.fresh.basket.yalets.ShowMarketItemYalet"/>
+    <bean id="showBasketContentYalet" class="ru.yandex.fresh.basket.yalets.ShowBasketContentYalet"/>
+
+    <bean id="manager" class="ru.yandex.fresh.basket.model.MarketItemManager"/>
+
+
+</beans>

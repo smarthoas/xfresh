@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<?xml-stylesheet type="text/xsl" href="basket.xsl"?>
+<page>
+    <yalet id="showMarketItem"/>
+
+    <items>
+        <item uid="1">
+            <name>LG V-K9763NDU</name>
+            <description>
+                Тип уборки: влажная, без мешка для сбора пыли, мощность 1600 Вт,
+                мощность всасывания 300 Вт, регулятор мощности на корпусе,
+                7-ступенчатая система фильтрации
+            </description>
+            <price>7 900 руб</price>
+            <image path="images/1.jpg"/>
+        </item>
+
+        <item uid="2">
+            <name>Thomas Prestige 20S</name>
+            <description>
+                Тип уборки: влажная, без мешка для сбора пыли (аквафильтр),
+                мощность 1600 Вт.
+            </description>
+            <price>9 700 руб</price>
+            <image path="images/2.jpg"/>
+        </item>
+
+        <item uid="3">
+            <name>Delonghi WF 1500 EDL</name>
+            <description>
+                Тип уборки: влажная, без мешка для сбора пыли (аквафильтр),
+                мощность 1500 Вт, мощность всасывания 330 Вт,
+                регулятор мощности на корпусе, вес 7 кг
+            </description>
+            <price>7 000 руб</price>
+            <image path="images/3.jpg"/>
+        </item>
+
+        <item uid="4">
+            <name>Delonghi XE 1251</name>
+            <description>
+                Тип уборки: влажная, без мешка для сбора пыли, мощность 1300 Вт,
+                мощность всасывания 250 Вт, 4-ступенчатая система фильтрации, вес 9.9 кг
+            </description>
+            <price>7 200 руб</price>
+            <image path="images/4.jpg"/>
+        </item>
+
+        <item uid="5">
+            <name>Karcher PUZZI 100 Super</name>
+            <description>
+                Тип уборки: влажная, без мешка для сбора пыли,
+                мощность 1250 Вт, вес 10.3 кг
+            </description>
+            <price>8 400 руб</price>
+            <image path="images/5.jpg"/>
+        </item>
+
+        <item uid="6">
+            <name>Miele S 4211</name>
+            <description>
+                Индикатор заполнения пылесборника,
+                автосматывание сетевого шнура,
+                ножной переключатель вкл./выкл. на корпусе,
+                вертикальная парковка трубы всасывания на корпусе пылесоса
+            </description>
+            <price>7 928 руб</price>
+            <image path="images/6.jpg"/>
+        </item>
+
+        <item uid="7">
+            <name>Samsung VC-5915 V</name>
+            <description>
+                Тип уборки: сухая, мощность 1500 Вт, мощность всасывания 400 Вт,
+                пылесборник постоянный, регулятор мощности на корпусе,
+                4-ступенчатая система фильтрации, вес 3.8 кг
+            </description>
+            <price>2 548 руб</price>
+            <image path="images/7.jpg"/>
+        </item>
+
+    </items>
+
+</page>
+

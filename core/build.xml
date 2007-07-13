@@ -1,0 +1,54 @@
+<project>
+    <property file="build.properties"/>
+
+    <target name="init">
+        <property name="fbf.jar" location="bin/fbf.jar"/>
+        <property name="fbf.build" location="bin"/>
+        <property name="fbf.classes" location="bin/classes"/>
+        <property name="fbf.src" location="src/java"/>
+    
+        <property name="fbf.classpath" location="
+            lib/junit-4.0.jar:
+            lib/log4j-1.2.13.jar:
+            lib/spring/spring-beans.jar:
+            lib/spring/spring-context.jar:
+            lib/spring/spring-core.jar:
+            lib/spring/spring-web.jar:
+            lib/jakarta-commons/commons-lang.jar:
+            lib/jakarta-commons/commons-logging.jar:
+            
+        "/>
+
+        <fileset id="libs" dir="lib">
+            <include name="**/*.jar"/>
+        </fileset>
+
+        <fileset id="servlet-api-lib" dir="${tomcat.dir}/common/lib">
+            <include name="servlet-api.jar"/>
+        </fileset>
+
+        <path id="fbf.classpath">
+            <fileset refid="libs"/>
+            <fileset refid="servlet-api-lib"/>
+        </path>
+    </target>
+
+    <target name="build" depends="init">
+        <mkdir dir="${fbf.classes}"/>
+
+        <javac 
+            srcdir      = "${fbf.src}"
+            destdir     = "${fbf.classes}"
+            classpathref= "fbf.classpath"
+            debug       = "${javac.debug}"
+            debuglevel  = "${javac.debuglevel}"
+        />
+            
+        <jar
+            destfile="${fbf.jar}"
+            basedir="${fbf.classes}"
+            includes="**/*.class"
+        />
+    </target>
+
+</project>

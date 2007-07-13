@@ -26,8 +26,12 @@
 */
 package net.sf.xfresh.core;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -79,5 +83,13 @@ class SimpleInternalRequest implements InternalRequest {
 
     public String[] getParameters(String name) {
         return httpRequest.getParameterValues(name);
+    }
+    
+    public Map<String, String> getCookies() {
+        Map<String, String> result = new HashMap<String, String>();
+        for (Cookie cookie : httpRequest.getCookies()) {
+            result.put(cookie.getName(), cookie.getValue());
+        }
+        return result;
     }
 }

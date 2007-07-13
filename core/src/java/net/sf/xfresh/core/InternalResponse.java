@@ -27,6 +27,7 @@
 package net.sf.xfresh.core;
 
 import java.util.Collection;
+import java.util.Map;
 import java.io.Writer;
 import java.io.IOException;
 
@@ -50,4 +51,6 @@ public interface InternalResponse {
     void addError(ErrorInfo errorInfo);
 
     Collection<ErrorInfo> getErrors();
+    
+    void setCookies(Map<String, String> cookies);
 }
