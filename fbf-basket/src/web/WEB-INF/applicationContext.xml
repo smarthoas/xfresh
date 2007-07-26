@@ -7,14 +7,14 @@
     <bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor"/>
 
 	<!--Fresh core beans-->
-    <bean id="yaletSupport" class="ru.yandex.fresh.core.DefaultYaletSupport"/>
-    <bean id="yaletResolver" class="ru.yandex.fresh.core.SpringYaletResolver"/>
+    <bean id="yaletSupport" class="net.sf.xfresh.core.DefaultYaletSupport"/>
+    <bean id="yaletResolver" class="net.sf.xfresh.core.SpringYaletResolver"/>
 
 	<!--Yalets-->
-    <bean id="showMarketItemYalet" class="ru.yandex.fresh.basket.yalets.ShowMarketItemYalet"/>
-    <bean id="showBasketContentYalet" class="ru.yandex.fresh.basket.yalets.ShowBasketContentYalet"/>
+    <bean id="showMarketItemYalet" class="net.sf.xfresh.basket.yalets.ShowMarketItemYalet"/>
+    <bean id="showBasketContentYalet" class="net.sf.xfresh.basket.yalets.ShowBasketContentYalet"/>
 
-    <bean id="manager" class="ru.yandex.fresh.basket.model.MarketItemManager"/>
+    <bean id="manager" class="net.sf.xfresh.basket.model.MarketItemManager"/>
 
 
 </beans>

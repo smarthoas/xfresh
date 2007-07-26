@@ -16,7 +16,7 @@
     </listener>
     <servlet>
         <servlet-name>dispatcher</servlet-name>
-        <servlet-class>ru.yandex.fresh.core.Dispatcher</servlet-class>
+        <servlet-class>net.sf.xfresh.core.Dispatcher</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
