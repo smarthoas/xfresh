@@ -1,4 +1,4 @@
-<project>
+<project default="build">
     <property file="build.properties"/>
 
     <target name="init">
