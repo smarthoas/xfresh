@@ -1,5 +1,4 @@
 <project default="build">
-    <property file="build.properties"/>
 
     <target name="init">
         <property name="fbf.jar" location="bin/fbf.jar"/>
@@ -23,13 +22,8 @@
             <include name="**/*.jar"/>
         </fileset>
 
-        <fileset id="servlet-api-lib" dir="${tomcat.dir}/common/lib">
-            <include name="servlet-api.jar"/>
-        </fileset>
-
         <path id="fbf.classpath">
             <fileset refid="libs"/>
-            <fileset refid="servlet-api-lib"/>
         </path>
     </target>
 

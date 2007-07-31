@@ -2,6 +2,7 @@
 <?xml-stylesheet type="text/xsl" href="content.xsl"?>
 <page>
     <yalet id="showBasketContent"/>
+    <currency>руб.</currency>
 
     <items>
         <item uid="1">
@@ -11,7 +12,7 @@
                 мощность всасывания 300 Вт, регулятор мощности на корпусе,
                 7-ступенчатая система фильтрации
             </description>
-            <price>7 900 руб</price>
+            <price>7900</price>
             <image path="images/1.jpg"/>
         </item>
 
@@ -21,7 +22,7 @@
                 Тип уборки: влажная, без мешка для сбора пыли (аквафильтр),
                 мощность 1600 Вт.
             </description>
-            <price>9 700 руб</price>
+            <price>9700</price>
             <image path="images/2.jpg"/>
         </item>
 
@@ -32,39 +33,39 @@
                 мощность 1500 Вт, мощность всасывания 330 Вт,
                 регулятор мощности на корпусе, вес 7 кг
             </description>
-            <price>7 000 руб</price>
+            <price>7000</price>
             <image path="images/3.jpg"/>
         </item>
 
         <item uid="4">
             <name>Delonghi XE 1251</name>
             <description>
-                Тип уборки: влажная, без мешка для сбора пыли, мощность 1300 Вт, 
+                Тип уборки: влажная, без мешка для сбора пыли, мощность 1300 Вт,
                 мощность всасывания 250 Вт, 4-ступенчатая система фильтрации, вес 9.9 кг
             </description>
-            <price>7 200 руб</price>
+            <price>7200</price>
             <image path="images/4.jpg"/>
         </item>
 
         <item uid="5">
             <name>Karcher PUZZI 100 Super</name>
             <description>
-                Тип уборки: влажная, без мешка для сбора пыли, 
+                Тип уборки: влажная, без мешка для сбора пыли,
                 мощность 1250 Вт, вес 10.3 кг
             </description>
-            <price>8 400 руб</price>
+            <price>8400</price>
             <image path="images/5.jpg"/>
         </item>
 
         <item uid="6">
             <name>Miele S 4211</name>
             <description>
-                Индикатор заполнения пылесборника, 
+                Индикатор заполнения пылесборника,
                 автосматывание сетевого шнура,
                 ножной переключатель вкл./выкл. на корпусе,
                 вертикальная парковка трубы всасывания на корпусе пылесоса
             </description>
-            <price>7 928 руб</price>
+            <price>7928</price>
             <image path="images/6.jpg"/>
         </item>
 
@@ -75,11 +76,12 @@
                 пылесборник постоянный, регулятор мощности на корпусе,
                 4-ступенчатая система фильтрации, вес 3.8 кг
             </description>
-            <price>2 548 руб</price>
+            <price>2548</price>
             <image path="images/7.jpg"/>
         </item>
 
     </items>
 
 </page>
+
         

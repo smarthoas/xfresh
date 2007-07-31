@@ -52,3 +52,7 @@
     color: rgb(0, 108, 0);
     background-color: white;
 }
+
+.price {
+    width: 200px;
+}

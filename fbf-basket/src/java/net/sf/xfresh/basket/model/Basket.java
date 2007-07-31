@@ -10,9 +10,11 @@ import java.util.*;
  */
 public class Basket {
     private final List<MarketItem> content = new LinkedList<MarketItem>();
+    private int count = 0;
 
     public void addItem(MarketItem item) {
         content.add(new BasketMarketItem(item.getUid()));
+        count++;
     }
 
     public void removeItem(MarketItem item) {
@@ -27,7 +29,11 @@ public class Basket {
     public List<MarketItem> getContent() {
         return content;
     }
-
+    
+    public int getCount() {
+    	return count;
+    }
+    
     public boolean contains(MarketItem item) {
         for (MarketItem marketItem : content) {
             if (marketItem.getUid() == item.getUid()) {
@@ -46,10 +52,11 @@ public class Basket {
         return 0;
     }
 
-    public void setItemCount(MarketItem item, int count) {
+    public void setItemCount(MarketItem item, int itemCount) {
         for (MarketItem marketItem : content) {
             if (marketItem.getUid() == item.getUid()) {
-                ((BasketMarketItem)marketItem).setCount(count);
+            	this.count += itemCount - ((BasketMarketItem)marketItem).getCount();
+                ((BasketMarketItem)marketItem).setCount(itemCount);
             }
         }
     }

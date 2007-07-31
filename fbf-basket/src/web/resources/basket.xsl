@@ -39,7 +39,7 @@
                         <td>
                             <xsl:value-of select="$market-item/description/text()"/>
                         </td>
-                        <td>
+                        <td class="price">
                             <xsl:value-of select="$market-item/price/text()"/>
                         </td>
                         <td class="chooser">
@@ -61,6 +61,6 @@
                 </tr>
             </table>
         </form>
-    </xsl:template>
 
+    </xsl:template>
 </xsl:stylesheet>
