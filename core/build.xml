@@ -38,7 +38,9 @@
             debug       = "${javac.debug}"
             debuglevel  = "${javac.debuglevel}"
         />
-            
+
+        <mkdir dir="${dist.dir}"/>
+
         <jar
             destfile="${jar.file}"
             basedir="${classes.dir}"
