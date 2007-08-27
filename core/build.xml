@@ -1,10 +1,11 @@
 <project default="build">
 
     <target name="init">
-        <property name="fbf.jar" location="bin/fbf.jar"/>
-        <property name="fbf.build" location="bin"/>
-        <property name="fbf.classes" location="bin/classes"/>
-        <property name="fbf.src" location="src/java"/>
+        <property name="build.dir" location="build"/>
+        <property name="dist.dir" location="${build.dir}/dist"/>
+        <property name="jar.file" location="${dist.dir}/fbf.jar"/>
+        <property name="classes.dir" location="${build.dir}/classes"/>
+        <property name="src.dir" location="src/java"/>
     
         <property name="fbf.classpath" location="
             lib/junit-4.0.jar:
@@ -28,19 +29,19 @@
     </target>
 
     <target name="build" depends="init">
-        <mkdir dir="${fbf.classes}"/>
+        <mkdir dir="${classes.dir}"/>
 
         <javac 
-            srcdir      = "${fbf.src}"
-            destdir     = "${fbf.classes}"
+            srcdir      = "${src.dir}"
+            destdir     = "${classes.dir}"
             classpathref= "fbf.classpath"
             debug       = "${javac.debug}"
             debuglevel  = "${javac.debuglevel}"
         />
             
         <jar
-            destfile="${fbf.jar}"
-            basedir="${fbf.classes}"
+            destfile="${jar.file}"
+            basedir="${classes.dir}"
             includes="**/*.class"
         />
     </target>
