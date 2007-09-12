@@ -67,12 +67,14 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 public class Dispatcher extends HttpServlet {
     private static final Logger log = Logger.getLogger(Dispatcher.class);
 
-    private static final String ET_PARAM_NAME = "_et";
     private static final String DEFAULT_ENCODING = "windows-1251";
     private static final OutputFormat DEFAULT_FORMAT = new OutputFormat("XML", DEFAULT_ENCODING, false);
 
-    private YaletSupport yaletSupport;
     private static final int INITIAL_SIZE = 1024*64;
+    private static final String TEXT_HTML = "text/html";
+    private static final String TEXT_XML = "text/xml";
+
+    private YaletSupport yaletSupport;
 
     public void init(final ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
@@ -105,6 +107,12 @@ public class Dispatcher extends HttpServlet {
         final InternalRequest internalRequest = yaletSupport.createRequest(req, realPath);
 
         final InternalResponse internalResponse = yaletSupport.createResponse(res);
+
+        if (internalRequest.needTransform()) {
+            res.setContentType(TEXT_HTML);
+        } else {
+            res.setContentType(TEXT_XML);
+        }
 
         process(internalRequest, internalResponse, new RedirHandler(res));
     }

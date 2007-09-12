@@ -27,6 +27,7 @@
 package net.sf.xfresh.core;
 
 import java.util.Map;
+import java.util.List;
 
 /**
  * Date: 20.04.2007
@@ -44,4 +45,6 @@ public interface InternalRequest {
     String[] getParameters(final String name);
     
     Map<String, String> getCookies();
+
+    Map<String, List<String>> getAllParameters();
 }

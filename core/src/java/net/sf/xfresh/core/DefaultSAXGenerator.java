@@ -239,7 +239,6 @@ public class DefaultSAXGenerator implements SAXGenerator {
         public Object getValue() {
             return value;
         }
-
     }
 
     private boolean isPrimitive(final Class<? extends Object> clazz) {
@@ -251,11 +250,12 @@ public class DefaultSAXGenerator implements SAXGenerator {
     }
 
     private String encode(final String value) {
-        String charsetName = "Windows-1251";
-        try {
-            return new String(value.getBytes(charsetName)); // todo kill encoding hack
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(charsetName + " - unsupported", e);
-        }
+//        String charsetName = "Windows-1251";
+//        try {
+//            return new String(value.getBytes(charsetName)); // todo kill encoding hack
+            return new String(value); // todo kill encoding hack
+//        } catch (UnsupportedEncodingException e) {
+//            throw new RuntimeException(charsetName + " - unsupported", e);
+//        }
     }
 }
