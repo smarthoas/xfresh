@@ -26,9 +26,16 @@
 */
 package net.sf.xfresh.core;
 
-import java.io.CharArrayWriter;
-import java.io.IOException;
-import java.io.Writer;
+import org.apache.log4j.Logger;
+import org.apache.xalan.xsltc.trax.SmartTransformerFactoryImpl;
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLFilter;
+import org.xml.sax.XMLReader;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -38,25 +45,17 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-
-import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLFilter;
-import org.xml.sax.XMLReader;
-
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
+import java.io.CharArrayWriter;
+import java.io.IOException;
+import java.io.Writer;
 
 /**
  * Date: 18.04.2007
@@ -75,6 +74,7 @@ public class Dispatcher extends HttpServlet {
     private static final String TEXT_XML = "text/xml";
 
     private YaletSupport yaletSupport;
+    private static final String UTF_8_ENCODING = "utf-8";
 
     public void init(final ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
@@ -159,14 +159,20 @@ public class Dispatcher extends HttpServlet {
     }
 
     private Transformer createTransformer(final String realPath) throws TransformerConfigurationException {
-        final SAXTransformerFactory transformerFactory = (SAXTransformerFactory) TransformerFactory.newInstance();
+        final SAXTransformerFactory transformerFactory = (SAXTransformerFactory) SmartTransformerFactoryImpl.newInstance();
         final StreamSource streamSource = new StreamSource(realPath);
         final Source associatedStylesheet = transformerFactory.getAssociatedStylesheet(streamSource,
                 null, null, null);
         if (associatedStylesheet==null) {
             return null;
         }
-        return transformerFactory.newTransformer(associatedStylesheet);
+
+        final Transformer transformer = transformerFactory.newTransformer(associatedStylesheet);
+        if (log.isDebugEnabled()) {
+            log.debug("transformer class = " + transformer.getClass());
+        }
+//        transformer.setOutputProperty(OutputKeys.ENCODING, UTF_8_ENCODING);
+        return transformer;
     }
 
     private XMLReader createReader() throws ParserConfigurationException, SAXException {

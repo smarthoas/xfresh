@@ -39,6 +39,7 @@ import org.apache.commons.lang.StringEscapeUtils;
  */
 public class XmlUtil {
     public static final AttributesImpl EMPTY_ATTRIBUTES = new AttributesImpl();
+    private static final String NULL_TYPE = "";
 
     public static void end(final ContentHandler handler, final String elementName) throws SAXException {
         handler.endElement(null, elementName, elementName);
@@ -61,7 +62,7 @@ public class XmlUtil {
             for (int i = 1; i + 1 < elementAndAttributes.length; ) {
                 String attributeName = elementAndAttributes[i++];
                 String attributeValue = elementAndAttributes[i++];
-                attributes.addAttribute(null, attributeName, attributeName, null, attributeValue);
+                attributes.addAttribute(null, attributeName, attributeName, NULL_TYPE, attributeValue);
             }
         }
         start(handler, elementName, attributes);
