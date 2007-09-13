@@ -39,7 +39,7 @@ import org.apache.commons.lang.StringEscapeUtils;
  */
 public class XmlUtil {
     public static final AttributesImpl EMPTY_ATTRIBUTES = new AttributesImpl();
-    private static final String NULL_TYPE = "";
+    public static final String NULL_TYPE = "";
 
     public static void end(final ContentHandler handler, final String elementName) throws SAXException {
         handler.endElement(null, elementName, elementName);

@@ -32,6 +32,7 @@ import static net.sf.xfresh.util.XmlUtil.end;
 import static net.sf.xfresh.util.XmlUtil.start;
 import static net.sf.xfresh.util.XmlUtil.text;
 import static net.sf.xfresh.util.XmlUtil.toStandart;
+import net.sf.xfresh.util.XmlUtil;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -175,7 +176,7 @@ public class DefaultSAXGenerator implements SAXGenerator {
             final Class<?> valueClass = valueInfo.getClazz();
             if (isAttribute(valueClass)) {
                 final String name = toStandart(property.getKey());
-                attributes.addAttribute(null, name, name, null, valueInfo.getValue().toString());
+                attributes.addAttribute(null, name, name, XmlUtil.NULL_TYPE, valueInfo.getValue().toString());
             }
         }
         return attributes;
