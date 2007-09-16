@@ -1,5 +1,6 @@
 <project default="build">
     <target name="init">
+        <property file="local.build.properties"/>
         <property file="build.properties"/>
 
         <property name="src.dir" location="${project.dir}/src/java"/>
