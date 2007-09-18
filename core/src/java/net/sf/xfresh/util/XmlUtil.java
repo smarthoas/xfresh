@@ -26,10 +26,9 @@
 */
 package net.sf.xfresh.util;
 
-import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Date: 22.04.2007
@@ -79,6 +78,6 @@ public class XmlUtil {
     }
 
     public static void text(final ContentHandler handler, final String value) throws SAXException {
-        handler.characters(StringEscapeUtils.escapeXml(value).toCharArray(), 0, value.length());
+        handler.characters(value.toCharArray(), 0, value.length());
     }
 }
