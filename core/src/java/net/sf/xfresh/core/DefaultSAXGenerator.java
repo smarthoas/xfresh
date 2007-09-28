@@ -26,19 +26,17 @@
 */
 package net.sf.xfresh.core;
 
-import static org.apache.commons.lang.ArrayUtils.contains;
 import static net.sf.xfresh.util.XmlUtil.empty;
 import static net.sf.xfresh.util.XmlUtil.end;
 import static net.sf.xfresh.util.XmlUtil.start;
 import static net.sf.xfresh.util.XmlUtil.text;
 import static net.sf.xfresh.util.XmlUtil.toStandart;
-import net.sf.xfresh.util.XmlUtil;
+import static org.apache.commons.lang.ArrayUtils.contains;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -46,6 +44,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import net.sf.xfresh.util.XmlUtil;
 
 import org.apache.log4j.Logger;
 import org.xml.sax.ContentHandler;
@@ -118,20 +118,20 @@ public class DefaultSAXGenerator implements SAXGenerator {
         end(handler, element);
     }
 
-    private void writeMap(final ContentHandler handler, final String externalName, final Map map) throws SAXException {
+    @SuppressWarnings("unchecked")
+	private void writeMap(final ContentHandler handler, final String externalName, final Map map) throws SAXException {
         String element = (externalName == null) ? MAP_ELEMENT : externalName;
         start(handler, element);
+        
         for (Object o : map.entrySet()) {
-            Map.Entry entry = (Map.Entry) o;
-            start(handler, ENTRY_ELEMENT);
-            start(handler, KEY_ELEMENT);
-            writeShortly(handler, entry.getKey());
-            end(handler, KEY_ELEMENT);
-            start(handler, VALUE_ELEMENT);
-            writeShortly(handler, entry.getValue());
-            end(handler, VALUE_ELEMENT);
-            end(handler, ENTRY_ELEMENT);
-        }
+            Map.Entry entry = (Map.Entry) o;            
+            String entryElement = entry.getKey().toString();
+            
+            start(handler, entryElement);
+            writeShortly(handler, entry.getValue().toString());
+            end(handler, entryElement);
+        }       
+        
         end(handler, element);
     }
 

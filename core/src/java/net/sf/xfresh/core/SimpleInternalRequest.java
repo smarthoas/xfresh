@@ -85,12 +85,14 @@ class SimpleInternalRequest implements InternalRequest {
     }
     
     public Map<String, String> getCookies() {
-        Map<String, String> result = new HashMap<String, String>();
         Cookie[] cookies = httpRequest.getCookies();
-        if (cookies != null) {
-        	for (Cookie cookie : httpRequest.getCookies()) {
-                result.put(cookie.getName(), cookie.getValue());
-            }
+        if (cookies == null) {
+        	return Collections.emptyMap();
+        }
+        
+        Map<String, String> result = new HashMap<String, String>();
+    	for (Cookie cookie : httpRequest.getCookies()) {
+            result.put(cookie.getName(), cookie.getValue());
         }
         return result;
     }
@@ -108,5 +110,13 @@ class SimpleInternalRequest implements InternalRequest {
             allParams.put(name, values);
         }
         return allParams;
+    }
+    
+    public String getRequestURL() {
+    	return httpRequest.getRequestURL().toString();
+    }
+    
+    public String getQueryString() {
+    	return httpRequest.getQueryString();
     }
 }

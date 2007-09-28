@@ -47,4 +47,8 @@ public interface InternalRequest {
     Map<String, String> getCookies();
 
     Map<String, List<String>> getAllParameters();
+    
+    String getRequestURL();
+    
+    String getQueryString();
 }
