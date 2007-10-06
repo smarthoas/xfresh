@@ -177,6 +177,7 @@ public class Dispatcher extends HttpServlet {
 
     private XMLReader createReader() throws ParserConfigurationException, SAXException {
         SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+        parserFactory.setXIncludeAware(true);
         final SAXParser saxParser = parserFactory.newSAXParser();
         final XMLReader xmlReader = saxParser.getXMLReader();
         xmlReader.setFeature("http://xml.org/sax/features/namespaces", true);

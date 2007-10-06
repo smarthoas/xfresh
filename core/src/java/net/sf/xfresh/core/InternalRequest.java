@@ -51,4 +51,8 @@ public interface InternalRequest {
     String getRequestURL();
     
     String getQueryString();
+    
+    int getIntParameter(final String name);
+    
+    int getIntParameter(final String name, final int defaultValue);
 }

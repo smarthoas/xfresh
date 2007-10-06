@@ -119,4 +119,16 @@ class SimpleInternalRequest implements InternalRequest {
     public String getQueryString() {
     	return httpRequest.getQueryString();
     }
+
+	public int getIntParameter(String name) {
+		return Integer.parseInt(getParameter(name));
+	}
+
+	public int getIntParameter(String name, int defaultValue) {
+		try {
+			return Integer.parseInt(getParameter(name));
+		} catch (NumberFormatException e) {
+			return defaultValue;
+		}
+	}
 }
