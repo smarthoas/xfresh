@@ -26,10 +26,9 @@
 */
 package net.sf.xfresh.core;
 
-import java.util.Collection;
-import java.util.Map;
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
+import java.util.Map;
 
 /**
  * Date: 20.04.2007
@@ -41,16 +40,20 @@ public interface InternalResponse {
     void redirectTo(final String path);
 
     void add(final Object object);
+    
+    void add(final Object object, final String paramName);
 
-    Collection getData();
+    Map<Object, String> getData();
 
     String getRedir();
 
     Writer getWriter() throws IOException;
 
     void addError(ErrorInfo errorInfo);
+    
+    void addError(ErrorInfo errorInfo, final String paramName);
 
-    Collection<ErrorInfo> getErrors();
+    Map<ErrorInfo, String> getErrors();
     
     void setCookies(Map<String, String> cookies);
 }

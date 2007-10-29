@@ -1,16 +1,18 @@
 package net.sf.xfresh.core;
 
-import junit.framework.TestCase;
-import org.xml.sax.SAXException;
-import org.apache.commons.lang.StringUtils;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-
-import java.io.StringWriter;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+
+import junit.framework.TestCase;
+
+import org.apache.commons.lang.StringUtils;
+import org.xml.sax.SAXException;
+
+import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 /**
  * Date: 22.04.2007
@@ -42,10 +44,7 @@ public class DefaultSAXGeneratorTest extends TestCase {
         map.put("k1","v1");
         map.put("k2","v2");
         doWrite(map);
-        checkResult("<map>" +
-                "<entry><key>k1</key><value>v1</value></entry>" +
-                "<entry><key>k2</key><value>v2</value></entry>" +
-                "</map>");
+        checkResult("<map>" + "<k1>v1</k1><k2>v2</k2>" + "</map>");
     }
 
     public void testSimpleObject() throws Exception {
@@ -84,7 +83,11 @@ public class DefaultSAXGeneratorTest extends TestCase {
     }
 
     private void doWrite(final Object dataItem) throws SAXException, IOException {
-        generator.writeXml(serializer.asContentHandler(), Arrays.asList(dataItem));
+    	Map<Object, String> data = new HashMap<Object, String>();
+    	for (Object item : Arrays.asList(dataItem)) {
+    		data.put(item, null);
+    	}
+        generator.writeXml(serializer.asContentHandler(), data);
         stringWriter.close();
     }
 }

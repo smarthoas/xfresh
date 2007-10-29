@@ -44,7 +44,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.UnsupportedEncodingException;
 
 import net.sf.xfresh.util.XmlUtil;
 
@@ -91,15 +90,17 @@ public class DefaultSAXGenerator implements SAXGenerator {
     };
 
     private static final Object[] EMPTY_ARGS = null;
+    
     private String charsetName;
 
     public void setCharsetName(final String charsetName) {
         this.charsetName = charsetName;
     }
-
-    public void writeXml(final ContentHandler handler, final Collection data) throws SAXException {
-        for (Object dataItem : data) {
-            writeAny(handler, null, dataItem);
+    
+    public void writeXml(final ContentHandler handler, final Map<? extends Object, String> data) throws SAXException {
+        for (Object dataItem : data.keySet()) {
+        	String externalName = data.get(dataItem);
+            writeAny(handler, externalName, dataItem);
         }
     }
 
@@ -125,19 +126,19 @@ public class DefaultSAXGenerator implements SAXGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    private void writeMap(final ContentHandler handler, final String externalName, final Map map) throws SAXException {
+	private void writeMap(final ContentHandler handler, final String externalName, final Map map) throws SAXException {
         String element = (externalName == null) ? MAP_ELEMENT : externalName;
         start(handler, element);
-
+        
         for (Object o : map.entrySet()) {
-            Map.Entry entry = (Map.Entry) o;
+            Map.Entry entry = (Map.Entry) o;            
             String entryElement = entry.getKey().toString();
-
+            
             start(handler, entryElement);
             writeShortly(handler, entry.getValue().toString());
             end(handler, entryElement);
-        }
-
+        }       
+        
         end(handler, element);
     }
 
@@ -257,14 +258,12 @@ public class DefaultSAXGenerator implements SAXGenerator {
     }
 
     private String encode(final String value) {
-        if (charsetName == null) {
-            return value;
-        } else {
-            try {
-                return new String(value.getBytes(charsetName));
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
-            }
-        }
+//        String charsetName = "Windows-1251";
+//        try {
+//            return new String(value.getBytes(charsetName)); // todo kill encoding hack
+            return new String(value); // todo kill encoding hack
+//        } catch (UnsupportedEncodingException e) {
+//            throw new RuntimeException(charsetName + " - unsupported", e);
+//        }
     }
 }

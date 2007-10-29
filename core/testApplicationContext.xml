@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans default-lazy-init="true" default-autowire="byName">
+    <!--Spring helpers-->
+    <bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor"/>
+
+    <!--Fresh core beans-->
+    <bean id="yaletSupport" class="net.sf.xfresh.core.DefaultYaletSupport"/>
+
+    <bean id="yaletResolver" class="net.sf.xfresh.core.SpringYaletResolver"/>
+
+    <bean id="saxGenerator" class="net.sf.xfresh.core.DefaultSAXGenerator"/>
+
+    <!--Yalets-->
+    <bean id="addTestInfoYalet" class="net.sf.xfresh.mock.DoNothingYalet"/>
+</beans>

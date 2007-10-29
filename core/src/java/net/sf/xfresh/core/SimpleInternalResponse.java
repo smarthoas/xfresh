@@ -26,15 +26,15 @@
 */
 package net.sf.xfresh.core;
 
-import org.apache.log4j.Logger;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Collection;
-import java.util.ArrayList;
-import java.util.Map;
-import java.io.Writer;
-import java.io.IOException;
+
+import org.apache.log4j.Logger;
 
 /**
  * Date: 20.04.2007
@@ -47,8 +47,8 @@ class SimpleInternalResponse implements InternalResponse {
 
     private final HttpServletResponse httpResponse;
     private String redir;
-    private Collection data = new ArrayList();
-    private Collection<ErrorInfo> errors = new ArrayList<ErrorInfo>();
+    private Map<Object, String> data = new HashMap<Object, String>();
+    private Map<ErrorInfo, String> errors = new HashMap<ErrorInfo, String>();
     private Writer writer;
 
     protected SimpleInternalResponse(final HttpServletResponse httpResponse) {
@@ -57,20 +57,24 @@ class SimpleInternalResponse implements InternalResponse {
 
     public void redirectTo(final String path) {
         if (redir != null) {
-            throw new IllegalStateException("Already redirected");
+        	throw new IllegalStateException("Already redirected");
         }
         redir = path;
     }
 
     public void add(final Object object) {
-        data.add(object);
+        data.put(object, null);
+    }
+    
+    public void add(final Object object, final String paramName) {
+    	data.put(object, paramName);
     }
 
-    public Collection getData() {
+    public Map<Object, String> getData() {
         return data;
     }
 
-    public Collection<ErrorInfo> getErrors() {
+    public Map<ErrorInfo, String> getErrors() {
         return errors;
     }
 
@@ -90,7 +94,11 @@ class SimpleInternalResponse implements InternalResponse {
     }
 
     public void addError(ErrorInfo errorInfo) {
-        errors.add(errorInfo);
+        errors.put(errorInfo, null);
+    }
+    
+    public void addError(ErrorInfo errorInfo, final String paramName) {
+        errors.put(errorInfo, paramName);
     }
 
     public void setCookies(Map<String, String> cookies) {

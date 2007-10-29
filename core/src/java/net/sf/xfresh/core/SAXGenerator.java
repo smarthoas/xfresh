@@ -26,10 +26,10 @@
 */
 package net.sf.xfresh.core;
 
+import java.util.Map;
+
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-
-import java.util.Collection;
 
 /**
  * Date: 21.04.2007
@@ -38,5 +38,5 @@ import java.util.Collection;
  * @author Nikolay Malevanny nmalevanny@yandex-team.ru
  */
 public interface SAXGenerator {
-    void writeXml(final ContentHandler handler, final Collection data) throws SAXException;
+    void writeXml(final ContentHandler handler, final Map<? extends Object, String> data) throws SAXException;
 }
