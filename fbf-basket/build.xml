@@ -1,4 +1,4 @@
-<project default="build">
+<project name="simple-basket" default="build">
     <target name="init">
         <property file="local.build.properties"/>
         <property file="build.properties"/>
