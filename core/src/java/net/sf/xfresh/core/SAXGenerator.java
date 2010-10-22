@@ -37,6 +37,6 @@ import org.xml.sax.SAXException;
  *
  * @author Nikolay Malevanny nmalevanny@yandex-team.ru
  */
-public interface SAXGenerator {
+public interface SaxGenerator {
     void writeXml(final ContentHandler handler, final Map<? extends Object, String> data) throws SAXException;
 }

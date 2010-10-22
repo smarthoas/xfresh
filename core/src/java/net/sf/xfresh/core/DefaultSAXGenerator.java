@@ -58,8 +58,8 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author Nikolay Malevanny nmalevanny@yandex-team.ru
  */
-public class DefaultSAXGenerator implements SAXGenerator {
-    private static final Logger log = Logger.getLogger(DefaultSAXGenerator.class);
+public class DefaultSaxGenerator implements SaxGenerator {
+    private static final Logger log = Logger.getLogger(DefaultSaxGenerator.class);
 
     private static final String COLLECTION_ELEMENT = "collection";
     private static final String MAP_ELEMENT = "map";

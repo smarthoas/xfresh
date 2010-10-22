@@ -17,8 +17,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @author Nikolay Malevanny nmalevanny@yandex-team.ru
  */
 public class DispatcherTest extends TestCase {
-    private static final String TEST_CONTENT = "<?xml version=\"1.0\" encoding=\"windows-1251\"?>\n<page><a>тест</a><data id=\"addTestInfo\"/></page>";
-    private static final String TEST_TRANSFORMED_CONTENT = "<html><head><META http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1251\"><title>Тест</title></head><body><h1>Проверка111</h1></body></html>";
+    private static final String TEST_CONTENT = "<?xml version=\"1.0\" encoding=\"windows-1251\"?>\n<page><a>С‚РµСЃС‚</a><data id=\"addTestInfo\"/></page>";
+    private static final String TEST_TRANSFORMED_CONTENT = "<html><head><META http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1251\">" +
+            "<title>РўРµСЃС‚</title></head><body><h1>РџСЂРѕРІРµСЂРєР°111</h1></body></html>";
     private Dispatcher dispatcher;
     private ByteArrayOutputStream baos;
     private SimpleInternalResponse response;
@@ -37,7 +38,7 @@ public class DispatcherTest extends TestCase {
     }
 
     public void testProcessFile() throws Exception {
-        request = new SimpleInternalRequest(null, "test.xml");
+        request = new SimpleInternalRequest(null, "./core/src/test/test.xml");
         request.setNeedTransform(false);
         dispatcher.process(request, response, new RedirHandler(null));
         assertEquals(TEST_CONTENT,
@@ -45,7 +46,7 @@ public class DispatcherTest extends TestCase {
     }
 
     public void testTransformFile() throws Exception {
-        request = new SimpleInternalRequest(null, "test.xml");
+        request = new SimpleInternalRequest(null, "./core/src/test/test.xml");
 
         dispatcher.process(request, response, new RedirHandler(null));
         assertEquals(TEST_TRANSFORMED_CONTENT,
@@ -53,7 +54,7 @@ public class DispatcherTest extends TestCase {
     }
 
     public void testTransformXFile() throws Exception {
-        request = new SimpleInternalRequest(null, "xtest.xml");
+        request = new SimpleInternalRequest(null, "./core/src/test/xtest.xml");
 
         dispatcher.process(request, response, new RedirHandler(null));
         assertEquals(TEST_CONTENT,

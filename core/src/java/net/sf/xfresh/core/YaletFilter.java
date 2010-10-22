@@ -31,10 +31,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.ContentHandler;
 import org.apache.log4j.Logger;
-import net.sf.xfresh.core.YaletResolver;
-import net.sf.xfresh.core.InternalRequest;
-import net.sf.xfresh.core.InternalResponse;
-import net.sf.xfresh.core.Yalet;
 import net.sf.xfresh.util.XmlUtil;
 
 /**
@@ -54,13 +50,13 @@ public class YaletFilter extends XMLFilterImpl {
     private final YaletResolver yaletResolver;
     private final InternalRequest request;
     private final InternalResponse response;
-    private final SAXGenerator saxGenerator;
+    private final SaxGenerator saxGenerator;
 
     private String actionId;
     private boolean doingAction = false;
 
     public YaletFilter(final YaletResolver yaletResolver,
-                       final SAXGenerator saxGenerator,
+                       final SaxGenerator saxGenerator,
                        final InternalRequest request,
                        final InternalResponse response) {
         super();

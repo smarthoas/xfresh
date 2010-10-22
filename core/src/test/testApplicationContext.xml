@@ -9,7 +9,7 @@
 
     <bean id="yaletResolver" class="net.sf.xfresh.core.SpringYaletResolver"/>
 
-    <bean id="saxGenerator" class="net.sf.xfresh.core.DefaultSAXGenerator"/>
+    <bean id="saxGenerator" class="net.sf.xfresh.core.DefaultSaxGenerator"/>
 
     <!--Yalets-->
     <bean id="addTestInfoYalet" class="net.sf.xfresh.mock.DoNothingYalet"/>

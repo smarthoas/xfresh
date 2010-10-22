@@ -40,15 +40,15 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class DefaultYaletSupport implements YaletSupport {
     private YaletResolver yaletResolver;
-    private SAXGenerator SAXGenerator = new DefaultSAXGenerator();
+    private SaxGenerator saxGenerator = new DefaultSaxGenerator();
 
     @Required
     public void setYaletResolver(final YaletResolver yaletResolver) {
         this.yaletResolver = yaletResolver;
     }
 
-    public void setDataWriter(final SAXGenerator SAXGenerator) {
-        this.SAXGenerator = SAXGenerator;
+    public void setDataWriter(final SaxGenerator SaxGenerator) {
+        this.saxGenerator = SaxGenerator;
     }
 
     public InternalRequest createRequest(final HttpServletRequest httpServletRequest, final String realPath) {
@@ -60,6 +60,6 @@ public class DefaultYaletSupport implements YaletSupport {
     }
 
     public XMLFilter createFilter(final InternalRequest request, final InternalResponse response) {
-        return new YaletFilter(yaletResolver, SAXGenerator, request, response);
+        return new YaletFilter(yaletResolver, saxGenerator, request, response);
     }
 }

@@ -25,13 +25,13 @@ public class DefaultSAXGeneratorTest extends TestCase {
 
     private XMLSerializer serializer;
     private StringWriter stringWriter;
-    private SAXGenerator generator;
+    private SaxGenerator generator;
 
     protected void setUp() throws Exception {
         super.setUp();
         stringWriter = new StringWriter();
         serializer = new XMLSerializer(stringWriter, DEFAULT_FORMAT);
-        generator = new DefaultSAXGenerator();
+        generator = new DefaultSaxGenerator();
     }
 
     public void testCollection() throws Exception {
