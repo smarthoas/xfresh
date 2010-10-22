@@ -63,7 +63,7 @@
       <file leaf-file-name="DispatcherTest.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/core/src/test/net/sf/xfresh/core/DispatcherTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="30" column="35" selection-start="1151" selection-end="1151" vertical-scroll-proportion="0.6981132">
+            <state line="24" column="36" selection-start="993" selection-end="993" vertical-scroll-proportion="0.4716981">
               <folding />
             </state>
           </provider>
@@ -179,6 +179,24 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="xfresh" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lib" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jetty" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="PackagesPane" />
@@ -188,7 +206,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="recentsLimit" value="5" />
@@ -496,7 +514,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/test/net/sf/xfresh/core/DispatcherTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="35" selection-start="1151" selection-end="1151" vertical-scroll-proportion="0.6981132">
+        <state line="24" column="36" selection-start="993" selection-end="993" vertical-scroll-proportion="0.4716981">
           <folding />
         </state>
       </provider>

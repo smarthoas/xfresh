@@ -121,41 +121,21 @@
     <find-history />
   </component>
   <component name="libraryTable">
-    <library name="jakarta-commons">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/core/lib/jakarta-commons/commons-logging.jar!/" />
-        <root url="jar://$PROJECT_DIR$/core/lib/jakarta-commons/commons-lang.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
     <library name="lib">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/core/lib/servlet-api.jar!/" />
         <root url="jar://$PROJECT_DIR$/core/lib/junit-4.0.jar!/" />
-        <root url="jar://$PROJECT_DIR$/core/lib/log4j-1.2.13.jar!/" />
+        <root url="file://$PROJECT_DIR$/core/lib/jakarta-commons" />
+        <root url="file://$PROJECT_DIR$/core/lib/jetty" />
+        <root url="file://$PROJECT_DIR$/core/lib/spring" />
+        <root url="file://$PROJECT_DIR$/core/lib/xalan" />
+        <root url="jar://$PROJECT_DIR$/core/lib/log4j-1.2.15.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
-    </library>
-    <library name="spring">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/core/lib/spring/spring-beans.jar!/" />
-        <root url="jar://$PROJECT_DIR$/core/lib/spring/spring-core.jar!/" />
-        <root url="jar://$PROJECT_DIR$/core/lib/spring/spring-context.jar!/" />
-        <root url="jar://$PROJECT_DIR$/core/lib/spring/spring-web.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="xalan">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/core/lib/xalan/xercesImpl.jar!/" />
-        <root url="jar://$PROJECT_DIR$/core/lib/xalan/serializer.jar!/" />
-        <root url="jar://$PROJECT_DIR$/core/lib/xalan/xalan.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
+      <jarDirectory url="file://$PROJECT_DIR$/core/lib/jakarta-commons" recursive="false" />
+      <jarDirectory url="file://$PROJECT_DIR$/core/lib/jetty" recursive="false" />
+      <jarDirectory url="file://$PROJECT_DIR$/core/lib/spring" recursive="false" />
+      <jarDirectory url="file://$PROJECT_DIR$/core/lib/xalan" recursive="false" />
     </library>
   </component>
 </project>
