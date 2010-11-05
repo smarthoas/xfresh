@@ -13,7 +13,6 @@ import net.sf.xfresh.core.InternalResponse;
 import net.sf.xfresh.core.Yalet;
 
 /**
- * Created by IntelliJ IDEA.
  * User: Olga Bolshakova
  * Date: 27.06.2007
  * Time: 12:11:55

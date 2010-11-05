@@ -6,7 +6,6 @@ import net.sf.xfresh.core.InternalRequest;
 import net.sf.xfresh.core.InternalResponse;
 
 /**
- * Created by IntelliJ IDEA.
  * User: Olga Bolshakova
  * Date: 27.06.2007
  * Time: 12:11:27

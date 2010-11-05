@@ -3,7 +3,6 @@ package net.sf.xfresh.basket.model;
 import java.util.*;
 
 /**
- * Created by IntelliJ IDEA.
  * User: Olga Bolshakova
  * Date: 26.06.2007
  * Time: 18:26:19

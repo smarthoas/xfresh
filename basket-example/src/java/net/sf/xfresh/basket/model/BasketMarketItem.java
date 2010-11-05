@@ -1,7 +1,6 @@
 package net.sf.xfresh.basket.model;
 
 /**
- * Created by IntelliJ IDEA.
  * User: Olga Bolshakova
  * Date: 27.06.2007
  * Time: 13:53:46

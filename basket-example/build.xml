@@ -1,19 +1,16 @@
-<project name="simple-basket" default="build">
+<project name="basket-example" default="build">
     <target name="init">
         <property file="local.build.properties"/>
         <property file="build.properties"/>
 
         <property name="src.dir" location="${project.dir}/src/java"/>
 
-        <property name="webapp.name" value="basket"/>
-        <property name="webapp.dir" location="${tomcat.dir}/webapps/${webapp.name}"/>
 
         <property name="build.dir" location="${project.dir}/build"/>
         <property name="build.classes.dir" location="${build.dir}/classes"/>
 
         <fileset id="libs" dir="${core.dir}/lib">
             <include name="**/*.jar"/>
-            <exclude name="servlet-api.jar"/>
             <exclude name="junit*.jar"/>
         </fileset>
 

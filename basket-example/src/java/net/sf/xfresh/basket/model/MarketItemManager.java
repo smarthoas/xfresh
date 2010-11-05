@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Arrays;
 
 /**
- * Created by IntelliJ IDEA.
  * User: Olga Bolshakova
  * Date: 26.06.2007
  * Time: 18:33:35
