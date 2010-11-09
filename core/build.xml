@@ -9,34 +9,38 @@
 
         <property name="javac.debug" value="on"/>
         <property name="javac.debuglevel" value="lines"/>
-        
-        <fileset id="libs" dir="lib">
+
+        <fileset id="lib" dir="lib">
             <include name="**/*.jar"/>
         </fileset>
 
         <path id="xfresh.classpath">
-            <fileset refid="libs"/>
+            <fileset refid="lib"/>
         </path>
     </target>
 
     <target name="build" depends="init">
         <mkdir dir="${classes.dir}"/>
 
-        <javac 
-            srcdir      = "${src.dir}"
-            destdir     = "${classes.dir}"
-            classpathref= "xfresh.classpath"
-            debug       = "${javac.debug}"
-            debuglevel  = "${javac.debuglevel}"
-        />
+        <javac srcdir="${src.dir}"
+               destdir="${classes.dir}"
+               classpathref="xfresh.classpath"
+               debug="${javac.debug}"
+               debuglevel="${javac.debuglevel}"/>
 
         <mkdir dir="${dist.dir}"/>
 
         <jar
-            destfile="${jar.file}"
-            basedir="${classes.dir}"
-            includes="**/*.class"
-        />
+                destfile="${jar.file}"
+                basedir="${classes.dir}"
+                includes="**/*.class"
+                />
     </target>
 
+
+    <target name="clean" depends="init">
+        <delete dir="${build.dir}" failonerror="false"/>
+    </target>
+
+    <target name="rebuild" depends="clean, build"/>
 </project>

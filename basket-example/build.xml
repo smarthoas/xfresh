@@ -14,21 +14,16 @@
         <property name="build.lib.dir" location="${build.dir}/lib"/>
 
 
-        <fileset id="libs" dir="${core.dir}/lib">
+        <fileset id="core-lib" dir="${core.dir}/lib">
             <include name="**/*.jar"/>
             <exclude name="junit*.jar"/>
         </fileset>
 
-        <fileset id="project-libs" dir="${project.dir}">
-            <include name="**/*.jar"/>
-        </fileset>
-
-        <fileset id="framework" dir="${core.dir}/build/dist" includes="*.jar"/>
+        <fileset id="xfresh-core" dir="${core.dir}/build/dist" includes="*.jar"/>
 
         <path id="project.classpath">
-            <fileset refid="libs"/>
-            <fileset refid="framework"/>
-            <fileset refid="project-libs"/>
+            <fileset refid="core-lib"/>
+            <fileset refid="xfresh-core"/>
         </path>
 
         <mkdir dir="${build.dir}"/>
@@ -53,9 +48,6 @@
             basedir="${build.classes.dir}"
             includes="**/*.class"
         />
-        <copy todir="${build.lib.dir}" overwrite="true">
-            <fileset refid="framework"/>
-        </copy>
     </target>
 
     <target name="copy-view" depends="init">
@@ -63,12 +55,6 @@
             <fileset dir="${src.view.dir}"/>
         </copy>
     </target>
-
-    <!--<target name="copy-classes" depends="compile">-->
-        <!--<copy todir="${webapp.dir}/WEB-INF/classes">-->
-            <!--<fileset dir="${build.classes.dir}"/>-->
-        <!--</copy>-->
-    <!--</target>-->
 
     <target name="copy-config" depends="init">
         <copy todir="${build.dir}" overwrite="true">
@@ -79,10 +65,8 @@
 
     <target name="copy-libs" depends="init">
         <copy todir="${build.lib.dir}" flatten="true">
-            <fileset refid="libs"/>
-            <fileset refid="project-libs"/>
-            <fileset refid="framework"/>
+            <fileset refid="core-lib"/>
+            <fileset refid="xfresh-core"/>
         </copy>
     </target>
-
 </project>
