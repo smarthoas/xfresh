@@ -3,11 +3,16 @@
         <property file="local.build.properties"/>
         <property file="build.properties"/>
 
-        <property name="src.dir" location="${project.dir}/src/java"/>
+        <property name="src.dir" location="${project.dir}/src"/>
+        <property name="src.java.dir" location="${src.dir}/java"/>
+        <property name="src.view.dir" location="${src.dir}/web"/>
 
 
         <property name="build.dir" location="${project.dir}/build"/>
         <property name="build.classes.dir" location="${build.dir}/classes"/>
+        <property name="build.view.dir" location="${build.dir}/view"/>
+        <property name="build.lib.dir" location="${build.dir}/lib"/>
+
 
         <fileset id="libs" dir="${core.dir}/lib">
             <include name="**/*.jar"/>
@@ -26,43 +31,54 @@
             <fileset refid="project-libs"/>
         </path>
 
-        <property name="src.web.dir" location="${src.dir}/web"/>
-        <property name="resources.dir" location="src/web/resources"/>
-
         <mkdir dir="${build.dir}"/>
         <mkdir dir="${build.classes.dir}"/>
+        <mkdir dir="${build.view.dir}"/>
+        <mkdir dir="${build.lib.dir}"/>
     </target>
 
-    <target name="build" depends="copy-classes, copy-view, copy-config, copy-jars"/>
+    <target name="build" depends="compile, copy-project-jars, copy-view, copy-config, copy-libs"/>
 
     <target name="compile" depends="init">
         <javac destdir="${build.classes.dir}"
                classpathref="project.classpath"
                debug="on"
-               srcdir="${src.dir}">
+               srcdir="${src.java.dir}">
         </javac>
     </target>
 
-    <target name="copy-view" depends="init">
-        <copy todir="${webapp.dir}" overwrite="true">
-            <fileset dir="${project.dir}/src/web/resources"/>
+    <target name="copy-project-jars" depends="compile">
+        <jar
+            destfile="${build.lib.dir}/${module.name}.jar"
+            basedir="${build.classes.dir}"
+            includes="**/*.class"
+        />
+        <copy todir="${build.lib.dir}" overwrite="true">
+            <fileset refid="framework"/>
         </copy>
     </target>
 
-    <target name="copy-classes" depends="compile">
-        <copy todir="${webapp.dir}/WEB-INF/classes">
-            <fileset dir="${build.classes.dir}"/>
+    <target name="copy-view" depends="init">
+        <copy todir="${build.view.dir}" overwrite="true">
+            <fileset dir="${src.view.dir}"/>
         </copy>
     </target>
+
+    <!--<target name="copy-classes" depends="compile">-->
+        <!--<copy todir="${webapp.dir}/WEB-INF/classes">-->
+            <!--<fileset dir="${build.classes.dir}"/>-->
+        <!--</copy>-->
+    <!--</target>-->
 
     <target name="copy-config" depends="init">
-        <copy todir="${webapp.dir}/WEB-INF" overwrite="true">
-            <fileset dir="${project.dir}/src/web/WEB-INF"/>
+        <copy todir="${build.dir}" overwrite="true">
+            <fileset dir="${src.dir}/script"/>
         </copy>
+        <chmod file="${build.dir}/start.sh" perm="+x"/>
     </target>
 
-    <target name="copy-jars" depends="init">
-        <copy todir="${webapp.dir}/WEB-INF/lib" flatten="true">
+    <target name="copy-libs" depends="init">
+        <copy todir="${build.lib.dir}" flatten="true">
             <fileset refid="libs"/>
             <fileset refid="project-libs"/>
             <fileset refid="framework"/>

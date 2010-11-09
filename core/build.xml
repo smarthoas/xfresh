@@ -3,7 +3,7 @@
     <target name="init">
         <property name="build.dir" location="build"/>
         <property name="dist.dir" location="${build.dir}/dist"/>
-        <property name="jar.file" value="${dist.dir}/xfresh.jar"/>
+        <property name="jar.file" value="${dist.dir}/xfresh-core.jar"/>
         <property name="classes.dir" location="${build.dir}/classes"/>
         <property name="src.dir" location="src/java"/>
 
