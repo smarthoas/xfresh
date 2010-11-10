@@ -2,8 +2,6 @@ package net.sf.xfresh.db;
 
 import net.sf.xfresh.core.InternalRequest;
 import net.sf.xfresh.core.InternalResponse;
-import net.sf.xfresh.core.Yalet;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 /**
  * Date: Nov 9, 2010
@@ -11,21 +9,15 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
  *
  * @author Nikolay Malevanny nmalevanny@yandex-team.ru
  */
-public class QueryYalet implements Yalet {
-    private SimpleJdbcTemplate jdbcTemplate;
+public class QueryYalet extends AbstractDbYalet {
     private String query;
-
-    public void setJdbcTemplate(final SimpleJdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     public void setQuery(final String query) {
         this.query = query;
     }
 
+    @Override
     public void process(final InternalRequest req, final InternalResponse res) {
         res.add(jdbcTemplate.query(query, new RecordMapper()));
     }
-
-
 }

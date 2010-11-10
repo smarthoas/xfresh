@@ -34,6 +34,8 @@
     <bean id="saxGenerator" class="net.sf.xfresh.core.DefaultSaxGenerator"/>
 
     <!--Yalets-->
+    <bean id="checkDbYalet" class="net.sf.xfresh.dbe.CheckDbYalet"/>
+    
     <bean id="queryYalet" class="net.sf.xfresh.db.QueryYalet">
         <property name="query" value="select 1"/>
     </bean>
