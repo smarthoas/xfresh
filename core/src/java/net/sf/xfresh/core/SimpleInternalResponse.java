@@ -29,6 +29,7 @@ package net.sf.xfresh.core;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -47,7 +48,7 @@ class SimpleInternalResponse implements InternalResponse {
 
     private final HttpServletResponse httpResponse;
     private String redir;
-    private Map<Object, String> data = new HashMap<Object, String>();
+    private Map<Object, String> data = new LinkedHashMap<Object, String>();
     private Map<ErrorInfo, String> errors = new HashMap<ErrorInfo, String>();
     private Writer writer;
 

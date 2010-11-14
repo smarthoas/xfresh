@@ -66,7 +66,6 @@ public class JettyServerInitializerTest extends AbstractDependencyInjectionSprin
         assertEquals("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
                 "<page>\n" +
                 "    <data id=\"remoteAddr\"><string>127.0.0.1</string></data>\n" +
-                "    <data id=\"remoteAddr\"><string>127.0.0.1</string></data>\n" +
                 "</page>", content);
     }
 
@@ -75,7 +74,23 @@ public class JettyServerInitializerTest extends AbstractDependencyInjectionSprin
         assertEquals(200, response.getStatusLine().getStatusCode());
         final String content = copyToString(new InputStreamReader(response.getEntity().getContent()));
         assertEquals("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-                "<page><data id=\"ruString\"><string>Тест</string></data></page>", content);
+                "<page>" +
+                "\n    <data id=\"ruString\"><string>Тест</string></data>" +
+                "\n    <data id=\"ruString\"><string>Тест</string></data>" +
+                "\n    <data id=\"ruString\"><string>Тест</string></data>" +
+                "\n</page>", content);
+    }
+
+    public void testMultiRuStringTransform() throws Throwable {
+        final HttpResponse response = httpClient.execute(buildRequest("test-ru.xml"));
+        assertEquals(200, response.getStatusLine().getStatusCode());
+        final String content = copyToString(new InputStreamReader(response.getEntity().getContent()));
+        assertEquals("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+                "<page>" +
+                "\n    <data id=\"ruString\"><string>Тест</string></data>" +
+                "\n    <data id=\"ruString\"><string>Тест</string></data>" +
+                "\n    <data id=\"ruString\"><string>Тест</string></data>" +
+                "\n</page>", content);
     }
 
     private HttpGet buildRequest(final String name) {
