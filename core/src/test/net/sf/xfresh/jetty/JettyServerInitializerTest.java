@@ -70,6 +70,14 @@ public class JettyServerInitializerTest extends AbstractDependencyInjectionSprin
                 "</page>", content);
     }
 
+    public void testRuString() throws Throwable {
+        final HttpResponse response = httpClient.execute(buildRequest("test-ru.xml?_ox"));
+        assertEquals(200, response.getStatusLine().getStatusCode());
+        final String content = copyToString(new InputStreamReader(response.getEntity().getContent()));
+        assertEquals("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+                "<page><data id=\"ruString\"><string>Тест</string></data></page>", content);
+    }
+
     private HttpGet buildRequest(final String name) {
         final HttpGet httpGet = new HttpGet("http://localhost:" 
                 + port + "/" +
