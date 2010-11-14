@@ -124,8 +124,8 @@ class SimpleInternalRequest implements InternalRequest {
 		return Integer.parseInt(getParameter(name));
 	}
 
-    public String getRemoteUser() {
-        return httpRequest.getRemoteUser();
+    public String getRemoteAddr() {
+        return httpRequest.getRemoteAddr();
     }
 
 	public int getIntParameter(String name, int defaultValue) {

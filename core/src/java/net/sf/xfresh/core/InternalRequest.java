@@ -56,5 +56,5 @@ public interface InternalRequest {
     
     int getIntParameter(final String name, final int defaultValue);
 
-    String getRemoteUser();
+    String getRemoteAddr();
 }
