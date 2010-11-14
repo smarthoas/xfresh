@@ -85,7 +85,12 @@ public class JettyServerInitializerTest extends AbstractDependencyInjectionSprin
         final HttpResponse response = httpClient.execute(buildRequest("test-ru.xml"));
         assertEquals(200, response.getStatusLine().getStatusCode());
         final String content = copyToString(new InputStreamReader(response.getEntity().getContent()));
-        assertEquals("<html>ТестТестТест</html>", content);
+        assertEquals("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+                "<page>" +
+                "\n    <data id=\"ruString\"><string>Тест</string></data>" +
+                "\n    <data id=\"ruString\"><string>Тест</string></data>" +
+                "\n    <data id=\"ruString\"><string>Тест</string></data>" +
+                "\n</page>", content);
     }
 
     private HttpGet buildRequest(final String name) {
