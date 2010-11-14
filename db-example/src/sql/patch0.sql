@@ -1,5 +1,5 @@
 --создание базы данных
-CREATE DATABASE test;
+CREATE DATABASE test CHARACTER SET 'UTF8';
 
 --структура для хранения проверок
 DROP TABLE IF EXISTS db_check;
