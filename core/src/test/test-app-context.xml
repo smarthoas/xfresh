@@ -33,4 +33,6 @@
 
     <!--Yalets-->
     <bean id="addTestInfoYalet" class="net.sf.xfresh.mock.DoNothingYalet"/>
+
+    <bean id="remoteUserYalet" class="net.sf.xfresh.mock.RemoteUserYalet"/>
 </beans>

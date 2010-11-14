@@ -21,7 +21,7 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
  * @author Nikolay Malevanny nmalevanny@yandex-team.ru
  */
 public class DefaultSAXGeneratorTest extends TestCase {
-    private static final OutputFormat DEFAULT_FORMAT = new OutputFormat("XML", "windows-1251", false);
+    private static final OutputFormat DEFAULT_FORMAT = new OutputFormat("XML", "utf-8", false);
 
     private XMLSerializer serializer;
     private StringWriter stringWriter;
@@ -78,7 +78,7 @@ public class DefaultSAXGeneratorTest extends TestCase {
     private void checkResult(final String expectedResult) {
         String s = StringUtils.removeStart(
                 stringWriter.getBuffer().toString(),
-                "<?xml version=\"1.0\" encoding=\"windows-1251\"?>\n");
+                "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
         assertEquals(expectedResult, s);
     }
 

@@ -13,8 +13,8 @@ import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
  * @author Nikolay Malevanny nmalevanny@yandex-team.ru
  */
 public class YaletProcessorTest extends AbstractDependencyInjectionSpringContextTests {
-    private static final String TEST_CONTENT = "<?xml version=\"1.0\" encoding=\"windows-1251\"?>\n<page><a>тест</a><data id=\"addTestInfo\"/></page>";
-    private static final String TEST_TRANSFORMED_CONTENT = "<html><head><META http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1251\">" +
+    private static final String TEST_CONTENT = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<page><a>тест</a><data id=\"addTestInfo\"/></page>";
+    private static final String TEST_TRANSFORMED_CONTENT = "<html><head><META http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">" +
             "<title>Тест</title></head><body><h1>Проверка111</h1></body></html>";
     private YaletProcessor yaletProcessor;
     private ByteArrayOutputStream baos;

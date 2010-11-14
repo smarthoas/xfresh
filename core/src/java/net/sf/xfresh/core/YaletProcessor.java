@@ -37,7 +37,7 @@ import java.io.Writer;
 public class YaletProcessor {
     private static final Logger log = Logger.getLogger(YaletProcessor.class);
 
-    private static final String DEFAULT_ENCODING = "windows-1251";
+    private static final String DEFAULT_ENCODING = "utf-8";
     private static final OutputFormat DEFAULT_FORMAT = new OutputFormat("XML", DEFAULT_ENCODING, false);
     private static final int INITIAL_SIZE = 1024*64;
     private static final String TEXT_HTML = "text/html";
