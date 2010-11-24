@@ -1,5 +1,6 @@
 package net.sf.xfresh.core;
 
+import net.sf.saxon.TransformerFactoryImpl;
 import org.apache.log4j.Logger;
 import org.apache.xalan.xsltc.trax.SmartTransformerFactoryImpl;
 import org.apache.xml.serialize.OutputFormat;
@@ -122,7 +123,8 @@ public class YaletProcessor {
     }
 
     private Transformer createTransformer(final String realPath) throws TransformerConfigurationException {
-        final SAXTransformerFactory transformerFactory = (SAXTransformerFactory) SmartTransformerFactoryImpl.newInstance();
+//        final SAXTransformerFactory transformerFactory = (SAXTransformerFactory) SmartTransformerFactoryImpl.newInstance();
+        final SAXTransformerFactory transformerFactory = (SAXTransformerFactory) TransformerFactoryImpl.newInstance();
         final StreamSource streamSource = new StreamSource(realPath);
         final Source associatedStylesheet = transformerFactory.getAssociatedStylesheet(streamSource,
                 null, null, null);

@@ -81,11 +81,11 @@ public class ExtYaletFilter extends YaletFilter {
             xmlReader.setContentHandler(getContentHandler());
             xmlReader.parse(new InputSource(content));
         } catch (IOException e) {
-            log.error("ERROR", e); //ignored
+            log.error("Error while read url: " + httpUrl, e); //ignored
         } catch (ParserConfigurationException e) {
-            log.error("ERROR", e); //ignored
+            log.error("Error while parse url: " + httpUrl, e); //ignored
         } catch (SAXException e) {
-            log.error("ERROR", e); //ignored
+            log.error("Error while parse url: " + httpUrl, e); //ignored
         }
     }
 
