@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="example.xsl"?>
+<page xmlns:x="http://xfresh.sf.net/ext">
+    <x:http url="http://localhost:8080/test.xml"/>
+    <x:http url="{}"/>
+    <x:http url="js:ff">
+        <x:js>
+            ff = result.getPath("/block/value/@attr));
+        </x:js>
+    </x:http>
+    <x:js>
+        test = request.getParam("test");
+        state.setParamAsInt("test10",1);
+    </x:js>
+    <date><x:js escape="false">out=ff</x:js></date>
+</page>

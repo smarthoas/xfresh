@@ -39,8 +39,8 @@ import javax.servlet.http.HttpServletResponse;
  * @author Nikolay Malevanny nmalevanny@yandex-team.ru
  */
 public class DefaultYaletSupport implements YaletSupport {
-    private YaletResolver yaletResolver;
-    private SaxGenerator saxGenerator = new DefaultSaxGenerator();
+    protected YaletResolver yaletResolver;
+    protected SaxGenerator saxGenerator = new DefaultSaxGenerator();
 
     @Required
     public void setYaletResolver(final YaletResolver yaletResolver) {
