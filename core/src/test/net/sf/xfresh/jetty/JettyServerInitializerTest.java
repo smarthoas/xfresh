@@ -17,34 +17,11 @@ import static org.springframework.util.FileCopyUtils.copyToString;
  *
  * @author Nikolay Malevanny nmalevanny@yandex-team.ru
  */
-public class JettyServerInitializerTest extends AbstractDependencyInjectionSpringContextTests {
-    private HttpClient httpClient;
-    private JettyServerInitializer serverInitializer;
-    private int port;
+public class JettyServerInitializerTest extends AbstractJettyTest {
 
     public JettyServerInitializerTest() {
         super();
 //        setAutowireMode(AUTOWIRE_BY_NAME);
-    }
-
-    @Override
-    protected String[] getConfigLocations() {
-        return new String[]{
-                "classpath:test-app-context.xml"
-        };
-    }
-
-    @Required
-    public void setServerInitializer(final JettyServerInitializer serverInitializer) {
-        System.out.println("JettyServerInitializerTest.setServerInitializer");
-        this.serverInitializer = serverInitializer;
-    }
-
-    @Override
-    protected void onSetUp() throws Exception {
-        super.onSetUp();
-        httpClient = new DefaultHttpClient();
-        port = serverInitializer.getPort();
     }
 
     public void testLoadFile() throws Throwable {
@@ -88,10 +65,4 @@ public class JettyServerInitializerTest extends AbstractDependencyInjectionSprin
         assertEquals("<html>ТестТестТест</html>", content);
     }
 
-    private HttpGet buildRequest(final String name) {
-        final HttpGet httpGet = new HttpGet("http://localhost:" 
-                + port + "/" +
-                name);
-        return httpGet;
-    }
 }

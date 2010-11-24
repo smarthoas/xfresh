@@ -99,6 +99,7 @@ public class YaletFilter extends XMLFilterImpl {
             saxGenerator.writeXml(handler, response.getErrors());
             XmlUtil.end(handler, ERRORS_ELEMENT);
         }
+        response.clear();
         XmlUtil.end(handler, DATA_ELEMENT);
     }
 

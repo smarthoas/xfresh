@@ -39,11 +39,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import net.sf.xfresh.util.XmlUtil;
 
@@ -97,10 +93,9 @@ public class DefaultSaxGenerator implements SaxGenerator {
         this.charsetName = charsetName;
     }
     
-    public void writeXml(final ContentHandler handler, final Map<? extends Object, String> data) throws SAXException {
-        for (Object dataItem : data.keySet()) {
-        	String externalName = data.get(dataItem);
-            writeAny(handler, externalName, dataItem);
+    public void writeXml(final ContentHandler handler, final List<? extends Object> data) throws SAXException {
+        for (Object dataItem : data) {
+            writeAny(handler, null, dataItem);
         }
     }
 

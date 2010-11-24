@@ -2,9 +2,7 @@ package net.sf.xfresh.core;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import junit.framework.TestCase;
 
@@ -83,9 +81,9 @@ public class DefaultSAXGeneratorTest extends TestCase {
     }
 
     private void doWrite(final Object dataItem) throws SAXException, IOException {
-    	Map<Object, String> data = new HashMap<Object, String>();
+    	List<Object> data = new ArrayList<Object>();
     	for (Object item : Arrays.asList(dataItem)) {
-    		data.put(item, null);
+    		data.add(item);
     	}
         generator.writeXml(serializer.asContentHandler(), data);
         stringWriter.close();

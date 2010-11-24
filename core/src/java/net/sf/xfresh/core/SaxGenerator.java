@@ -26,6 +26,7 @@
 */
 package net.sf.xfresh.core;
 
+import java.util.List;
 import java.util.Map;
 
 import org.xml.sax.ContentHandler;
@@ -38,5 +39,5 @@ import org.xml.sax.SAXException;
  * @author Nikolay Malevanny nmalevanny@yandex-team.ru
  */
 public interface SaxGenerator {
-    void writeXml(final ContentHandler handler, final Map<? extends Object, String> data) throws SAXException;
+    void writeXml(final ContentHandler handler, final List<? extends Object> data) throws SAXException;
 }
