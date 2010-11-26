@@ -48,8 +48,8 @@ public class YaletFilter extends XMLFilterImpl {
     private static final String ID_ATTRIBUTE = "id";
 
     private final YaletResolver yaletResolver;
-    private final InternalRequest request;
-    private final InternalResponse response;
+    protected final InternalRequest request;
+    protected final InternalResponse response;
     private final SaxGenerator saxGenerator;
 
     private String actionId;
@@ -87,7 +87,7 @@ public class YaletFilter extends XMLFilterImpl {
 
     private void processYalet(final String yaletId) throws SAXException {
         final ContentHandler handler = getContentHandler();
-        Yalet yalet = yaletResolver.findYalet(yaletId);
+        final Yalet yalet = yaletResolver.findYalet(yaletId);
         if (log.isDebugEnabled()) {
             log.debug("Process yalet with id = " + yaletId);
         }

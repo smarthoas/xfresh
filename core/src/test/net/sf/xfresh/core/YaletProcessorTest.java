@@ -53,8 +53,8 @@ public class YaletProcessorTest extends AbstractDependencyInjectionSpringContext
         request = new SimpleInternalRequest(null, "./core/src/test/test.xml");
 
         yaletProcessor.process(request, response, new RedirHandler(null));
-        assertEquals(TEST_TRANSFORMED_CONTENT,
-                new String(baos.toByteArray()).trim());
+        assertEquals(TEST_TRANSFORMED_CONTENT.toLowerCase(),
+                new String(baos.toByteArray()).trim().toLowerCase());
     }
 
     public void testTransformXFile() throws Exception {

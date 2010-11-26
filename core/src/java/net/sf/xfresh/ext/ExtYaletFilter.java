@@ -1,11 +1,17 @@
 package net.sf.xfresh.ext;
 
 import net.sf.xfresh.core.*;
+import net.sf.xfresh.util.XmlUtil;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.Undefined;
+import org.mozilla.javascript.UniqueTag;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -31,6 +37,10 @@ public class ExtYaletFilter extends YaletFilter {
     private static final String JS_ELEMENT = "js";
     private HttpClient httpClient;
     private String httpUrl;
+    private StringBuilder jsContent;
+    private Context jsContext;
+    private Scriptable jsScope;
+    private static final String JS_OUT_NAME = "out";
 
     public ExtYaletFilter(final YaletResolver yaletResolver,
                           final SaxGenerator saxGenerator,
@@ -47,11 +57,38 @@ public class ExtYaletFilter extends YaletFilter {
                              final String qName,
                              final Attributes atts) throws SAXException {
         if (isHttpBlock(uri, localName)) {
-            httpUrl = atts.getValue("url");
+            final String urlValue = atts.getValue("url").trim();
+            if (urlValue.startsWith("js:")) {
+                checkAndInitJsContext();
+                httpUrl = processJsContent(wrapFunction(urlValue.substring(3)));
+            } else {
+                httpUrl = urlValue;
+            }
         } else if (isJsBlock(uri, localName)) {
-            // todo
+            if (jsContent != null) {
+                log.error("Nested js blocks not possible, previous ignored");
+            }
+            jsContent = new StringBuilder();
+            checkAndInitJsContext();
         } else {
             super.startElement(uri, localName, qName, atts);
+        }
+    }
+
+    private void checkAndInitJsContext() {
+        if (jsContext == null) {
+            jsContext = Context.enter();
+            jsScope = jsContext.initStandardObjects();
+            jsScope.put("request", jsScope, request);
+        }
+    }
+
+    @Override
+    public void characters(final char[] chars, final int start, final int length) throws SAXException {
+        if (jsContent != null) {
+            jsContent.append(chars, start, length);
+        } else {
+            super.characters(chars, start, length);
         }
     }
 
@@ -63,10 +100,46 @@ public class ExtYaletFilter extends YaletFilter {
             }
             httpUrl = null;
         } else if (isJsBlock(uri, localName)) {
-            // todo
+            if (jsContent != null) {
+                processJs();
+            }
+            jsContent = null;
         } else {
             super.endElement(uri, localName, qName);
         }
+    }
+
+    private void processJs() throws SAXException {
+        final String content = jsContent.toString();
+        final String result = processJsContent(content);
+        if (result != null) {
+            XmlUtil.text(getContentHandler(), result);
+        }
+    }
+
+    private String processJsContent(final String content) {
+        if (!StringUtils.isEmpty(content)) {
+            try {
+                jsContext.evaluateString(jsScope, content, null, 1, null);
+                final Object value = jsScope.get(JS_OUT_NAME, jsScope);
+                if (isCorrectReturnedValue(value)) {
+                    return value.toString();
+                }
+            } catch (Throwable e) {
+                log.error("Error while processing JS (ignored): " + content, e); //ignored
+            } finally {
+                jsScope.put(JS_OUT_NAME, jsScope, null);
+            }
+        }
+        return null;
+    }
+
+    private boolean isCorrectReturnedValue(final Object value) {
+        return value != null && !(value instanceof UniqueTag) && !(value instanceof Undefined);
+    }
+
+    private String wrapFunction(final String content) {
+        return "function _f_wrpr() {" + content + " }; var " + JS_OUT_NAME + " = _f_wrpr();";
     }
 
     private void processHttpBlock() {

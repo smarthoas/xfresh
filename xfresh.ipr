@@ -135,12 +135,14 @@
         <root url="file://$PROJECT_DIR$/core/lib/httpclient" />
         <root url="file://$PROJECT_DIR$/db/lib" />
         <root url="file://$PROJECT_DIR$/core/lib/saxon" />
+        <root url="file://$PROJECT_DIR$/core/lib/rhino" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
       <jarDirectory url="file://$PROJECT_DIR$/core/lib/httpclient" recursive="false" />
       <jarDirectory url="file://$PROJECT_DIR$/core/lib/jakarta-commons" recursive="false" />
       <jarDirectory url="file://$PROJECT_DIR$/core/lib/jetty" recursive="false" />
+      <jarDirectory url="file://$PROJECT_DIR$/core/lib/rhino" recursive="false" />
       <jarDirectory url="file://$PROJECT_DIR$/core/lib/saxon" recursive="false" />
       <jarDirectory url="file://$PROJECT_DIR$/core/lib/spring" recursive="false" />
       <jarDirectory url="file://$PROJECT_DIR$/core/lib/xalan" recursive="false" />

@@ -33,7 +33,7 @@ public class JettyServerInitializerTest extends AbstractJettyTest {
         final HttpResponse response = httpClient.execute(buildRequest("test.xml"));
         assertEquals(200, response.getStatusLine().getStatusCode());
         final String content = copyToString(new InputStreamReader(response.getEntity().getContent()));
-        assertEquals("<html><head><META http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><title>Тест</title></head><body><h1>Проверка111</h1></body></html>", content);
+        assertEquals("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><title>Тест</title></head><body><h1>Проверка111</h1></body></html>".toLowerCase(), content.toLowerCase());
     }
 
     public void testRemoteAddr() throws Throwable {

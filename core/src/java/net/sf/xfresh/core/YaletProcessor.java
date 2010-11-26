@@ -20,6 +20,7 @@ import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.stream.StreamResult;
@@ -122,21 +123,25 @@ public class YaletProcessor {
         }
     }
 
-    private Transformer createTransformer(final String realPath) throws TransformerConfigurationException {
-//        final SAXTransformerFactory transformerFactory = (SAXTransformerFactory) SmartTransformerFactoryImpl.newInstance();
-        final SAXTransformerFactory transformerFactory = (SAXTransformerFactory) TransformerFactoryImpl.newInstance();
-        final StreamSource streamSource = new StreamSource(realPath);
-        final Source associatedStylesheet = transformerFactory.getAssociatedStylesheet(streamSource,
-                null, null, null);
-        if (associatedStylesheet==null) {
-            return null;
-        }
+    private Transformer createTransformer(final String realPath) {
+        // use system property javax.xml.transform.TransformerFactory to define special factory  (e.g. net.sf.saxon.TransformerFactoryImpl)
+        Transformer transformer = null;
+        try {
+            final SAXTransformerFactory transformerFactory = (SAXTransformerFactory) TransformerFactory.newInstance();
+            final StreamSource streamSource = new StreamSource(realPath);
+            final Source associatedStylesheet = transformerFactory.getAssociatedStylesheet(streamSource,
+                    null, null, null);
+            if (associatedStylesheet==null) {
+                return null;
+            }
 
-        final Transformer transformer = transformerFactory.newTransformer(associatedStylesheet);
-        if (log.isDebugEnabled()) {
-            log.debug("transformer class = " + transformer.getClass());
+            transformer = transformerFactory.newTransformer(associatedStylesheet);
+            if (log.isDebugEnabled()) {
+                log.debug("transformer class = " + transformer.getClass());
+            }
+        } catch (TransformerConfigurationException e) {
+            log.info("Can't create transformer: " +  e.getMessage()); //ignored
         }
-//        transformer.setOutputProperty(OutputKeys.ENCODING, UTF_8_ENCODING);
         return transformer;
     }
 

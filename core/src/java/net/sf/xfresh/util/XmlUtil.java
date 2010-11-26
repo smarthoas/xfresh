@@ -61,14 +61,14 @@ public class XmlUtil {
             for (int i = 1; i + 1 < elementAndAttributes.length; ) {
                 String attributeName = elementAndAttributes[i++];
                 String attributeValue = elementAndAttributes[i++];
-                attributes.addAttribute(null, attributeName, attributeName, NULL_TYPE, attributeValue);
+                attributes.addAttribute("", attributeName, attributeName, NULL_TYPE, attributeValue);
             }
         }
         start(handler, elementName, attributes);
     }
 
     public static void start(final ContentHandler handler, final String elementName, final AttributesImpl attributes) throws SAXException {
-        handler.startElement(null, elementName, elementName, attributes);
+        handler.startElement("", elementName, elementName, attributes);
     }
 
     public static String toStandart(final String name) {

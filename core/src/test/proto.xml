@@ -3,6 +3,9 @@
 <page xmlns:x="http://xfresh.sf.net/ext">
     <x:http url="http://localhost:8080/test.xml"/>
     <x:http url="{}"/>
+    <x:js>
+        ff = "http://localhost:8080/test.xml?name=" + request.getParam("test");
+    </x:js>
     <x:http url="js:ff">
         <x:js>
             ff = result.getPath("/block/value/@attr));
@@ -10,7 +13,7 @@
     </x:http>
     <x:js>
         test = request.getParam("test");
-        state.setParamAsInt("test10",1);
     </x:js>
+    <date><x:js>out=test</x:js></date>
     <date><x:js escape="false">out=ff</x:js></date>
 </page>
