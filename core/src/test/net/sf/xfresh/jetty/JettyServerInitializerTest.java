@@ -65,4 +65,10 @@ public class JettyServerInitializerTest extends AbstractJettyTest {
         assertEquals("<html>ТестТестТест</html>", content);
     }
 
+    public void testRedirect() throws Throwable {
+        final HttpResponse response = httpClient.execute(buildRequest("test-redirect.xml"));
+        assertEquals(200, response.getStatusLine().getStatusCode());
+        final String content = copyToString(new InputStreamReader(response.getEntity().getContent()));
+        assertEquals("<html>ТестТестТест</html>", content);
+    }
 }

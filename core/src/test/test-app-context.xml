@@ -37,4 +37,6 @@
     <bean id="remoteAddrYalet" class="net.sf.xfresh.mock.RemoteAddrYalet"/>
 
     <bean id="ruStringYalet" class="net.sf.xfresh.mock.RuStringYalet"/>
+
+    <bean id="redirectYalet" class="net.sf.xfresh.mock.RedirectYalet"/>
 </beans>

@@ -46,17 +46,18 @@ public class JsBlockTest extends AbstractJettyTest {
         assertTrue(content.contains("1234567890"));
     }
 
-    /*
     public void testPerf() throws Throwable {
+        if (!"net.sf.saxon.TransformerFactoryImpl".equals(System.getProperty("javax.xml.transform.TransformerFactory"))) {
+             return; 
+        }
         final long st = System.currentTimeMillis();
         for (int i = 0; i < 10; i++) {
             final HttpResponse response = httpClient.execute(buildRequest("test-js-1.xml"));
             assertEquals(200, response.getStatusLine().getStatusCode());
             final String content = copyToString(new InputStreamReader(response.getEntity().getContent()));
-            System.out.println("content.length() = " + content.length());
+            assertEquals("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><title>Тест</title></head><body><h1>Проверка211</h1></body></html>", content);
         }
         System.out.println("Processing time is: " + (System.currentTimeMillis() - st));
     }
-    */
 }
 

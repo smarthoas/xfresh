@@ -178,7 +178,7 @@ public class DefaultSaxGenerator implements SaxGenerator {
             final Class<?> valueClass = valueInfo.getClazz();
             if (isAttribute(valueClass)) {
                 final String name = toStandart(property.getKey());
-                attributes.addAttribute(null, name, name, XmlUtil.NULL_TYPE, valueInfo.getValue().toString());
+                attributes.addAttribute("", name, name, XmlUtil.NULL_TYPE, valueInfo.getValue().toString());
             }
         }
         return attributes;

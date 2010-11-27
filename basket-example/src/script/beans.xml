@@ -27,7 +27,8 @@
         <property name="encoding" value="utf-8"/>
     </bean>
 
-    <bean id="yaletSupport" class="net.sf.xfresh.core.DefaultYaletSupport"/>
+    <!--<bean id="yaletSupport" class="net.sf.xfresh.core.DefaultYaletSupport"/>-->
+    <bean id="yaletSupport" class="net.sf.xfresh.ext.ExtYaletSupport"/>
 
     <bean id="yaletResolver" class="net.sf.xfresh.core.SpringYaletResolver"/>
 

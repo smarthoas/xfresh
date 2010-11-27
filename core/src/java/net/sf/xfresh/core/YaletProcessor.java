@@ -120,6 +120,14 @@ public class YaletProcessor {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new ServletException("Can't process file " + realPath, e);
+        } finally {
+            try {
+                final Writer nativeWriter = response.getWriter();
+                nativeWriter.flush();
+                nativeWriter.close();
+            } catch (IOException e) {
+                log.error("Error:", e); //ignored
+            }
         }
     }
 
