@@ -59,5 +59,17 @@ public class JsBlockTest extends AbstractJettyTest {
         }
         System.out.println("Processing time is: " + (System.currentTimeMillis() - st));
     }
+
+    /* TODO fix
+    public void testJsSrc() throws Throwable {
+        final HttpResponse response = httpClient.execute(buildRequest("test-js-3.xml?_ox"));
+        assertEquals(200, response.getStatusLine().getStatusCode());
+        final String content = copyToString(new InputStreamReader(response.getEntity().getContent()));
+        assertEquals(
+                "</>",
+                content);
+    }
+    */
+
 }
 

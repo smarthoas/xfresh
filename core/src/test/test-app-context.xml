@@ -25,7 +25,10 @@
         <property name="encoding" value="utf-8"/>
     </bean>
 
-    <bean id="yaletSupport" class="net.sf.xfresh.ext.ExtYaletSupport"/>
+    <bean id="yaletSupport" class="net.sf.xfresh.ext.ExtYaletSupport">
+        <property name="resourceBase" value="./core/src/test"/>
+    </bean>
+
 
     <bean id="yaletResolver" class="net.sf.xfresh.core.SpringYaletResolver"/>
 
@@ -39,4 +42,6 @@
     <bean id="ruStringYalet" class="net.sf.xfresh.mock.RuStringYalet"/>
 
     <bean id="redirectYalet" class="net.sf.xfresh.mock.RedirectYalet"/>
+
+    <bean id="sleepYalet" class="net.sf.xfresh.mock.SleepYalet"/>
 </beans>

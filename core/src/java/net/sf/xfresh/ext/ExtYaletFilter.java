@@ -3,15 +3,12 @@ package net.sf.xfresh.ext;
 import net.sf.xfresh.core.*;
 import net.sf.xfresh.util.XmlUtil;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.UniqueTag;
+import org.springframework.util.FileCopyUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -20,6 +17,8 @@ import org.xml.sax.XMLReader;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -35,20 +34,23 @@ public class ExtYaletFilter extends YaletFilter {
     private static final String XFRESH_EXT_URI = "http://xfresh.sf.net/ext";
     private static final String HTTP_ELEMENT = "http";
     private static final String JS_ELEMENT = "js";
-    private HttpClient httpClient;
     private String httpUrl;
     private StringBuilder jsContent;
     private Context jsContext;
     private Scriptable jsScope;
     private static final String JS_OUT_NAME = "out";
+    private HttpLoader httpLoader;
+    private static final int DEFAULT_TIMEOUT = 300;
+    private static final String JS_SRC_ATTR = "src";
+    private String resourceBase;
 
     public ExtYaletFilter(final YaletResolver yaletResolver,
                           final SaxGenerator saxGenerator,
                           final InternalRequest request,
-                          final InternalResponse response) {
+                          final InternalResponse response, final String resourceBase) {
         super(yaletResolver, saxGenerator, request, response);
-
-        httpClient = new DefaultHttpClient();
+        this.resourceBase = resourceBase;
+        httpLoader = new HttpLoader();
     }
 
     @Override
@@ -70,6 +72,16 @@ public class ExtYaletFilter extends YaletFilter {
             }
             jsContent = new StringBuilder();
             checkAndInitJsContext();
+            final String src = atts.getValue(JS_SRC_ATTR);
+            if (!StringUtils.isEmpty(src)) {
+                try {
+                    final String jsFileContent =
+                            FileCopyUtils.copyToString(new FileReader(resourceBase + File.separatorChar + src));
+                    processJsAndWrite(jsFileContent);
+                } catch (IOException e) {
+                    log.error("Can't read js from file: " + src, e); //ignored
+                }
+            }
         } else {
             super.startElement(uri, localName, qName, atts);
         }
@@ -79,7 +91,13 @@ public class ExtYaletFilter extends YaletFilter {
         if (jsContext == null) {
             jsContext = Context.enter();
             jsScope = jsContext.initStandardObjects();
+            evaluateJs("var " +
+                    JS_OUT_NAME +
+                    "; function write(content) {" +
+                    JS_OUT_NAME +
+                    " += content;};");
             jsScope.put("request", jsScope, request);
+            jsScope.put("httpLoader", jsScope, httpLoader);
         }
     }
 
@@ -111,6 +129,10 @@ public class ExtYaletFilter extends YaletFilter {
 
     private void processJs() throws SAXException {
         final String content = jsContent.toString();
+        processJsAndWrite(content);
+    }
+
+    private void processJsAndWrite(final String content) throws SAXException {
         final String result = processJsContent(content);
         if (result != null) {
             XmlUtil.text(getContentHandler(), result);
@@ -120,7 +142,7 @@ public class ExtYaletFilter extends YaletFilter {
     private String processJsContent(final String content) {
         if (!StringUtils.isEmpty(content)) {
             try {
-                jsContext.evaluateString(jsScope, content, null, 1, null);
+                evaluateJs(content);
                 final Object value = jsScope.get(JS_OUT_NAME, jsScope);
                 if (isCorrectReturnedValue(value)) {
                     return value.toString();
@@ -134,6 +156,10 @@ public class ExtYaletFilter extends YaletFilter {
         return null;
     }
 
+    private void evaluateJs(final String content) {
+        jsContext.evaluateString(jsScope, content, null, 1, null);
+    }
+
     private boolean isCorrectReturnedValue(final Object value) {
         return value != null && !(value instanceof UniqueTag) && !(value instanceof Undefined);
     }
@@ -144,8 +170,7 @@ public class ExtYaletFilter extends YaletFilter {
 
     private void processHttpBlock() {
         try {
-            final HttpResponse httpResponse = httpClient.execute(new HttpGet(httpUrl));
-            final InputStream content = httpResponse.getEntity().getContent();
+            final InputStream content = httpLoader.loadAsStream(httpUrl, DEFAULT_TIMEOUT);
             final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
             parserFactory.setXIncludeAware(true);
             final SAXParser saxParser = parserFactory.newSAXParser();
