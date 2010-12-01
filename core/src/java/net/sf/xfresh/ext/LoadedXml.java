@@ -2,14 +2,16 @@ package net.sf.xfresh.ext;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.xpath.NodeSet;
 import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+
+import static org.apache.commons.lang.StringUtils.EMPTY;
 
 /**
  * Date: Nov 29, 2010
@@ -20,32 +22,55 @@ import javax.xml.xpath.XPathFactory;
 public class LoadedXml {
     private static final Logger log = Logger.getLogger(LoadedXml.class);
 
-    public static final LoadedXml EMPTY = new LoadedXml(null);
+    public static final LoadedXml EMPTY_XML = new LoadedXml(null);
 
-    private final Document document;
+    private final Node node;
+    private static final XPathFactory XPATH_FACTORY = XPathFactory.newInstance();
 
-    public LoadedXml(final Document document) {
-        this.document = document;
+    public LoadedXml(final Document node) {
+        this.node = node;
+    }
+
+    protected final Node getNode() {
+        return node;
     }
 
     public String evaluateToString(final String expression, final String defaultValue) {
-        if (document==null) {
+        if (node ==null) {
             log.warn("Can't use expression [" + expression + "], document is null");
             return defaultValue;
         }
 
         try {
-            final XPath xpath = XPathFactory.newInstance().newXPath();
-            final String result = (String) xpath.evaluate(expression, document, XPathConstants.STRING);
+            final XPath xpath = XPATH_FACTORY.newXPath();
+            final String result = (String) xpath.evaluate(expression, node, XPathConstants.STRING);
             log.debug("xpath [" + expression +
                     "] evaluate result = " + result);
             if (StringUtils.isEmpty(result)) {
                 return defaultValue;
             }
-            return result;
+            return result.trim();
         } catch (XPathExpressionException e) {
             log.error("Error while execute expression: " + expression, e); //ignored
             return defaultValue;
+        }
+    }
+
+    public Node evaluateToNode(final String expression) {
+        if (node ==null) {
+            log.warn("Can't use expression [" + expression + "], document is null");
+            return null;
+        }
+
+        try {
+            final XPath xpath = XPATH_FACTORY.newXPath();
+            final Node result = (Node) xpath.evaluate(expression, node, XPathConstants.NODE);
+            log.debug("xpath [" + expression +
+                    "] evaluate result = " + result);
+            return result;
+        } catch (XPathExpressionException e) {
+            log.error("Error while execute expression: " + expression, e); //ignored
+            return null;
         }
     }
 }

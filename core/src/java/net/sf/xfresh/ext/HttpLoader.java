@@ -1,13 +1,9 @@
 package net.sf.xfresh.ext;
 
-import org.apache.http.HttpConnection;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.DefaultedHttpContext;
-import org.apache.http.protocol.HttpContext;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -27,7 +23,8 @@ import java.io.InputStream;
 public class HttpLoader {
     private static final Logger log = Logger.getLogger(HttpLoader.class);
 
-    private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
+    private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY =
+            DocumentBuilderFactory.newInstance();
 
     private HttpClient httpClient;
 
@@ -55,7 +52,7 @@ public class HttpLoader {
         } catch (SAXException e) {
             log.error("Error while processing url: " + url, e); //ignored
         }
-        return LoadedXml.EMPTY;
+        return LoadedXml.EMPTY_XML;
     }
 }
 

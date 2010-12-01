@@ -1,7 +1,16 @@
 //var result1 = httpLoader.loadInBackground("http://localhost:33333/test.xml?_ox", 300, cache("test_key", 300));
-var result2 = httpLoader.load("http://localhost:33333/test.xml?_ox", 100);
-var i = result2.evaluateToString("/PAGE","ERROR");
+var result2 = httpLoader.load("http://localhost:33333/test-js-1.xml?_ox", 100);
+var i = result2.evaluateToString("/page/out-example[1]","ERROR");
 //write(escape(result1));
-write(i);
-//writeXml(result2);
+writer.write(i);
+//write(1);
+//write(2);
+writer.write("\n\nэто кусок ноды:\n");
+writer.writeNode(result2.evaluateToNode("/page/out-example[2]"));
+writer.write("\n\nэто загруженный документ:\n");
+writer.writeLoaded(result2);
+writer.write("\n<a>а так не работает :) -- теги эскейпятся</a>");
 //httpLoader.wait(result1);
+//if ("aaa" = request.getParameter("do_send")) {
+//    sendMessage("bla-bla");
+//}
