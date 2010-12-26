@@ -16,14 +16,5 @@
             out = i;
         </x:js>
     </out-example>
-    <x:http url="js: return 'http://localhost:33333/test.xml?_ox'">
-        <x:js>
-            var text = "test result.evaluate("/page/a[1]");
-        </x:js>
-    </x:http>
-    <x:js escape>
-        <![CDATA[
-
-        ]]>
-    </x:js>
+    <x:http url="js: return 'http://localhost:33333/test.xml?_ox'"/>
 </page>

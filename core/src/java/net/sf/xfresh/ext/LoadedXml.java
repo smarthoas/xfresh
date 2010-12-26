@@ -4,14 +4,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-
-import static org.apache.commons.lang.StringUtils.EMPTY;
 
 /**
  * Date: Nov 29, 2010
@@ -24,26 +21,26 @@ public class LoadedXml {
 
     public static final LoadedXml EMPTY_XML = new LoadedXml(null);
 
-    private final Node node;
+    private final Node content;
     private static final XPathFactory XPATH_FACTORY = XPathFactory.newInstance();
 
-    public LoadedXml(final Document node) {
-        this.node = node;
+    public LoadedXml(final Document content) {
+        this.content = content;
     }
 
     protected final Node getNode() {
-        return node;
+        return content;
     }
 
     public String evaluateToString(final String expression, final String defaultValue) {
-        if (node ==null) {
+        if (content == null) {
             log.warn("Can't use expression [" + expression + "], document is null");
             return defaultValue;
         }
 
         try {
             final XPath xpath = XPATH_FACTORY.newXPath();
-            final String result = (String) xpath.evaluate(expression, node, XPathConstants.STRING);
+            final String result = (String) xpath.evaluate(expression, content, XPathConstants.STRING);
             log.debug("xpath [" + expression +
                     "] evaluate result = " + result);
             if (StringUtils.isEmpty(result)) {
@@ -57,14 +54,14 @@ public class LoadedXml {
     }
 
     public Node evaluateToNode(final String expression) {
-        if (node ==null) {
+        if (content == null) {
             log.warn("Can't use expression [" + expression + "], document is null");
             return null;
         }
 
         try {
             final XPath xpath = XPATH_FACTORY.newXPath();
-            final Node result = (Node) xpath.evaluate(expression, node, XPathConstants.NODE);
+            final Node result = (Node) xpath.evaluate(expression, content, XPathConstants.NODE);
             log.debug("xpath [" + expression +
                     "] evaluate result = " + result);
             return result;
@@ -72,5 +69,9 @@ public class LoadedXml {
             log.error("Error while execute expression: " + expression, e); //ignored
             return null;
         }
+    }
+
+    public boolean isEmpty() {
+        return content == null;
     }
 }

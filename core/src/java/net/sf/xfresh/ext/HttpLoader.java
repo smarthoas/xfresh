@@ -4,6 +4,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -13,6 +15,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketTimeoutException;
 
 /**
  * Date: Nov 28, 2010
@@ -35,6 +38,9 @@ public class HttpLoader {
     public InputStream loadAsStream(final String url, final int timeout) throws IOException {
         // todo use timeout
         final HttpGet httpGet = new HttpGet(url);
+        final HttpParams httpParams = httpClient.getParams();
+        HttpConnectionParams.setConnectionTimeout(httpParams, timeout);
+        HttpConnectionParams.setSoTimeout(httpParams, timeout);
         final HttpResponse httpResponse = httpClient.execute(httpGet);
         return httpResponse.getEntity().getContent();
     }
@@ -45,6 +51,8 @@ public class HttpLoader {
             final DocumentBuilder builder = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
             final Document document = builder.parse(stream);
             return new LoadedXml(document);
+        } catch (SocketTimeoutException e) {
+            return LoadedXml.EMPTY_XML;
         } catch (IOException e) {
             log.error("Error while processing url: " + url, e); //ignored
         } catch (ParserConfigurationException e) {
