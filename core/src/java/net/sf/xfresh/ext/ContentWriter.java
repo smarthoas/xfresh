@@ -1,5 +1,6 @@
 package net.sf.xfresh.ext;
 
+import com.sun.istack.internal.NotNull;
 import org.apache.log4j.Logger;
 import org.apache.xalan.xsltc.trax.DOM2SAX;
 import org.w3c.dom.Node;
@@ -23,7 +24,7 @@ public class ContentWriter {
         this.contentHandler = contentHandler;
     }
 
-    public void write(final String content) {
+    public void write(@NotNull final String content) {
         final char[] chars = content.toCharArray();
         try {
             contentHandler.characters(chars, 0, chars.length);

@@ -120,6 +120,10 @@ class SimpleInternalRequest implements InternalRequest {
     	return httpRequest.getQueryString();
     }
 
+    public String getHeader(final String name) {
+        return httpRequest.getHeader(name);
+    }
+
 	public int getIntParameter(String name) {
 		return Integer.parseInt(getParameter(name));
 	}

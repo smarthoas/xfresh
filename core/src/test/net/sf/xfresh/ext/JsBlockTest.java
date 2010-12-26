@@ -2,6 +2,7 @@ package net.sf.xfresh.ext;
 
 import net.sf.xfresh.jetty.AbstractJettyTest;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
 
 import java.io.InputStreamReader;
 
@@ -92,6 +93,16 @@ public class JsBlockTest extends AbstractJettyTest {
         assertEquals(
                 TEST_JS_3_RESULT,
                 content);
+    }
+
+    public void testHeaders() throws Throwable {
+        final HttpGet httpGet = buildRequest("test-header.xml?_ox");
+        httpGet.setHeader("test", "111");
+        final HttpResponse response = httpClient.execute(httpGet);
+        assertEquals(200, response.getStatusLine().getStatusCode());
+        final String content = copyToString(new InputStreamReader(response.getEntity().getContent()));
+        assertTrue(content.contains("111"));
+        assertEquals("-1", response.getHeaders("test")[0].getValue());
     }
 }
 

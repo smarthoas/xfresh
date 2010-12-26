@@ -93,6 +93,7 @@ public class ExtYaletFilter extends YaletFilter {
             jsScope = jsContext.initStandardObjects();
             jsScope.put("writer", jsScope, new ContentWriter(getContentHandler()));
             jsScope.put("request", jsScope, request);
+            jsScope.put("response", jsScope, response);
             jsScope.put("httpLoader", jsScope, httpLoader);
         }
     }

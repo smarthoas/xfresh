@@ -59,4 +59,6 @@ public interface InternalResponse {
     void setCookies(Map<String, String> cookies);
 
     void clear();
+
+    void setHeader(String name, String value);
 }

@@ -82,6 +82,10 @@ class SimpleInternalResponse implements InternalResponse {
         this.writer = writer;
     }
 
+    public void setHeader(final String name, final String value) {
+        httpResponse.setHeader(name, value);
+    }
+
     public Writer getWriter() throws IOException {
         if (writer == null && httpResponse != null) {
             writer = httpResponse.getWriter();

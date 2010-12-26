@@ -1,6 +1,6 @@
 //var result1 = httpLoader.loadInBackground("http://localhost:33333/test.xml?_ox", 300, cache("test_key", 300));
 var loaded = httpLoader.load("http://localhost:33333/test-js-1.xml?_ox", 100);
-if (!loaded.isEmpty()) {
+if (!   loaded.isEmpty()) {
     var i = loaded.evaluateToString("/page/out-example[1]","ERROR");
     //write(escape(result1));
 } else {
