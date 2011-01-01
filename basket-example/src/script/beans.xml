@@ -28,7 +28,9 @@
     </bean>
 
     <!--<bean id="yaletSupport" class="net.sf.xfresh.core.DefaultYaletSupport"/>-->
-    <bean id="yaletSupport" class="net.sf.xfresh.ext.ExtYaletSupport"/>
+    <bean id="yaletSupport" class="net.sf.xfresh.ext.ExtYaletSupport">
+        <property name="resourceBase" value="./view"/>
+    </bean>
 
     <bean id="yaletResolver" class="net.sf.xfresh.core.SpringYaletResolver"/>
 
