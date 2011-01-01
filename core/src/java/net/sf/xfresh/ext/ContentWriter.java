@@ -1,8 +1,8 @@
 package net.sf.xfresh.ext;
 
-import com.sun.istack.internal.NotNull;
 import org.apache.log4j.Logger;
 import org.apache.xalan.xsltc.trax.DOM2SAX;
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Node;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
