@@ -59,4 +59,6 @@ public interface InternalRequest {
     String getRemoteAddr();
 
     String getHeader(String name);
+
+//    Long getUserId();
 }

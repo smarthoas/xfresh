@@ -16,6 +16,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * Date: Nov 28, 2010
@@ -35,14 +37,21 @@ public class HttpLoader {
         httpClient = new DefaultHttpClient();
     }
 
-    public InputStream loadAsStream(final String url, final int timeout) throws IOException {
-        // todo use timeout
+    public InputStream loadWithHeaders(final String url, final int timeout, final Map<String, String> headers) throws IOException {
         final HttpGet httpGet = new HttpGet(url);
+        for (final Map.Entry<String, String> entry : headers.entrySet()){
+            httpGet.setHeader(entry.getKey(), entry.getValue());
+        }
         final HttpParams httpParams = httpClient.getParams();
         HttpConnectionParams.setConnectionTimeout(httpParams, timeout);
         HttpConnectionParams.setSoTimeout(httpParams, timeout);
         final HttpResponse httpResponse = httpClient.execute(httpGet);
         return httpResponse.getEntity().getContent();
+
+    }
+
+    public InputStream loadAsStream(final String url, final int timeout) throws IOException {
+        return loadWithHeaders(url, timeout, Collections.<String, String>emptyMap());
     }
 
     public LoadedXml load(final String url, final int timeout) {

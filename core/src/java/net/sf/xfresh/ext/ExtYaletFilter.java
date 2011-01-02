@@ -34,23 +34,30 @@ public class ExtYaletFilter extends YaletFilter {
     private static final String XFRESH_EXT_URI = "http://xfresh.sf.net/ext";
     private static final String HTTP_ELEMENT = "http";
     private static final String JS_ELEMENT = "js";
+    private static final String AUTH_ELEMENT = "auth";
+
+    private static final String JS_OUT_NAME = "out";
+    private static final String JS_SRC_ATTR = "src";
+
+    private static final int DEFAULT_TIMEOUT = 300;
+
+    private final AuthHandler authHandler;
+
     private String httpUrl;
     private StringBuilder jsContent;
     private Context jsContext;
     private Scriptable jsScope;
-    private static final String JS_OUT_NAME = "out";
     private HttpLoader httpLoader;
-    private static final int DEFAULT_TIMEOUT = 300;
-    private static final String JS_SRC_ATTR = "src";
     private String resourceBase;
 
-    public ExtYaletFilter(final YaletResolver yaletResolver,
-                          final SaxGenerator saxGenerator,
+    public ExtYaletFilter(final SingleYaletProcessor singleYaletProcessor,
+                          final AuthHandler authHandler,
                           final InternalRequest request,
                           final InternalResponse response, final String resourceBase) {
-        super(yaletResolver, saxGenerator, request, response);
+        super(singleYaletProcessor, request, response);
         this.resourceBase = resourceBase;
         httpLoader = new HttpLoader();
+        this.authHandler = authHandler;
     }
 
     @Override
@@ -82,6 +89,8 @@ public class ExtYaletFilter extends YaletFilter {
                     log.error("Can't read js from file: " + src, e); //ignored
                 }
             }
+        } else if (isAuthBlock(uri, localName)) {
+            //do nothing
         } else {
             super.startElement(uri, localName, qName, atts);
         }
@@ -119,6 +128,8 @@ public class ExtYaletFilter extends YaletFilter {
                 processJs();
             }
             jsContent = null;
+        } else if (isAuthBlock(uri, localName)) {
+            processAuthBlock();
         } else {
             super.endElement(uri, localName, qName);
         }
@@ -184,6 +195,10 @@ public class ExtYaletFilter extends YaletFilter {
         }
     }
 
+    private void processAuthBlock() {
+        authHandler.processAuth(request, response, getContentHandler());
+    }
+
     private boolean checkHttpUrl() {
         return httpUrl != null && httpUrl.startsWith("http://");
     }
@@ -194,5 +209,9 @@ public class ExtYaletFilter extends YaletFilter {
 
     private boolean isJsBlock(final String uri, final String localName) {
         return XFRESH_EXT_URI.equalsIgnoreCase(uri) && JS_ELEMENT.equalsIgnoreCase(localName);
+    }
+
+    private boolean isAuthBlock(final String uri, final String localName) {
+        return XFRESH_EXT_URI.equalsIgnoreCase(uri) && AUTH_ELEMENT.equalsIgnoreCase(localName);
     }
 }

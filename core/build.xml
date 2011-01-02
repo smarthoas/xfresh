@@ -7,8 +7,6 @@
         <property name="classes.dir" location="${build.dir}/classes"/>
         <property name="src.dir" location="src/java"/>
 
-        <property name="javac.debug" value="on"/>
-        <property name="javac.debuglevel" value="lines"/>
 
         <fileset id="lib" dir="lib">
             <include name="**/*.jar"/>
@@ -25,8 +23,8 @@
         <javac srcdir="${src.dir}"
                destdir="${classes.dir}"
                classpathref="xfresh.classpath"
-               debug="${javac.debug}"
-               debuglevel="${javac.debuglevel}"/>
+               debug="on"
+               debuglevel="lines,vars,source"/>
 
         <mkdir dir="${dist.dir}"/>
 

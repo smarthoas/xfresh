@@ -43,25 +43,21 @@ public class YaletFilter extends XMLFilterImpl {
     private static final Logger log = Logger.getLogger(YaletFilter.class);
 
     private static final String YALET_ELEMENT = "yalet";
-    private static final String DATA_ELEMENT = "data";
-    private static final String ERRORS_ELEMENT = "errors";
     private static final String ID_ATTRIBUTE = "id";
 
-    private final YaletResolver yaletResolver;
+    private final SingleYaletProcessor singleYaletProcessor;
+
     protected final InternalRequest request;
     protected final InternalResponse response;
-    private final SaxGenerator saxGenerator;
 
     private String actionId;
     private boolean doingAction = false;
 
-    public YaletFilter(final YaletResolver yaletResolver,
-                       final SaxGenerator saxGenerator,
+    public YaletFilter(final SingleYaletProcessor singleYaletProcessor,
                        final InternalRequest request,
                        final InternalResponse response) {
         super();
-        this.yaletResolver = yaletResolver;
-        this.saxGenerator = saxGenerator;
+        this.singleYaletProcessor = singleYaletProcessor;
         this.request = request;
         this.response = response;
         actionId = null;
@@ -78,29 +74,15 @@ public class YaletFilter extends XMLFilterImpl {
 
     public void endElement(final String uri, final String localName, final String qName) throws SAXException {
         if (doingAction && YALET_ELEMENT.equalsIgnoreCase(qName)) {
-            processYalet(actionId);
+            processYalet(actionId, getContentHandler());
             doingAction = false;
         } else {
             super.endElement(uri, localName, qName);
         }
     }
 
-    private void processYalet(final String yaletId) throws SAXException {
-        final ContentHandler handler = getContentHandler();
-        final Yalet yalet = yaletResolver.findYalet(yaletId);
-        if (log.isDebugEnabled()) {
-            log.debug("Process yalet with id = " + yaletId);
-        }
-        yalet.process(request, response);
-        XmlUtil.start(handler, DATA_ELEMENT, ID_ATTRIBUTE, yaletId);
-        saxGenerator.writeXml(handler, response.getData());
-        if (!response.getErrors().isEmpty()) {
-            XmlUtil.start(handler, ERRORS_ELEMENT, ID_ATTRIBUTE, yaletId);
-            saxGenerator.writeXml(handler, response.getErrors());
-            XmlUtil.end(handler, ERRORS_ELEMENT);
-        }
-        response.clear();
-        XmlUtil.end(handler, DATA_ELEMENT);
+    private void processYalet(final String yaletId, final ContentHandler handler) throws SAXException {
+        singleYaletProcessor.processYalet(yaletId, handler, request, response);
     }
 
 }
