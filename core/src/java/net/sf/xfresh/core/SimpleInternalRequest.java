@@ -38,15 +38,21 @@ import java.util.*;
  *
  * @author Nikolay Malevanny nmalevanny@yandex-team.ru
  */
-class SimpleInternalRequest implements InternalRequest {
+public class SimpleInternalRequest implements InternalRequest {
     private static final Logger log = Logger.getLogger(SimpleInternalRequest.class);
 
     private static final String OFF_XSLT_PARAM_NAME = "_ox";
+    private static final String USER_ID_PARAM_NAME = "__user_id";
 
     private final HttpServletRequest httpRequest;
     private final String realPath;
     private Boolean needTransform = true;
     private Map<String, List<String>> allParams;
+
+    protected SimpleInternalRequest(final SimpleInternalRequest src) {
+        this.httpRequest = src.httpRequest;
+        this.realPath = src.realPath;
+    }
 
     protected SimpleInternalRequest(final HttpServletRequest httpRequest, final String realPath) {
         this.httpRequest = httpRequest;
@@ -65,7 +71,7 @@ class SimpleInternalRequest implements InternalRequest {
         if (httpRequest != null) {
             needTransform = httpRequest.getParameter(OFF_XSLT_PARAM_NAME) == null;
             if (log.isDebugEnabled()) {
-                log.debug("needTransform = " + needTransform);
+                log.debug("needTransform for " + realPath + " = " + needTransform);
             }
         }
         return needTransform;
@@ -83,60 +89,65 @@ class SimpleInternalRequest implements InternalRequest {
     public String[] getParameters(String name) {
         return httpRequest.getParameterValues(name);
     }
-    
+
     public Map<String, String> getCookies() {
-        Cookie[] cookies = httpRequest.getCookies();
+        final Cookie[] cookies = httpRequest.getCookies();
         if (cookies == null) {
-        	return Collections.emptyMap();
+            return Collections.emptyMap();
         }
-        
-        Map<String, String> result = new HashMap<String, String>();
-    	for (Cookie cookie : httpRequest.getCookies()) {
+
+        final Map<String, String> result = new HashMap<String, String>();
+        for (final Cookie cookie : httpRequest.getCookies()) {
             result.put(cookie.getName(), cookie.getValue());
         }
         return result;
     }
 
     public Map<String, List<String>> getAllParameters() {
-        if (allParams!=null) {
+        if (allParams != null) {
             return allParams;
         }
 
         allParams = new HashMap<String, List<String>>();
         final Enumeration names = httpRequest.getParameterNames();
         while (names.hasMoreElements()) {
-            String name = (String) names.nextElement();
+            final String name = (String) names.nextElement();
             final List<String> values = Arrays.asList(httpRequest.getParameterValues(name));
             allParams.put(name, values);
         }
         return allParams;
     }
-    
+
     public String getRequestURL() {
-    	return httpRequest.getRequestURL().toString();
+        return httpRequest.getRequestURL().toString();
     }
-    
+
     public String getQueryString() {
-    	return httpRequest.getQueryString();
+        return httpRequest.getQueryString();
     }
 
     public String getHeader(final String name) {
         return httpRequest.getHeader(name);
     }
 
-	public int getIntParameter(String name) {
-		return Integer.parseInt(getParameter(name));
-	}
+    public int getIntParameter(String name) {
+        return Integer.parseInt(getParameter(name));
+    }
 
     public String getRemoteAddr() {
         return httpRequest.getRemoteAddr();
     }
 
-	public int getIntParameter(String name, int defaultValue) {
-		try {
-			return Integer.parseInt(getParameter(name));
-		} catch (NumberFormatException e) {
-			return defaultValue;
-		}
-	}
+    public int getIntParameter(String name, int defaultValue) {
+        try {
+            return Integer.parseInt(getParameter(name));
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    public Long getUserId() {
+        final String userId = getParameter(USER_ID_PARAM_NAME);
+        return userId == null ? null : Long.valueOf(userId);
+    }
 }

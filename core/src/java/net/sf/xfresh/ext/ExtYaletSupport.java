@@ -16,15 +16,9 @@ public class ExtYaletSupport extends DefaultYaletSupport {
 
     private String resourceBase;
 
-    private AuthHandler authHandler = new AlwaysNoAuthHandler();
-
     @Required
     public void setResourceBase(final String resourceBase) {
         this.resourceBase = resourceBase;
-    }
-
-    public void setAuthHandler(final AuthHandler authHandler) {
-        this.authHandler = authHandler;
     }
 
     @Override

@@ -9,7 +9,7 @@
         </layout>
     </appender>
     <logger name="net.sf.xfresh" additivity="false">
-        <level value="DEBUG"/>
+        <level value="INFO"/>
         <appender-ref ref="console"/>
     </logger>
     <root>

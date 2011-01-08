@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+ "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="byName">
+
+    <!--auth beans-->
+
+    <bean id="userService" class="net.sf.xfresh.auth.DbUserService"/>
+
+    <bean id="authService" class="net.sf.xfresh.auth.CookieAuthService"/>
+
+    <!--yalets-->
+
+    <bean id="userIdYalet" class="net.sf.xfresh.auth.yalet.UserIdYalet"/>
+    <bean id="addUserYalet" class="net.sf.xfresh.auth.yalet.AddUserYalet"/>
+    <bean id="doAuthYalet" class="net.sf.xfresh.auth.yalet.DoAuthYalet"/>
+    <bean id="userInfoYalet" class="net.sf.xfresh.auth.yalet.UserInfoYalet"/>
+
+</beans>

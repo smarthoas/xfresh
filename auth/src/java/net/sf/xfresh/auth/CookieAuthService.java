@@ -32,10 +32,15 @@ public class CookieAuthService implements AuthService {
 
     public UserInfo doAuth(final String login, final String passwd, final InternalResponse res) {
         final UserInfo user = userService.getUser(login);
+        if (user == null) {
+            res.removeCookie(cookieName);
+            return null;
+        }
         final String passwdAdd = user.getPasswdAdd();
 
         final String hash = calculateHash(passwd, passwdAdd);
         if (!user.getPasswdHash().equals(hash)) {
+            res.removeCookie(cookieName);
             return null;
         }
 
@@ -47,7 +52,6 @@ public class CookieAuthService implements AuthService {
         final Map<String, String> cookies = new HashMap<String, String>();
         cookies.put(cookieName, userId + "|" + value);
         res.setCookies(cookies);
-
     }
 
     private String calculateHash(final String passwd, final String passwdAdd) {

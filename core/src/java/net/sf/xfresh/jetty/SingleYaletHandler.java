@@ -49,7 +49,7 @@ public class SingleYaletHandler extends AbstractHandler {
 
         final String realPath = target.substring(1);
 
-        log.info("Start process yalet => {" + realPath + "}. remote addr is {" + req.getRemoteAddr() + "}");
+        log.info("Start process yalet => {" + realPath + "}, remote ip {" + req.getRemoteAddr() + "}");
 
         final long startTime = System.currentTimeMillis();
 
@@ -68,6 +68,7 @@ public class SingleYaletHandler extends AbstractHandler {
             writer.flush();
             writer.close();
         } catch (Exception e) {
+            log.error("", e);
             throw new RuntimeException(e);
         }
 

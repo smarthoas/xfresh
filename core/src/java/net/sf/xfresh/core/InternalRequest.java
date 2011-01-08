@@ -60,5 +60,5 @@ public interface InternalRequest {
 
     String getHeader(String name);
 
-//    Long getUserId();
+    Long getUserId();
 }

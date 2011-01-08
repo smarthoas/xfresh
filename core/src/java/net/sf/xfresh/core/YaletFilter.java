@@ -26,12 +26,18 @@
 */
 package net.sf.xfresh.core;
 
-import org.xml.sax.helpers.XMLFilterImpl;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.ContentHandler;
+import net.sf.xfresh.ext.AuthHandler;
 import org.apache.log4j.Logger;
-import net.sf.xfresh.util.XmlUtil;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.XMLFilterImpl;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Date: 21.04.2007
@@ -50,17 +56,29 @@ public class YaletFilter extends XMLFilterImpl {
     protected final InternalRequest request;
     protected final InternalResponse response;
 
+    protected final AuthHandler authHandler;
+
     private String actionId;
     private boolean doingAction = false;
 
+    protected Long userId = null;
+
     public YaletFilter(final SingleYaletProcessor singleYaletProcessor,
+                       final AuthHandler handler,
                        final InternalRequest request,
                        final InternalResponse response) {
         super();
+        this.authHandler = handler;
         this.singleYaletProcessor = singleYaletProcessor;
         this.request = request;
         this.response = response;
         actionId = null;
+    }
+
+    @Override
+    public void startDocument() throws SAXException {
+        userId = authHandler.getUserId(request);
+        super.startDocument();
     }
 
     public void startElement(final String uri, final String localName, final String qName, final Attributes atts) throws SAXException {
@@ -82,7 +100,18 @@ public class YaletFilter extends XMLFilterImpl {
     }
 
     private void processYalet(final String yaletId, final ContentHandler handler) throws SAXException {
-        singleYaletProcessor.processYalet(yaletId, handler, request, response);
+        singleYaletProcessor.processYalet(yaletId, handler, wrap(request, userId), response);
     }
 
+
+    protected InternalRequest wrap(final InternalRequest req, final Long userId) {
+        return (InternalRequest)Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] {InternalRequest.class}, new InvocationHandler() {
+            public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+                if ("getUserId".equals(method.getName())) {
+                    return userId;
+                }
+                return method.invoke(req, args);
+            }
+        });
+    }
 }

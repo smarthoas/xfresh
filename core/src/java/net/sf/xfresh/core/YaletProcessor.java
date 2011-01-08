@@ -1,8 +1,6 @@
 package net.sf.xfresh.core;
 
-import net.sf.saxon.TransformerFactoryImpl;
 import org.apache.log4j.Logger;
-import org.apache.xalan.xsltc.trax.SmartTransformerFactoryImpl;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 import org.springframework.beans.factory.annotation.Required;
@@ -63,10 +61,8 @@ public class YaletProcessor {
         req.setCharacterEncoding(encoding);
         res.setCharacterEncoding(encoding);
 
-        if (log.isDebugEnabled()) {
-            log.debug("===Start process user request, realPath = " + realPath);
-            log.debug("method = " + req.getMethod());
-        }
+        log.info("Start process user request => {" + realPath + "}, remote ip => {" + req.getRemoteAddr() + "}, method=" + req.getMethod());
+        final long startTime = System.currentTimeMillis();
 
         final InternalRequest internalRequest = yaletSupport.createRequest(req, realPath);
 
@@ -79,6 +75,7 @@ public class YaletProcessor {
         }
 
         process(internalRequest, internalResponse, new RedirHandler(res));
+        log.info("Processing time for user request => {" + realPath + "} is " + (System.currentTimeMillis() - startTime) + " ms");
     }
 
     protected void process(final InternalRequest request,
@@ -108,13 +105,13 @@ public class YaletProcessor {
                 yaletFilter.parse(inputSource);
             }
             final String redir = response.getRedir();
-            if (redir == null) {
+            if (redir == null || !response.getErrors().isEmpty()) {
                 writer.close();
                 final Writer nativeWriter = response.getWriter();
                 nativeWriter.write(writer.toCharArray());
                 nativeWriter.flush();
                 nativeWriter.close();
-            } else {
+            } else if (redir != null) {
                 redirHandler.doRedirect(redir);
             }
         } catch (Exception e) {
@@ -144,9 +141,6 @@ public class YaletProcessor {
             }
 
             transformer = transformerFactory.newTransformer(associatedStylesheet);
-            if (log.isDebugEnabled()) {
-                log.debug("transformer class = " + transformer.getClass());
-            }
         } catch (TransformerConfigurationException e) {
             log.info("Can't create transformer: " +  e.getMessage()); //ignored
         }
@@ -154,7 +148,7 @@ public class YaletProcessor {
     }
 
     private XMLReader createReader() throws ParserConfigurationException, SAXException {
-        SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+        final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
         parserFactory.setXIncludeAware(true);
         final SAXParser saxParser = parserFactory.newSAXParser();
         final XMLReader xmlReader = saxParser.getXMLReader();

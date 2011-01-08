@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+ "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="byName">
+
+	<!--Spring helpers-->
+    <bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor"/>
+
+    <!--Jetty beans-->
+    <bean id="serverInitializer" class="net.sf.xfresh.jetty.JettyServerInitializer">
+        <property name="port" value="${app.port}"/>
+        <property name="maxThreads" value="10"/>
+        <property name="handlers">
+            <list>
+                <bean class="net.sf.xfresh.jetty.SingleYaletHandler"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+          lazy-init="false">
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="locations">
+            <list>
+                <value>app.properties</value>
+            </list>
+        </property>
+    </bean>
+
+	<!--Fresh core beans-->
+
+    <bean id="yaletSupport" class="net.sf.xfresh.core.DefaultYaletSupport"/>
+
+    <bean id="yaletResolver" class="net.sf.xfresh.core.SpringYaletResolver"/>
+
+    <bean id="saxGenerator" class="net.sf.xfresh.core.DefaultSaxGenerator"/>
+
+    <bean id="singleYaletProcessor" class="net.sf.xfresh.core.DefaultSingleYaletProcessor"/>
+
+</beans>

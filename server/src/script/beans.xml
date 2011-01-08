@@ -19,7 +19,7 @@
                 <bean class="net.sf.xfresh.server.UrlRewriteHandler">
                     <property name="handler">
                         <bean class="net.sf.xfresh.jetty.YaletXmlPageHandler">
-                            <property name="resourceBase" value="./web"/>
+                            <property name="resourceBase" ref="resourseBase"/>
                         </bean>
                     </property>
                     <property name="pathPatternToPage">
@@ -27,6 +27,9 @@
                             <entry key="/" value="/index.xml"/>
                         </map>
                     </property>
+                </bean>
+                <bean class="org.mortbay.jetty.handler.ResourceHandler">
+                    <property name="resourceBase" ref="resourseBase"/>
                 </bean>
             </list>
         </property>
@@ -43,6 +46,7 @@
             <!--<bean class="net.sf.xfresh.ext.AlwaysNoAuthHandler"/>-->
             <bean class="net.sf.xfresh.ext.SimpleHttpAuthHandler">
                 <property name="authUrl" value="http://localhost:33001/userInfo"/>
+                <property name="userIdXpath" value="data/user-info/uid/text()"/>
             </bean>
         </property>
     </bean>

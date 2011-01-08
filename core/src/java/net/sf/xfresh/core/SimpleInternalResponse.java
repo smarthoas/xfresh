@@ -98,9 +98,15 @@ class SimpleInternalResponse implements InternalResponse {
     }
     
     public void setCookies(Map<String, String> cookies) {
-        for (Map.Entry<String, String> cookie : cookies.entrySet()) {
+        for (final Map.Entry<String, String> cookie : cookies.entrySet()) {
             httpResponse.addCookie(new Cookie(cookie.getKey(), cookie.getValue()));
         }
+    }
+
+    public void removeCookie(final String name) {
+        final Cookie cookie = new Cookie(name, "deleted");
+        cookie.setMaxAge(0);
+        httpResponse.addCookie(cookie);
     }
 
     public void putAttribute(final String name, final Object value) {
@@ -114,5 +120,9 @@ class SimpleInternalResponse implements InternalResponse {
     public void clear() {
         data.clear();
         errors.clear();
+    }
+
+    public void setHttpStatus(final int statusCode) {
+        httpResponse.setStatus(statusCode);
     }
 }

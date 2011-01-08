@@ -1,9 +1,12 @@
 package net.sf.xfresh.ext;
 
 import net.sf.xfresh.core.*;
+import net.sf.xfresh.core.xml.Xmler;
 import net.sf.xfresh.util.XmlUtil;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.log4j.Logger;
+import org.mortbay.jetty.HttpStatus;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.Undefined;
@@ -14,13 +17,16 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.net.ConnectException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Date: Nov 24, 2010
@@ -35,29 +41,28 @@ public class ExtYaletFilter extends YaletFilter {
     private static final String HTTP_ELEMENT = "http";
     private static final String JS_ELEMENT = "js";
     private static final String AUTH_ELEMENT = "auth";
+    private static final String REDIRECT_ELEMENT = "http-redirect";
 
     private static final String JS_OUT_NAME = "out";
     private static final String JS_SRC_ATTR = "src";
 
     private static final int DEFAULT_TIMEOUT = 300;
 
-    private final AuthHandler authHandler;
+    private final HttpLoader httpLoader = new HttpLoader();
+    private final String resourceBase;
 
     private String httpUrl;
     private StringBuilder jsContent;
     private Context jsContext;
     private Scriptable jsScope;
-    private HttpLoader httpLoader;
-    private String resourceBase;
+    private String redirTo;
 
     public ExtYaletFilter(final SingleYaletProcessor singleYaletProcessor,
                           final AuthHandler authHandler,
                           final InternalRequest request,
                           final InternalResponse response, final String resourceBase) {
-        super(singleYaletProcessor, request, response);
+        super(singleYaletProcessor, authHandler, request, response);
         this.resourceBase = resourceBase;
-        httpLoader = new HttpLoader();
-        this.authHandler = authHandler;
     }
 
     @Override
@@ -90,6 +95,9 @@ public class ExtYaletFilter extends YaletFilter {
                 }
             }
         } else if (isAuthBlock(uri, localName)) {
+            //do nothing
+        } else if (isRedirectBlock(uri, localName)) {
+            this.redirTo = atts.getValue("to");
             //do nothing
         } else {
             super.startElement(uri, localName, qName, atts);
@@ -130,6 +138,8 @@ public class ExtYaletFilter extends YaletFilter {
             jsContent = null;
         } else if (isAuthBlock(uri, localName)) {
             processAuthBlock();
+        } else if (isRedirectBlock(uri, localName)) {
+            response.redirectTo(redirTo);
         } else {
             super.endElement(uri, localName, qName);
         }
@@ -178,21 +188,93 @@ public class ExtYaletFilter extends YaletFilter {
 
     private void processHttpBlock() {
         try {
-            final InputStream content = httpLoader.loadAsStream(httpUrl, DEFAULT_TIMEOUT);
-            final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
-            parserFactory.setXIncludeAware(true);
-            final SAXParser saxParser = parserFactory.newSAXParser();
-            final XMLReader xmlReader = saxParser.getXMLReader();
-            xmlReader.setFeature("http://xml.org/sax/features/namespaces", true);
-            xmlReader.setContentHandler(getContentHandler());
-            xmlReader.parse(new InputSource(content));
+            final HttpMethodResult result = httpLoader.loadAsStreamWithHeaders(httpUrl, DEFAULT_TIMEOUT, constructParametersForRemoteCall());
+
+            response.setCookies(collectCookies(result.getHeaders()));
+
+            processStatus(result.getStatusCode());
+
+            if (result.getStatusCode() == HttpServletResponse.SC_OK) {
+                writeContent(result);
+            }
+
+        } catch (ConnectException e) {
+            writeFailedBlock("BAD_CONNECTION");
+            log.error("", e);
         } catch (IOException e) {
-            log.error("Error while read url: " + httpUrl, e); //ignored
+            writeFailedBlock("IO_PROBLEM");
+            log.error("", e);
         } catch (ParserConfigurationException e) {
-            log.error("Error while parse url: " + httpUrl, e); //ignored
+            writeFailedBlock("PARSE_PROBLEM");
+            log.error("", e);
         } catch (SAXException e) {
-            log.error("Error while parse url: " + httpUrl, e); //ignored
+            writeFailedBlock("PARSE_PROBLEM");
+            log.error("", e);
         }
+    }
+
+    private void writeFailedBlock(final String message) {
+        Xmler.tag("http-error", Xmler.attribute("url", httpUrl), message).writeTo(getContentHandler());
+    }
+
+    private void writeFailedStatusBlock(final String message, final int status) {
+        Xmler.tag("http-error", Xmler.attribute("url", httpUrl).and("status", status), message).writeTo(getContentHandler());
+    }
+
+    private void writeContent(final HttpMethodResult result) throws ParserConfigurationException, SAXException, IOException {
+        final InputStream content = result.getInputStream();
+        final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+        parserFactory.setXIncludeAware(true);
+        final SAXParser saxParser = parserFactory.newSAXParser();
+        final XMLReader xmlReader = saxParser.getXMLReader();
+        xmlReader.setFeature("http://xml.org/sax/features/namespaces", true);
+        xmlReader.setContentHandler(getContentHandler());
+        xmlReader.parse(new InputSource(content));
+    }
+
+    private void processStatus(final int statusCode) {
+        if (statusCode == HttpServletResponse.SC_OK) {
+            return;
+        }
+        String message = "";
+        if (statusCode == HttpServletResponse.SC_FORBIDDEN) {
+            message = "FORBIDDEN";
+            response.addError(new ErrorInfo(message));
+        } else if (statusCode == HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
+            message = "INTERNAL_ERROR";
+            response.addError(new ErrorInfo(message));
+        } else {
+            message = "UNKNOWN_ERROR";
+            response.addError(new ErrorInfo(message));
+        }
+        writeFailedStatusBlock(message, statusCode);
+    }
+
+    private Map<String, String> collectCookies(final Map<String, List<String>> headers) {
+        final Map<String, String> cookies = new HashMap<String, String>();
+        for (final Map.Entry<String, List<String>> entry : headers.entrySet()){
+            final String headerName = entry.getKey();
+            final List<String> headerValues = entry.getValue();
+            if ("Set-Cookie".equals(headerName)) {
+                for (final String cookieHeader : headerValues) {
+                    final String[] splittedCookieHeader = cookieHeader.split(";");
+                    final String[] splitted = splittedCookieHeader[0].split("=");
+                    if (splitted.length != 2) {
+                        continue;
+                    }
+                    cookies.put(splitted[0], splitted[1]);
+                }
+            }
+        }
+        return cookies;
+    }
+
+    private Map<String, List<String>> constructParametersForRemoteCall() {
+        final Map<String, List<String>> allParameters = new HashMap<String, List<String>>(request.getAllParameters());
+        if (userId != null) {
+            allParameters.put("__user_id", Collections.singletonList(Long.toString(userId)));
+        }
+        return allParameters;
     }
 
     private void processAuthBlock() {
@@ -213,5 +295,9 @@ public class ExtYaletFilter extends YaletFilter {
 
     private boolean isAuthBlock(final String uri, final String localName) {
         return XFRESH_EXT_URI.equalsIgnoreCase(uri) && AUTH_ELEMENT.equalsIgnoreCase(localName);
+    }
+
+    private boolean isRedirectBlock(final String uri, final String localName) {
+        return XFRESH_EXT_URI.equalsIgnoreCase(uri) && REDIRECT_ELEMENT.equalsIgnoreCase(localName);
     }
 }
