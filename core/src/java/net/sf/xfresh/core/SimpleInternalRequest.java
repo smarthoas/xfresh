@@ -26,6 +26,7 @@
 */
 package net.sf.xfresh.core;
 
+import com.sun.istack.internal.Nullable;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.Cookie;
@@ -47,10 +48,12 @@ class SimpleInternalRequest implements InternalRequest {
     private final String realPath;
     private Boolean needTransform = true;
     private Map<String, List<String>> allParams;
+    private Map<String, String> cookiesMap;
 
     protected SimpleInternalRequest(final HttpServletRequest httpRequest, final String realPath) {
         this.httpRequest = httpRequest;
         this.realPath = realPath;
+        buildCookiesMap();
     }
 
     public String getRealPath() {
@@ -83,22 +86,31 @@ class SimpleInternalRequest implements InternalRequest {
     public String[] getParameters(String name) {
         return httpRequest.getParameterValues(name);
     }
-    
+
     public Map<String, String> getCookies() {
-        Cookie[] cookies = httpRequest.getCookies();
+        return cookiesMap;
+    }
+
+
+    public @Nullable String getCookie(final String name) {
+        return cookiesMap.get(name);
+    }
+
+    private void buildCookiesMap() {
+        final Cookie[] cookies = httpRequest.getCookies();
         if (cookies == null) {
-        	return Collections.emptyMap();
+            cookiesMap = Collections.emptyMap();
+            return;
         }
-        
-        Map<String, String> result = new HashMap<String, String>();
-    	for (Cookie cookie : httpRequest.getCookies()) {
-            result.put(cookie.getName(), cookie.getValue());
+
+        cookiesMap = new HashMap<String, String>();
+        for (final Cookie cookie : cookies) {
+            cookiesMap.put(cookie.getName(), cookie.getValue());
         }
-        return result;
     }
 
     public Map<String, List<String>> getAllParameters() {
-        if (allParams!=null) {
+        if (allParams != null) {
             return allParams;
         }
 
@@ -111,32 +123,32 @@ class SimpleInternalRequest implements InternalRequest {
         }
         return allParams;
     }
-    
+
     public String getRequestURL() {
-    	return httpRequest.getRequestURL().toString();
+        return httpRequest.getRequestURL().toString();
     }
-    
+
     public String getQueryString() {
-    	return httpRequest.getQueryString();
+        return httpRequest.getQueryString();
     }
 
     public String getHeader(final String name) {
         return httpRequest.getHeader(name);
     }
 
-	public int getIntParameter(String name) {
-		return Integer.parseInt(getParameter(name));
-	}
+    public int getIntParameter(String name) {
+        return Integer.parseInt(getParameter(name));
+    }
 
     public String getRemoteAddr() {
         return httpRequest.getRemoteAddr();
     }
 
-	public int getIntParameter(String name, int defaultValue) {
-		try {
-			return Integer.parseInt(getParameter(name));
-		} catch (NumberFormatException e) {
-			return defaultValue;
-		}
-	}
+    public int getIntParameter(String name, int defaultValue) {
+        try {
+            return Integer.parseInt(getParameter(name));
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
 }

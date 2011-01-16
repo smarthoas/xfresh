@@ -104,5 +104,14 @@ public class JsBlockTest extends AbstractJettyTest {
         assertTrue(content.contains("111"));
         assertEquals("-1", response.getHeaders("test")[0].getValue());
     }
+
+    public void testCookie() throws Throwable {
+        final HttpGet httpGet = buildRequest("test-cookie.xml?_ox");
+        final HttpResponse response = httpClient.execute(httpGet);
+        assertEquals(200, response.getStatusLine().getStatusCode());
+        final String content = copyToString(new InputStreamReader(response.getEntity().getContent()));
+        assertTrue(content.contains("111"));
+        assertEquals("-1", response.getHeaders("test")[0].getValue());
+    }
 }
 

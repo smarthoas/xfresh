@@ -26,6 +26,8 @@
 */
 package net.sf.xfresh.core;
 
+import com.sun.istack.internal.Nullable;
+
 import java.util.Map;
 import java.util.List;
 
@@ -59,4 +61,7 @@ public interface InternalRequest {
     String getRemoteAddr();
 
     String getHeader(String name);
+
+    @Nullable
+    String getCookie(String name);
 }
