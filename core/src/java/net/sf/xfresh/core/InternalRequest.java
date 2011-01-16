@@ -64,4 +64,6 @@ public interface InternalRequest {
 
     @Nullable
     String getCookie(String name);
+
+    Long getUserId();
 }

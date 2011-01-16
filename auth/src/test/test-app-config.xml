@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans default-lazy-init="true" default-autowire="byName">
+    <!--Spring helpers-->
+    <bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor"/>
+
+    <!--Jetty beans-->
+    <bean id="serverInitializer" class="net.sf.xfresh.jetty.JettyServerInitializer">
+        <property name="port" value="33333"/>
+        <property name="maxThreads" value="10"/>
+        <property name="handlers">
+            <list>
+                <bean class="net.sf.xfresh.jetty.YaletXmlPageHandler">
+                    <property name="resourceBase" value="./core/src/test"/>
+                </bean>
+                <bean class="org.mortbay.jetty.handler.ResourceHandler">
+                    <property name="resourceBase" value="./core/src/test"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <!--Fresh core beans-->
+    <bean id="yaletProcessor" class="net.sf.xfresh.core.YaletProcessor">
+        <property name="encoding" value="utf-8"/>
+    </bean>
+
+    <bean id="yaletSupport" class="net.sf.xfresh.ext.ExtYaletSupport">
+        <property name="resourceBase" value="./core/src/test"/>
+    </bean>
+
+
+    <bean id="yaletResolver" class="net.sf.xfresh.core.SpringYaletResolver"/>
+
+    <bean id="saxGenerator" class="net.sf.xfresh.core.DefaultSaxGenerator"/>
+
+    <bean id="singleYaletProcessor" class="net.sf.xfresh.core.DefaultSingleYaletProcessor">
+        <property name="addAdditionalInfo" value="false"/>
+    </bean>
+
+    <!--auth beans-->
+
+    <bean id="dbUserService" class="net.sf.xfresh.auth.DbUserService"/>
+
+    <!--Yalets-->
+
+
+    <!--db-->
+    <bean id="jdbcTemplate"
+          class="org.springframework.jdbc.core.simple.SimpleJdbcTemplate"
+          lazy-init="false" autowire="no">
+        <constructor-arg index="0" ref="dataSource"/>
+    </bean>
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" autowire="no">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/xfresh_auth?autoReconnect=true&#38;useUnicode=true&#38;characterEncoding=utf8&#38;useCompression=true&#38;useServerPrepStmts=true&#38;useCursorFetch=true"/>
+        <property name="username" value="xfresh"/>
+        <property name="password" value="xfresh"/>
+        <property name="maxActive" value="4"/>
+        <property name="maxIdle" value="4"/>
+        <property name="removeAbandoned" value="false"/>
+        <property name="removeAbandonedTimeout" value="300"/>
+        <property name="logAbandoned" value="true"/>
+        <property name="validationQuery" value="select 1"/>
+    </bean>
+
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager" autowire="no">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="transactionTemplate"
+          class="org.springframework.transaction.support.TransactionTemplate" autowire="no">
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+
+</beans>

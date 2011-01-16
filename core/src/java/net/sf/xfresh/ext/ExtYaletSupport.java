@@ -13,6 +13,7 @@ import org.xml.sax.XMLFilter;
  * @author Nikolay Malevanny nmalevanny@yandex-team.ru
  */
 public class ExtYaletSupport extends DefaultYaletSupport {
+
     private String resourceBase;
 
     @Required
@@ -22,6 +23,6 @@ public class ExtYaletSupport extends DefaultYaletSupport {
 
     @Override
     public XMLFilter createFilter(final InternalRequest request, final InternalResponse response) {
-        return new ExtYaletFilter(yaletResolver, saxGenerator, request, response, resourceBase);
+        return new ExtYaletFilter(singleYaletProcessor, authHandler, request, response, resourceBase);
     }
 }

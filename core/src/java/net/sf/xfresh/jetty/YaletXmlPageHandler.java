@@ -40,7 +40,9 @@ public class YaletXmlPageHandler extends AbstractHandler {
             return;
         }
         final String path = resourceBase + target;
-        log.debug("path = " + path);
+        if (log.isDebugEnabled()) {
+            log.debug("handle url => {" + path + "}");
+        }
         yaletProcessor.process(httpServletRequest, httpServletResponse, path);
     }
 }

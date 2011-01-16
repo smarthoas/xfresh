@@ -39,16 +39,21 @@ import java.util.*;
  *
  * @author Nikolay Malevanny nmalevanny@yandex-team.ru
  */
-class SimpleInternalRequest implements InternalRequest {
+public class SimpleInternalRequest implements InternalRequest {
     private static final Logger log = Logger.getLogger(SimpleInternalRequest.class);
 
     private static final String OFF_XSLT_PARAM_NAME = "_ox";
+    private static final String USER_ID_PARAM_NAME = "__user_id";
 
     private final HttpServletRequest httpRequest;
     private final String realPath;
     private Boolean needTransform = true;
     private Map<String, List<String>> allParams;
     private Map<String, String> cookiesMap;
+
+    protected SimpleInternalRequest(final SimpleInternalRequest src) {
+        this(src.httpRequest, src.realPath);
+    }
 
     protected SimpleInternalRequest(final HttpServletRequest httpRequest, final String realPath) {
         this.httpRequest = httpRequest;
@@ -68,7 +73,7 @@ class SimpleInternalRequest implements InternalRequest {
         if (httpRequest != null) {
             needTransform = httpRequest.getParameter(OFF_XSLT_PARAM_NAME) == null;
             if (log.isDebugEnabled()) {
-                log.debug("needTransform = " + needTransform);
+                log.debug("needTransform for " + realPath + " = " + needTransform);
             }
         }
         return needTransform;
@@ -97,6 +102,11 @@ class SimpleInternalRequest implements InternalRequest {
     }
 
     private void buildCookiesMap() {
+        if (httpRequest == null) {
+            cookiesMap = Collections.emptyMap();
+            return;
+        }
+
         final Cookie[] cookies = httpRequest.getCookies();
         if (cookies == null) {
             cookiesMap = Collections.emptyMap();
@@ -117,7 +127,7 @@ class SimpleInternalRequest implements InternalRequest {
         allParams = new HashMap<String, List<String>>();
         final Enumeration names = httpRequest.getParameterNames();
         while (names.hasMoreElements()) {
-            String name = (String) names.nextElement();
+            final String name = (String) names.nextElement();
             final List<String> values = Arrays.asList(httpRequest.getParameterValues(name));
             allParams.put(name, values);
         }
@@ -150,5 +160,10 @@ class SimpleInternalRequest implements InternalRequest {
         } catch (NumberFormatException e) {
             return defaultValue;
         }
+    }
+
+    public Long getUserId() {
+        final String userId = getParameter(USER_ID_PARAM_NAME);
+        return userId == null ? null : Long.valueOf(userId);
     }
 }

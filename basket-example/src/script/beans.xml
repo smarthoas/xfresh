@@ -27,12 +27,13 @@
         <property name="encoding" value="utf-8"/>
     </bean>
 
-    <!--<bean id="yaletSupport" class="net.sf.xfresh.core.DefaultYaletSupport"/>-->
-    <bean id="yaletSupport" class="net.sf.xfresh.ext.ExtYaletSupport"/>
+    <bean id="yaletSupport" class="net.sf.xfresh.core.DefaultYaletSupport"/>
 
     <bean id="yaletResolver" class="net.sf.xfresh.core.SpringYaletResolver"/>
 
     <bean id="saxGenerator" class="net.sf.xfresh.core.DefaultSaxGenerator"/>
+
+    <bean id="singleYaletProcessor" class="net.sf.xfresh.core.DefaultSingleYaletProcessor"/>
 
 	<!--Yalets-->
     <bean id="showMarketItemYalet" class="net.sf.xfresh.basket.yalets.ShowMarketItemYalet"/>

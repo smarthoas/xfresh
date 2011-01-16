@@ -34,6 +34,10 @@
 
     <bean id="saxGenerator" class="net.sf.xfresh.core.DefaultSaxGenerator"/>
 
+    <bean id="singleYaletProcessor" class="net.sf.xfresh.core.DefaultSingleYaletProcessor">
+        <property name="addAdditionalInfo" value="false"/>
+    </bean>
+
     <!--Yalets-->
     <bean id="addTestInfoYalet" class="net.sf.xfresh.mock.DoNothingYalet"/>
 

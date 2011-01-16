@@ -26,6 +26,8 @@
 */
 package net.sf.xfresh.core;
 
+import net.sf.xfresh.ext.AlwaysNoAuthHandler;
+import net.sf.xfresh.ext.AuthHandler;
 import org.xml.sax.XMLFilter;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -39,16 +41,18 @@ import javax.servlet.http.HttpServletResponse;
  * @author Nikolay Malevanny nmalevanny@yandex-team.ru
  */
 public class DefaultYaletSupport implements YaletSupport {
-    protected YaletResolver yaletResolver;
-    protected SaxGenerator saxGenerator = new DefaultSaxGenerator();
+
+    protected SingleYaletProcessor singleYaletProcessor;
+
+    protected AuthHandler authHandler = new AlwaysNoAuthHandler();
 
     @Required
-    public void setYaletResolver(final YaletResolver yaletResolver) {
-        this.yaletResolver = yaletResolver;
+    public void setSingleYaletProcessor(final SingleYaletProcessor singleYaletProcessor) {
+        this.singleYaletProcessor = singleYaletProcessor;
     }
 
-    public void setDataWriter(final SaxGenerator SaxGenerator) {
-        this.saxGenerator = SaxGenerator;
+    public void setAuthHandler(final AuthHandler authHandler) {
+        this.authHandler = authHandler;
     }
 
     public InternalRequest createRequest(final HttpServletRequest httpServletRequest, final String realPath) {
@@ -60,6 +64,6 @@ public class DefaultYaletSupport implements YaletSupport {
     }
 
     public XMLFilter createFilter(final InternalRequest request, final InternalResponse response) {
-        return new YaletFilter(yaletResolver, saxGenerator, request, response);
+        return new YaletFilter(singleYaletProcessor, authHandler, request, response);
     }
 }

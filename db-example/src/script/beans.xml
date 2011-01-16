@@ -33,6 +33,8 @@
 
     <bean id="saxGenerator" class="net.sf.xfresh.core.DefaultSaxGenerator"/>
 
+    <bean id="singleYaletProcessor" class="net.sf.xfresh.core.DefaultSingleYaletProcessor"/>
+
     <!--Yalets-->
     <bean id="checkDbYalet" class="net.sf.xfresh.dbe.CheckDbYalet"/>
     

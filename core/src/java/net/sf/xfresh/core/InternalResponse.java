@@ -58,7 +58,11 @@ public interface InternalResponse {
     
     void setCookies(Map<String, String> cookies);
 
+    void removeCookie(String name);
+
     void clear();
 
     void setHeader(String name, String value);
+
+    void setHttpStatus(int statusCode);
 }

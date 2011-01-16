@@ -26,12 +26,18 @@
 */
 package net.sf.xfresh.core;
 
-import org.xml.sax.helpers.XMLFilterImpl;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.ContentHandler;
+import net.sf.xfresh.ext.AuthHandler;
 import org.apache.log4j.Logger;
-import net.sf.xfresh.util.XmlUtil;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.XMLFilterImpl;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Date: 21.04.2007
@@ -43,28 +49,36 @@ public class YaletFilter extends XMLFilterImpl {
     private static final Logger log = Logger.getLogger(YaletFilter.class);
 
     private static final String YALET_ELEMENT = "yalet";
-    private static final String DATA_ELEMENT = "data";
-    private static final String ERRORS_ELEMENT = "errors";
     private static final String ID_ATTRIBUTE = "id";
 
-    private final YaletResolver yaletResolver;
+    private final SingleYaletProcessor singleYaletProcessor;
+
     protected final InternalRequest request;
     protected final InternalResponse response;
-    private final SaxGenerator saxGenerator;
+
+    protected final AuthHandler authHandler;
 
     private String actionId;
     private boolean doingAction = false;
 
-    public YaletFilter(final YaletResolver yaletResolver,
-                       final SaxGenerator saxGenerator,
+    protected Long userId = null;
+
+    public YaletFilter(final SingleYaletProcessor singleYaletProcessor,
+                       final AuthHandler handler,
                        final InternalRequest request,
                        final InternalResponse response) {
         super();
-        this.yaletResolver = yaletResolver;
-        this.saxGenerator = saxGenerator;
+        this.authHandler = handler;
+        this.singleYaletProcessor = singleYaletProcessor;
         this.request = request;
         this.response = response;
         actionId = null;
+    }
+
+    @Override
+    public void startDocument() throws SAXException {
+        userId = authHandler.getUserId(request);
+        super.startDocument();
     }
 
     public void startElement(final String uri, final String localName, final String qName, final Attributes atts) throws SAXException {
@@ -78,29 +92,26 @@ public class YaletFilter extends XMLFilterImpl {
 
     public void endElement(final String uri, final String localName, final String qName) throws SAXException {
         if (doingAction && YALET_ELEMENT.equalsIgnoreCase(qName)) {
-            processYalet(actionId);
+            processYalet(actionId, getContentHandler());
             doingAction = false;
         } else {
             super.endElement(uri, localName, qName);
         }
     }
 
-    private void processYalet(final String yaletId) throws SAXException {
-        final ContentHandler handler = getContentHandler();
-        final Yalet yalet = yaletResolver.findYalet(yaletId);
-        if (log.isDebugEnabled()) {
-            log.debug("Process yalet with id = " + yaletId);
-        }
-        yalet.process(request, response);
-        XmlUtil.start(handler, DATA_ELEMENT, ID_ATTRIBUTE, yaletId);
-        saxGenerator.writeXml(handler, response.getData());
-        if (!response.getErrors().isEmpty()) {
-            XmlUtil.start(handler, ERRORS_ELEMENT, ID_ATTRIBUTE, yaletId);
-            saxGenerator.writeXml(handler, response.getErrors());
-            XmlUtil.end(handler, ERRORS_ELEMENT);
-        }
-        response.clear();
-        XmlUtil.end(handler, DATA_ELEMENT);
+    private void processYalet(final String yaletId, final ContentHandler handler) throws SAXException {
+        singleYaletProcessor.processYalet(yaletId, handler, wrap(request, userId), response);
     }
 
+
+    protected InternalRequest wrap(final InternalRequest req, final Long userId) {
+        return (InternalRequest)Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] {InternalRequest.class}, new InvocationHandler() {
+            public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+                if ("getUserId".equals(method.getName())) {
+                    return userId;
+                }
+                return method.invoke(req, args);
+            }
+        });
+    }
 }
