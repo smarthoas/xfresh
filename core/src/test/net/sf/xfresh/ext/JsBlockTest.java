@@ -72,7 +72,7 @@ public class JsBlockTest extends AbstractJettyTest {
 
     public void testPerf() throws Throwable {
         if (!"net.sf.saxon.TransformerFactoryImpl".equals(System.getProperty("javax.xml.transform.TransformerFactory"))) {
-             return; 
+            return;
         }
         final long st = System.currentTimeMillis();
         final int limit = 10;
@@ -105,14 +105,14 @@ public class JsBlockTest extends AbstractJettyTest {
         assertEquals("-1", response.getHeaders("test")[0].getValue());
     }
 
-    public void tmpTestCookie() throws Throwable {
-        // todo fix
+    public void testCookie() throws Throwable {
         final HttpGet httpGet = buildRequest("test-cookie.xml?_ox");
+        httpGet.setHeader("Cookie", "test=111");
         final HttpResponse response = httpClient.execute(httpGet);
         assertEquals(200, response.getStatusLine().getStatusCode());
         final String content = copyToString(new InputStreamReader(response.getEntity().getContent()));
         assertTrue(content.contains("111"));
-        assertEquals("-1", response.getHeaders("test")[0].getValue());
+        assertEquals("test=-1", response.getHeaders("Set-Cookie")[0].getValue());
     }
 }
 
