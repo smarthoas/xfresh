@@ -23,6 +23,7 @@
         <javac srcdir="${src.dir}"
                destdir="${classes.dir}"
                classpathref="xfresh.classpath"
+               bootclasspath="${sun.boot.class.path}"
                debug="on"
                debuglevel="lines,vars,source"/>
 
