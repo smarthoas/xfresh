@@ -26,12 +26,11 @@
 */
 package net.sf.xfresh.core;
 
-import static net.sf.xfresh.util.XmlUtil.empty;
-import static net.sf.xfresh.util.XmlUtil.end;
-import static net.sf.xfresh.util.XmlUtil.start;
-import static net.sf.xfresh.util.XmlUtil.text;
-import static net.sf.xfresh.util.XmlUtil.toStandart;
-import static org.apache.commons.lang.ArrayUtils.contains;
+import net.sf.xfresh.util.XmlUtil;
+import org.apache.log4j.Logger;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -41,12 +40,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import net.sf.xfresh.util.XmlUtil;
-
-import org.apache.log4j.Logger;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
+import static net.sf.xfresh.util.XmlUtil.*;
+import static org.apache.commons.lang.ArrayUtils.contains;
 
 /**
  * Date: 21.04.2007
@@ -86,13 +81,13 @@ public class DefaultSaxGenerator implements SaxGenerator {
     };
 
     private static final Object[] EMPTY_ARGS = null;
-    
+
     private String charsetName;
 
     public void setCharsetName(final String charsetName) {
         this.charsetName = charsetName;
     }
-    
+
     public void writeXml(final ContentHandler handler, final List<? extends Object> data) throws SAXException {
         for (Object dataItem : data) {
             writeAny(handler, null, dataItem);
@@ -121,19 +116,19 @@ public class DefaultSaxGenerator implements SaxGenerator {
     }
 
     @SuppressWarnings("unchecked")
-	private void writeMap(final ContentHandler handler, final String externalName, final Map map) throws SAXException {
+    private void writeMap(final ContentHandler handler, final String externalName, final Map map) throws SAXException {
         String element = (externalName == null) ? MAP_ELEMENT : externalName;
         start(handler, element);
-        
+
         for (Object o : map.entrySet()) {
-            Map.Entry entry = (Map.Entry) o;            
+            Map.Entry entry = (Map.Entry) o;
             String entryElement = entry.getKey().toString();
-            
+
             start(handler, entryElement);
             writeShortly(handler, entry.getValue().toString());
             end(handler, entryElement);
-        }       
-        
+        }
+
         end(handler, element);
     }
 
@@ -204,6 +199,7 @@ public class DefaultSaxGenerator implements SaxGenerator {
                 String name = propertyDescriptor.getName();
                 if (!contains(STOP_NAMES, name)) {
                     Method readMethod = propertyDescriptor.getReadMethod();
+                    if (readMethod == null) continue;
                     try {
                         final Object value = readMethod.invoke(dataItem, EMPTY_ARGS);
                         if (value != dataItem) {
@@ -256,7 +252,7 @@ public class DefaultSaxGenerator implements SaxGenerator {
 //        String charsetName = "Windows-1251";
 //        try {
 //            return new String(value.getBytes(charsetName)); // todo kill encoding hack
-            return new String(value); // todo kill encoding hack
+        return new String(value); // todo kill encoding hack
 //        } catch (UnsupportedEncodingException e) {
 //            throw new RuntimeException(charsetName + " - unsupported", e);
 //        }

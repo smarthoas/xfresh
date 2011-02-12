@@ -4,9 +4,7 @@ import net.sf.xfresh.core.*;
 import net.sf.xfresh.core.xml.Xmler;
 import net.sf.xfresh.util.XmlUtil;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.conn.HttpHostConnectException;
 import org.apache.log4j.Logger;
-import org.mortbay.jetty.HttpStatus;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.Undefined;
@@ -21,7 +19,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.ConnectException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -109,7 +110,7 @@ public class ExtYaletFilter extends YaletFilter {
             jsContext = Context.enter();
             jsScope = jsContext.initStandardObjects();
             jsScope.put("writer", jsScope, new ContentWriter(getContentHandler()));
-            jsScope.put("request", jsScope, request);
+            jsScope.put("request", jsScope, wrap(request, userId));
             jsScope.put("response", jsScope, response);
             jsScope.put("httpLoader", jsScope, httpLoader);
         }
@@ -252,7 +253,7 @@ public class ExtYaletFilter extends YaletFilter {
 
     private Map<String, String> collectCookies(final Map<String, List<String>> headers) {
         final Map<String, String> cookies = new HashMap<String, String>();
-        for (final Map.Entry<String, List<String>> entry : headers.entrySet()){
+        for (final Map.Entry<String, List<String>> entry : headers.entrySet()) {
             final String headerName = entry.getKey();
             final List<String> headerValues = entry.getValue();
             if ("Set-Cookie".equals(headerName)) {
