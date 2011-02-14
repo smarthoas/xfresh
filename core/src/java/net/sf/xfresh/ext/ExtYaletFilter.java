@@ -47,10 +47,15 @@ public class ExtYaletFilter extends YaletFilter {
     private static final String JS_OUT_NAME = "out";
     private static final String JS_SRC_ATTR = "src";
 
+    private static final String DATA_ELEMENT = "data";
+    private static final String ID_ATTRIBUTE = "id";
+    private static final String JS_DATA = "jsData";
+
     private static final int DEFAULT_TIMEOUT = 300;
 
     private final HttpLoader httpLoader = new HttpLoader();
     private final String resourceBase;
+    private final SaxGenerator saxGenerator;
 
     private String httpUrl;
     private StringBuilder jsContent;
@@ -61,9 +66,10 @@ public class ExtYaletFilter extends YaletFilter {
     public ExtYaletFilter(final SingleYaletProcessor singleYaletProcessor,
                           final AuthHandler authHandler,
                           final InternalRequest request,
-                          final InternalResponse response, final String resourceBase) {
+                          final InternalResponse response, final String resourceBase, final SaxGenerator saxGenerator) {
         super(singleYaletProcessor, authHandler, request, response);
         this.resourceBase = resourceBase;
+        this.saxGenerator = saxGenerator;
     }
 
     @Override
@@ -155,6 +161,13 @@ public class ExtYaletFilter extends YaletFilter {
         final String result = processJsContent(content);
         if (result != null) {
             XmlUtil.text(getContentHandler(), result);
+        }
+        if (!response.getData().isEmpty()) {
+            XmlUtil.start(getContentHandler(), DATA_ELEMENT, ID_ATTRIBUTE, JS_DATA);
+
+            saxGenerator.writeXml(getContentHandler(), response.getData());
+            response.clear();
+            XmlUtil.end(getContentHandler(), DATA_ELEMENT);
         }
     }
 
