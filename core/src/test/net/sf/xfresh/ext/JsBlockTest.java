@@ -95,6 +95,15 @@ public class JsBlockTest extends AbstractJettyTest {
                 content);
     }
 
+    public void testJsSrcAndWriterAndXslt() throws Throwable {
+        final HttpResponse response = httpClient.execute(buildRequest("test-js-3.xml"));
+        assertEquals(200, response.getStatusLine().getStatusCode());
+        final String content = copyToString(new InputStreamReader(response.getEntity().getContent()));
+        assertEquals(
+                TEST_JS_3_RESULT,
+                content);
+    }
+
     public void testHeaders() throws Throwable {
         final HttpGet httpGet = buildRequest("test-header.xml?_ox");
         httpGet.setHeader("test", "111");
