@@ -1,12 +1,20 @@
 package net.sf.xfresh.ext;
 
+import com.sun.xml.internal.bind.v2.runtime.JAXBContextImpl;
+import com.sun.xml.internal.txw2.output.DomSerializer;
 import org.apache.log4j.Logger;
 import org.apache.xalan.xsltc.trax.DOM2SAX;
+import org.apache.xerces.parsers.DOMParser;
+import org.apache.xml.serialize.DOMSerializer;
+import org.apache.xml.serialize.XMLSerializer;
+import org.apache.xml.serializer.ToXMLSAXHandler;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Node;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 import java.io.IOException;
 
 /**
@@ -38,17 +46,17 @@ public class ContentWriter {
     }
 
     public void writeNode(final Node node) {
-        if (node ==null) {
+        if (node == null) {
             log.debug("Can't write empty node");
             return;
         }
         try {
+//            final ToXMLSAXHandler xmlSaxHandler = new ToXMLSAXHandler(contentHandler, "UTF-8");
+//            xmlSaxHandler.serialize(node);
             final DOM2SAX dom2SAX = new DOM2SAX(node);
             dom2SAX.setContentHandler(contentHandler);
             dom2SAX.parse();
-        } catch (IOException e) {
-            log.error("Can't write node", e); //ignored
-        } catch (SAXException e) {
+        } catch (Exception e) {
             log.error("Can't write node", e); //ignored
         }
     }

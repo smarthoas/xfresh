@@ -101,12 +101,13 @@
     <option name="PROJECT_PROFILE" value="Project Default" />
     <option name="USE_PROJECT_PROFILE" value="true" />
     <version value="1.0" />
-    <list size="5">
+    <list size="6">
       <item index="0" class="java.lang.String" itemvalue="SERVER PROBLEM" />
-      <item index="1" class="java.lang.String" itemvalue="INFO" />
-      <item index="2" class="java.lang.String" itemvalue="TYPO" />
-      <item index="3" class="java.lang.String" itemvalue="WARNING" />
-      <item index="4" class="java.lang.String" itemvalue="ERROR" />
+      <item index="1" class="java.lang.String" itemvalue="WEAK WARNING" />
+      <item index="2" class="java.lang.String" itemvalue="INFO" />
+      <item index="3" class="java.lang.String" itemvalue="TYPO" />
+      <item index="4" class="java.lang.String" itemvalue="WARNING" />
+      <item index="5" class="java.lang.String" itemvalue="ERROR" />
     </list>
   </component>
   <component name="JavadocGenerationManager">
@@ -168,7 +169,6 @@
         <root url="jar://$PROJECT_DIR$/core/lib/junit-4.0.jar!/" />
         <root url="file://$PROJECT_DIR$/core/lib/jakarta-commons" />
         <root url="file://$PROJECT_DIR$/core/lib/jetty" />
-        <root url="file://$PROJECT_DIR$/core/lib/spring" />
         <root url="file://$PROJECT_DIR$/core/lib/xalan" />
         <root url="jar://$PROJECT_DIR$/core/lib/log4j-1.2.15.jar!/" />
         <root url="file://$PROJECT_DIR$/core/lib/httpclient" />
@@ -176,6 +176,7 @@
         <root url="file://$PROJECT_DIR$/core/lib/saxon" />
         <root url="file://$PROJECT_DIR$/core/lib/rhino" />
         <root url="file://$PROJECT_DIR$/core/lib/jetbrains" />
+        <root url="file://$PROJECT_DIR$/core/lib/spring" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

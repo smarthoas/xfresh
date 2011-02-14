@@ -11,9 +11,9 @@ writer.write(i);
 //write(2);
 writer.write("\n\nэто кусок ноды:\n");
 writer.writeNode(loaded.evaluateToNode("/page/out-example[2]"));
-writer.write("\n\nэто загруженный документ:\n");
-writer.writeLoaded(loaded);
-writer.write("\n<a>а так не работает :) -- теги эскейпятся</a>");
+//writer.write("\n\nэто загруженный документ:\n");
+//writer.writeLoaded(loaded);
+//writer.write("\n<a>а так не работает :) -- теги эскейпятся</a>");
 //httpLoader.wait(result1);
 //if ("aaa" = request.getParameter("do_send")) {
 //    sendMessage("bla-bla");
