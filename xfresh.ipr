@@ -139,8 +139,8 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/auth/auth.iml" filepath="$PROJECT_DIR$/auth/auth.iml" />
       <module fileurl="file://$PROJECT_DIR$/basket-example/basket-example.iml" filepath="$PROJECT_DIR$/basket-example/basket-example.iml" />
-      <module fileurl="file://$PROJECT_DIR$/fbf-basket/src/basket-example.iml" filepath="$PROJECT_DIR$/fbf-basket/src/basket-example.iml" />
       <module fileurl="file://$PROJECT_DIR$/core/src/core.iml" filepath="$PROJECT_DIR$/core/src/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/db/db.iml" filepath="$PROJECT_DIR$/db/db.iml" />
       <module fileurl="file://$PROJECT_DIR$/db-example/db-example.iml" filepath="$PROJECT_DIR$/db-example/db-example.iml" />
@@ -156,7 +156,7 @@
     <option name="mySupportsUserInfoFilter" value="true" />
   </component>
   <component name="VcsDirectoryMappings">
-    <mapping directory="" vcs="" />
+    <mapping directory="" vcs="Git" />
   </component>
   <component name="XPathView.XPathProjectComponent">
     <history />

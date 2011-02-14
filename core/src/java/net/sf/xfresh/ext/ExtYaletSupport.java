@@ -3,6 +3,7 @@ package net.sf.xfresh.ext;
 import net.sf.xfresh.core.DefaultYaletSupport;
 import net.sf.xfresh.core.InternalRequest;
 import net.sf.xfresh.core.InternalResponse;
+import net.sf.xfresh.core.SaxGenerator;
 import org.springframework.beans.factory.annotation.Required;
 import org.xml.sax.XMLFilter;
 
@@ -14,15 +15,21 @@ import org.xml.sax.XMLFilter;
  */
 public class ExtYaletSupport extends DefaultYaletSupport {
 
-    private String resourceBase;
+    protected String resourceBase;
+    protected SaxGenerator saxGenerator;
 
     @Required
     public void setResourceBase(final String resourceBase) {
         this.resourceBase = resourceBase;
     }
 
+    @Required
+    public void setSaxGenerator(SaxGenerator saxGenerator) {
+        this.saxGenerator = saxGenerator;
+    }
+
     @Override
     public XMLFilter createFilter(final InternalRequest request, final InternalResponse response) {
-        return new ExtYaletFilter(singleYaletProcessor, authHandler, request, response, resourceBase);
+        return new ExtYaletFilter(singleYaletProcessor, authHandler, request, response, resourceBase, saxGenerator);
     }
 }

@@ -1,3 +1,5 @@
-var testValue = request.getHeader("test");
+var testValue = request.getCookie("test");
 writer.write(testValue);
-response.setHeader("test", -1);
+var cookies = request.getCookies();
+cookies.put("test", "-1")
+response.setCookies(cookies);
