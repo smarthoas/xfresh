@@ -49,6 +49,29 @@ public class JsBlockTest extends AbstractJettyTest {
             "</page>\n" +
             "&lt;a&gt;а так не работает :) -- теги эскейпятся&lt;/a&gt;\n" +
             "</page>";
+    private static final String TEST_JS_3_XSLT_RESULT = "<?xml version=\"1.0\" encoding=\"utf-8\"?><root>" +
+            "<?xml-stylesheet type=\"text/xsl\" href=\"test-js-3.xsl\"?><page xmlns:x=\"http://xfresh.sf.net/ext\">\n" +
+            "    <!--<x:js src=\"common-functions.js\"/>-->\n" +
+            "    1\n" +
+            "\n" +
+            "это кусок ноды:\n" +
+            "<out-example>\n" +
+            "        1001.0\n" +
+            "    </out-example>\n" +
+            "\n" +
+            "это загруженный документ:\n" +
+            "<page>\n" +
+            "    <out-example>\n" +
+            "        1\n" +
+            "    </out-example>\n" +
+            "    \n" +
+            "    <out-example>\n" +
+            "        1001.0\n" +
+            "    </out-example>\n" +
+            "    <page><a>тест</a><data id=\"addTestInfo\"/></page>\n" +
+            "</page>\n" +
+            "&lt;a&gt;а так не работает :) -- теги эскейпятся&lt;/a&gt;\n" +
+            "</page><test>8</test></root>";
 
     public JsBlockTest() {
         super();
@@ -100,7 +123,7 @@ public class JsBlockTest extends AbstractJettyTest {
         assertEquals(200, response.getStatusLine().getStatusCode());
         final String content = copyToString(new InputStreamReader(response.getEntity().getContent()));
         assertEquals(
-                TEST_JS_3_RESULT,
+                TEST_JS_3_XSLT_RESULT,
                 content);
     }
 

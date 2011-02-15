@@ -1,21 +1,15 @@
 package net.sf.xfresh.ext;
 
-import com.sun.xml.internal.bind.v2.runtime.JAXBContextImpl;
-import com.sun.xml.internal.txw2.output.DomSerializer;
 import org.apache.log4j.Logger;
 import org.apache.xalan.xsltc.trax.DOM2SAX;
-import org.apache.xerces.parsers.DOMParser;
-import org.apache.xml.serialize.DOMSerializer;
-import org.apache.xml.serialize.XMLSerializer;
-import org.apache.xml.serializer.ToXMLSAXHandler;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Node;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import java.io.IOException;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 /**
  * Date: Dec 1, 2010
@@ -54,10 +48,21 @@ public class ContentWriter {
 //            final ToXMLSAXHandler xmlSaxHandler = new ToXMLSAXHandler(contentHandler, "UTF-8");
 //            xmlSaxHandler.serialize(node);
             final DOM2SAX dom2SAX = new DOM2SAX(node);
-            dom2SAX.setContentHandler(contentHandler);
+            dom2SAX.setContentHandler(wrap(contentHandler));
             dom2SAX.parse();
         } catch (Exception e) {
             log.error("Can't write node", e); //ignored
         }
+    }
+
+    protected ContentHandler wrap(final ContentHandler req) {
+        return (ContentHandler) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{ContentHandler.class}, new InvocationHandler() {
+            public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+                if ("startDocument".equals(method.getName()) || "endDocument".equals(method.getName())) {
+                    return null;
+                }
+                return method.invoke(req, args);
+            }
+        });
     }
 }
