@@ -55,8 +55,8 @@ public class ContentWriter {
         }
     }
 
-    protected ContentHandler wrap(final ContentHandler req) {
-        return (ContentHandler) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{ContentHandler.class}, new InvocationHandler() {
+    public static ContentHandler wrap(final ContentHandler req) {
+        return (ContentHandler) Proxy.newProxyInstance(req.getClass().getClassLoader(), new Class[]{ContentHandler.class}, new InvocationHandler() {
             public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
                 if ("startDocument".equals(method.getName()) || "endDocument".equals(method.getName())) {
                     return null;

@@ -22,8 +22,6 @@ import java.util.Map;
  */
 public class SimpleHttpAuthHandler implements AuthHandler {
 
-    private final HttpLoader httpLoader = new HttpLoader();
-
     private String authUrl;
 
     private String userIdXpath;
@@ -46,7 +44,7 @@ public class SimpleHttpAuthHandler implements AuthHandler {
             final SAXParser saxParser = parserFactory.newSAXParser();
             final XMLReader xmlReader = saxParser.getXMLReader();
             xmlReader.setFeature("http://xml.org/sax/features/namespaces", true);
-            xmlReader.setContentHandler(handler);
+            xmlReader.setContentHandler(ContentWriter.wrap(handler));
             xmlReader.parse(new InputSource(content));
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -54,7 +52,7 @@ public class SimpleHttpAuthHandler implements AuthHandler {
     }
 
     private InputStream getAuthInfoStream(final Map<String, String> headers) throws IOException {
-        return httpLoader.loadAsStream(authUrl, 300, Collections.<String, List<String>>emptyMap(), headers);
+        return new HttpLoader().loadAsStream(authUrl, 300, Collections.<String, List<String>>emptyMap(), headers);
     }
 
     private Map<String, String> collectCookiesHeader(final InternalRequest req) {

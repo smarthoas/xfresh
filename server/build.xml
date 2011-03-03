@@ -9,6 +9,7 @@
         <property name="build.dir" location="build"/>
         <property name="build.classes.dir" location="${build.dir}/classes"/>
         <property name="build.lib.dir" location="${build.dir}/lib"/>
+        <property name="build.web.dir" location="${build.dir}/web"/>
 
         <fileset id="core-lib" dir="${core.dir}/lib">
             <include name="**/*.jar"/>
@@ -25,6 +26,7 @@
         <mkdir dir="${build.dir}"/>
         <mkdir dir="${build.classes.dir}"/>
         <mkdir dir="${build.lib.dir}"/>
+        <mkdir dir="${build.web.dir}"/>
     </target>
 
     <target name="build" depends="compile, copy-project-jars, copy-config, copy-libs"/>
@@ -40,10 +42,10 @@
 
     <target name="copy-project-jars" depends="compile">
         <jar
-            destfile="${build.lib.dir}/${module.name}.jar"
-            basedir="${build.classes.dir}"
-            includes="**/*.class"
-        />
+                destfile="${build.lib.dir}/${module.name}.jar"
+                basedir="${build.classes.dir}"
+                includes="**/*.class"
+                />
     </target>
 
     <target name="copy-config" depends="init">
@@ -51,6 +53,7 @@
             <fileset dir="${src.dir}/script"/>
         </copy>
         <chmod file="${build.dir}/start.sh" perm="+x"/>
+        <chmod file="${build.dir}/stop.sh" perm="+x"/>
     </target>
 
     <target name="copy-libs" depends="init">
