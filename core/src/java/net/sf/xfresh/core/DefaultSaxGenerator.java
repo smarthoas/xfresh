@@ -102,7 +102,7 @@ public class DefaultSaxGenerator implements SaxGenerator {
         } else if (dataItem instanceof Map) {
             writeMap(handler, externalName, (Map) dataItem);
         } else if (dataItem instanceof ObjectWrapper) {
-            writeItem(handler, ((ObjectWrapper) dataItem).name, ((ObjectWrapper) dataItem).obj);
+            writeAny(handler, ((ObjectWrapper) dataItem).name, ((ObjectWrapper) dataItem).obj);
         } else {
             writeItem(handler, externalName, dataItem);
         }
