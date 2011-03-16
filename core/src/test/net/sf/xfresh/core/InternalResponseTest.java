@@ -1,6 +1,8 @@
 package net.sf.xfresh.core;
 
-import junit.framework.TestCase;
+import net.sf.xfresh.jetty.AbstractJettyTest;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
 
 /**
  * Date: 21.04.2007
@@ -8,7 +10,7 @@ import junit.framework.TestCase;
  *
  * @author Nikolay Malevanny nmalevanny@yandex-team.ru
  */
-public class InternalResponseTest extends TestCase {
+public class InternalResponseTest extends AbstractJettyTest {
 
     public void testDoubleRedir() throws Exception {
         InternalResponse response = new SimpleInternalResponse(null);
@@ -20,5 +22,30 @@ public class InternalResponseTest extends TestCase {
         } catch (IllegalStateException e) {
             // ok
         }
+    }
+
+    public void testAddCookie() throws Exception {
+        HttpResponse response = httpClient.execute(buildRequest("test-addcookie.xml"));
+        assertEquals(200, response.getStatusLine().getStatusCode());
+        Header[] headers = response.getHeaders("Set-Cookie");
+        assertEquals(5, headers.length);
+
+        for (int i = 0; i < 5; ++i)
+            assert headers[i].getValue().contains("key=value");
+
+        for (int i = 1; i < 5; ++i)
+            assert headers[i].getValue().contains("Expires=");
+
+        for (int i = 2; i < 5; ++i)
+            assert headers[i].getValue().contains("Domain=.domain.com");
+
+        for (int i = 3; i < 5; ++i)
+            assert headers[i].getValue().contains("path=/test.html");
+        /*
+        //not implemented
+        ///todo: uncomment then will be implemented
+        for (int i = 4; i < 5; ++i)
+            assert headers[i].getValue().contains("HttpOnly");
+        */
     }
 }

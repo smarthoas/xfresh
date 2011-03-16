@@ -1,16 +1,14 @@
 package net.sf.xfresh.core;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.*;
-
+import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import junit.framework.TestCase;
-
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.SAXException;
 
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.*;
 
 /**
  * Date: 22.04.2007
@@ -39,8 +37,8 @@ public class DefaultSAXGeneratorTest extends TestCase {
 
     public void testMap() throws Exception {
         final Map map = new HashMap();
-        map.put("k1","v1");
-        map.put("k2","v2");
+        map.put("k1", "v1");
+        map.put("k2", "v2");
         doWrite(map);
         checkResult("<map>" + "<k1>v1</k1><k2>v2</k2>" + "</map>");
     }
@@ -53,6 +51,12 @@ public class DefaultSAXGeneratorTest extends TestCase {
     public void testSimpleObjectWithNull() throws Exception {
         doWrite(new A(null, 1));
         checkResult("<a c=\"1\"><b/></a>");
+    }
+
+    public void testWrappedObject() throws Exception {
+        DefaultSaxGenerator.ObjectWrapper wrapped = new DefaultSaxGenerator.ObjectWrapper("testName", new A("test", 1));
+        doWrite(wrapped);
+        checkResult("<testName c=\"1\"><b>test</b></testName>");
     }
 
     private static class A {
@@ -81,10 +85,10 @@ public class DefaultSAXGeneratorTest extends TestCase {
     }
 
     private void doWrite(final Object dataItem) throws SAXException, IOException {
-    	List<Object> data = new ArrayList<Object>();
-    	for (Object item : Arrays.asList(dataItem)) {
-    		data.add(item);
-    	}
+        List<Object> data = new ArrayList<Object>();
+        for (Object item : Arrays.asList(dataItem)) {
+            data.add(item);
+        }
         generator.writeXml(serializer.asContentHandler(), data);
         stringWriter.close();
     }

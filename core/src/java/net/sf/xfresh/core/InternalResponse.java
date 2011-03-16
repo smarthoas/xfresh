@@ -42,8 +42,10 @@ public interface InternalResponse {
 
     void add(final Object object);
 
+    void addWrapped(final String name, final Object object);
+
     void putAttribute(final String name, final Object value);
-    
+
     List<Object> getData();
 
     String getRedir();
@@ -53,9 +55,19 @@ public interface InternalResponse {
     Writer getWriter() throws IOException;
 
     void addError(ErrorInfo errorInfo);
-    
+
     List<ErrorInfo> getErrors();
-    
+
+    void addCookie(String name, String value);
+
+    void addCookie(String name, String value, int maxAge);
+
+    void addCookie(String name, String value, int maxAge, String domain);
+
+    void addCookie(String name, String value, int maxAge, String domain, String path);
+
+    void addCookie(String name, String value, int maxAge, String domain, String path, boolean httpOnly);
+
     void setCookies(Map<String, String> cookies);
 
     void removeCookie(String name);

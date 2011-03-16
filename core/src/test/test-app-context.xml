@@ -48,4 +48,6 @@
     <bean id="redirectYalet" class="net.sf.xfresh.mock.RedirectYalet"/>
 
     <bean id="sleepYalet" class="net.sf.xfresh.mock.SleepYalet"/>
+
+    <bean id="addCookieYalet" class="net.sf.xfresh.mock.AddCookieYalet"/>
 </beans>

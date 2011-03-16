@@ -101,6 +101,8 @@ public class DefaultSaxGenerator implements SaxGenerator {
             writeCollection(handler, externalName, (Collection) dataItem);
         } else if (dataItem instanceof Map) {
             writeMap(handler, externalName, (Map) dataItem);
+        } else if (dataItem instanceof ObjectWrapper) {
+            writeItem(handler, ((ObjectWrapper) dataItem).name, ((ObjectWrapper) dataItem).obj);
         } else {
             writeItem(handler, externalName, dataItem);
         }
@@ -256,5 +258,15 @@ public class DefaultSaxGenerator implements SaxGenerator {
 //        } catch (UnsupportedEncodingException e) {
 //            throw new RuntimeException(charsetName + " - unsupported", e);
 //        }
+    }
+
+    public static final class ObjectWrapper {
+        private final String name;
+        private final Object obj;
+
+        public ObjectWrapper(String name, Object obj) {
+            this.name = name;
+            this.obj = obj;
+        }
     }
 }

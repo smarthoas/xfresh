@@ -26,19 +26,19 @@
 */
 package net.sf.xfresh.core;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.*;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Date: 20.04.2007
  * Time: 18:31:03
- *
+ * <p/>
  * Reused from different yalets.
  *
  * @author Nikolay Malevanny nmalevanny@yandex-team.ru
@@ -57,15 +57,19 @@ class SimpleInternalResponse implements InternalResponse {
 
     public void redirectTo(final String path) {
         if (redir != null) {
-        	throw new IllegalStateException("Already redirected");
+            throw new IllegalStateException("Already redirected");
         }
         redir = path;
+    }
+
+    public void addWrapped(final String name, final Object object) {
+        data.add(new DefaultSaxGenerator.ObjectWrapper(name, object));
     }
 
     public void add(final Object object) {
         data.add(object);
     }
-    
+
     public final List<Object> getData() {
         return data;
     }
@@ -96,7 +100,32 @@ class SimpleInternalResponse implements InternalResponse {
     public void addError(final ErrorInfo errorInfo) {
         errors.add(errorInfo);
     }
-    
+
+    public void addCookie(String name, String value) {
+        addCookie(name, value, -1);
+    }
+
+    public void addCookie(String name, String value, int maxAge) {
+        addCookie(name, value, maxAge, "");
+    }
+
+    public void addCookie(String name, String value, int maxAge, String domain) {
+        addCookie(name, value, maxAge, domain, "");
+    }
+
+    public void addCookie(String name, String value, int maxAge, String domain, String path) {
+        addCookie(name, value, maxAge, domain, path, false);
+    }
+
+    public void addCookie(String name, String value, int maxAge, String domain, String path, boolean httpOnly) {
+        final Cookie cookie = new Cookie(name, value);
+        cookie.setMaxAge(maxAge);
+        cookie.setDomain(domain);
+        cookie.setPath(path);
+//        cookie.setHttpOnly(httpOnly);         //not available in java EE 5.0
+        httpResponse.addCookie(cookie);
+    }
+
     public void setCookies(Map<String, String> cookies) {
         for (final Map.Entry<String, String> cookie : cookies.entrySet()) {
             httpResponse.addCookie(new Cookie(cookie.getKey(), cookie.getValue()));
