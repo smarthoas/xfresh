@@ -27,7 +27,7 @@
 package net.sf.xfresh.core;
 
 import java.io.IOException;
-import java.io.Writer;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -54,7 +54,7 @@ public interface InternalResponse {
 
     Object getAttribute(final String name);
 
-    Writer getWriter() throws IOException;
+    OutputStream getOutputStream() throws IOException;
 
     void addError(ErrorInfo errorInfo);
 

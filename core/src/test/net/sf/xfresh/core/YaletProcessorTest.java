@@ -1,10 +1,8 @@
 package net.sf.xfresh.core;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintWriter;
-
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * Date: 20.04.2007
@@ -38,7 +36,7 @@ public class YaletProcessorTest extends AbstractDependencyInjectionSpringContext
 
         baos = new ByteArrayOutputStream();
         response = new SimpleInternalResponse(null);
-        response.setWriter(new PrintWriter(baos));
+        response.setOutputStream(baos);
     }
 
     public void testProcessFile() throws Exception {

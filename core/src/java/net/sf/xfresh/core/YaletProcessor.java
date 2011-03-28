@@ -23,10 +23,10 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import java.io.CharArrayWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 
 /**
  * Date: Nov 5, 2010
@@ -68,11 +68,11 @@ public class YaletProcessor {
 
         final InternalResponse internalResponse = yaletSupport.createResponse(res);
 
-        if (internalRequest.needTransform()) {
+        /*  if (internalRequest.needTransform()) {
             res.setContentType(TEXT_HTML);
         } else {
             res.setContentType(TEXT_XML);
-        }
+        }*/
 
         process(internalRequest, internalResponse, new RedirHandler(res));
         log.info("Processing time for user request => {" + realPath + "} is " + (System.currentTimeMillis() - startTime) + " ms");
@@ -91,32 +91,34 @@ public class YaletProcessor {
 
             yaletFilter.setParent(xmlReader);
 
-            final CharArrayWriter writer = new CharArrayWriter(INITIAL_SIZE);
+            final ByteArrayOutputStream stream = new ByteArrayOutputStream(INITIAL_SIZE);
             Transformer transformer = null;
             if (request.needTransform()) {
                 transformer = createTransformer(realPath);
             }
             if (transformer != null) {
+                response.setContentType(TEXT_HTML);
                 final SAXSource saxSource = new SAXSource(yaletFilter, inputSource);
-                transformer.transform(saxSource, new StreamResult(writer));
+                transformer.transform(saxSource, new StreamResult(stream));
             } else {
                 response.setContentType(TEXT_XML);
-                final XMLSerializer serializer = new MyXMLSerializer(writer);
+                final XMLSerializer serializer = new MyXMLSerializer(stream);
                 yaletFilter.setContentHandler(serializer);
                 yaletFilter.parse(inputSource);
             }
             final String redir = response.getRedir();
-            if (!response.getContentType().contains(TEXT_HTML) && !response.getContentType().contains(TEXT_XML)) {
+            final String contentType = response.getContentType();
+            if (contentType != null && !contentType.contains(TEXT_HTML) && !contentType.contains(TEXT_XML)) {
                 log.info("Content-Type: " + response.getContentType());
-                final Writer nativeWriter = response.getWriter();
-                nativeWriter.flush();
-                nativeWriter.close();
+                final OutputStream nativeStream = response.getOutputStream();
+                nativeStream.flush();
+                nativeStream.close();
             } else if (redir == null || !response.getErrors().isEmpty()) {
-                writer.close();
-                final Writer nativeWriter = response.getWriter();
-                nativeWriter.write(writer.toCharArray());
-                nativeWriter.flush();
-                nativeWriter.close();
+                stream.close();
+                final OutputStream nativeStream = response.getOutputStream();
+                nativeStream.write(stream.toByteArray());
+                nativeStream.flush();
+                nativeStream.close();
             } else if (redir != null) {
                 redirHandler.doRedirect(redir);
             }
@@ -125,9 +127,9 @@ public class YaletProcessor {
             throw new ServletException("Can't process file " + realPath, e);
         } finally {
             try {
-                final Writer nativeWriter = response.getWriter();
-                nativeWriter.flush();
-                nativeWriter.close();
+                final OutputStream nativeStream = response.getOutputStream();
+                nativeStream.flush();
+                nativeStream.close();
             } catch (IOException e) {
                 log.error("Error:", e); //ignored
             }
@@ -165,7 +167,7 @@ public class YaletProcessor {
     private static class MyXMLSerializer extends XMLSerializer {
         private static final String XML_STYLESHEET_PI = "xml-stylesheet";
 
-        public MyXMLSerializer(final Writer writer) {
+        public MyXMLSerializer(final OutputStream writer) {
             super(writer, DEFAULT_FORMAT);
         }
 

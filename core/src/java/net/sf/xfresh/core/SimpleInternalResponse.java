@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.Writer;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +51,7 @@ class SimpleInternalResponse implements InternalResponse {
     private List<Object> data = new ArrayList<Object>();
     private List<ErrorInfo> errors = new ArrayList<ErrorInfo>();
     private Map<String, Object> attributes = new HashMap<String, Object>();
-    private Writer writer;
+    private OutputStream outputStream;
 
     protected SimpleInternalResponse(final HttpServletResponse httpResponse) {
         this.httpResponse = httpResponse;
@@ -92,19 +92,19 @@ class SimpleInternalResponse implements InternalResponse {
         return redir;
     }
 
-    void setWriter(final Writer writer) {
-        this.writer = writer;
+    void setOutputStream(final OutputStream outputStream) {
+        this.outputStream = outputStream;
     }
 
     public void setHeader(final String name, final String value) {
         httpResponse.setHeader(name, value);
     }
 
-    public Writer getWriter() throws IOException {
-        if (writer == null && httpResponse != null) {
-            writer = httpResponse.getWriter();
+    public OutputStream getOutputStream() throws IOException {
+        if (outputStream == null && httpResponse != null) {
+            outputStream = httpResponse.getOutputStream();
         }
-        return writer;
+        return outputStream;
     }
 
     public void addError(final ErrorInfo errorInfo) {
@@ -166,10 +166,12 @@ class SimpleInternalResponse implements InternalResponse {
     }
 
     public void setContentType(String contentType) {
-        httpResponse.setContentType(contentType);
+        if (httpResponse != null) {
+            httpResponse.setContentType(contentType);
+        }
     }
 
     public String getContentType() {
-        return httpResponse.getContentType();
+        return httpResponse == null ? null : httpResponse.getContentType();
     }
 }
