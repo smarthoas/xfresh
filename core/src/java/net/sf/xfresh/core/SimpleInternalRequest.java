@@ -47,7 +47,7 @@ public class SimpleInternalRequest implements InternalRequest {
 
     private final HttpServletRequest httpRequest;
     private final String realPath;
-    private Boolean needTransform = true;
+    private boolean needTransform = true;
     private Map<String, List<String>> allParams;
     private Map<String, String> cookiesMap;
 
@@ -65,7 +65,7 @@ public class SimpleInternalRequest implements InternalRequest {
         return realPath;
     }
 
-    void setNeedTransform(final Boolean needTransform) {
+    void setNeedTransform(final boolean needTransform) {
         this.needTransform = needTransform;
     }
 
@@ -97,7 +97,9 @@ public class SimpleInternalRequest implements InternalRequest {
     }
 
 
-    public @Nullable String getCookie(final String name) {
+    public
+    @Nullable
+    String getCookie(final String name) {
         return cookiesMap.get(name);
     }
 
@@ -150,16 +152,28 @@ public class SimpleInternalRequest implements InternalRequest {
         return Integer.parseInt(getParameter(name));
     }
 
-    public String getRemoteAddr() {
-        return httpRequest.getRemoteAddr();
-    }
-
     public int getIntParameter(String name, int defaultValue) {
         try {
             return Integer.parseInt(getParameter(name));
         } catch (NumberFormatException e) {
             return defaultValue;
         }
+    }
+
+    public long getLongParameter(String name) {
+        return Long.parseLong(getParameter(name));
+    }
+
+    public long getLongParameter(String name, long defaultValue) {
+        try {
+            return Long.parseLong(getParameter(name));
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    public String getRemoteAddr() {
+        return httpRequest.getRemoteAddr();
     }
 
     public Long getUserId() {

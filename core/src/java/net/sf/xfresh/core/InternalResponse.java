@@ -42,6 +42,8 @@ public interface InternalResponse {
 
     void add(final Object object);
 
+    <K, V> void addMap(final Map<K, V> map, SaxWriter<Map.Entry<K, V>> writer);
+
     void addWrapped(final String name, final Object object);
 
     void putAttribute(final String name, final Object value);
@@ -77,4 +79,8 @@ public interface InternalResponse {
     void setHeader(String name, String value);
 
     void setHttpStatus(int statusCode);
+
+    void setContentType(String contentType);
+
+    String getContentType();
 }

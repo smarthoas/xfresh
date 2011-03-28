@@ -28,8 +28,8 @@ package net.sf.xfresh.core;
 
 import com.sun.istack.internal.Nullable;
 
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Date: 20.04.2007
@@ -45,18 +45,22 @@ public interface InternalRequest {
     String getParameter(final String name);
 
     String[] getParameters(final String name);
-    
+
     Map<String, String> getCookies();
 
     Map<String, List<String>> getAllParameters();
-    
+
     String getRequestURL();
-    
+
     String getQueryString();
-    
+
     int getIntParameter(final String name);
-    
+
     int getIntParameter(final String name, final int defaultValue);
+
+    long getLongParameter(final String name);
+
+    long getLongParameter(final String name, final long defaultValue);
 
     String getRemoteAddr();
 

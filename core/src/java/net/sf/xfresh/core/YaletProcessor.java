@@ -39,7 +39,7 @@ public class YaletProcessor {
 
     private static final String DEFAULT_ENCODING = "utf-8";
     private static final OutputFormat DEFAULT_FORMAT = new OutputFormat("XML", DEFAULT_ENCODING, false);
-    private static final int INITIAL_SIZE = 1024*64;
+    private static final int INITIAL_SIZE = 1024 * 64;
     private static final String TEXT_HTML = "text/html";
     private static final String TEXT_XML = "text/xml";
 
@@ -100,12 +100,17 @@ public class YaletProcessor {
                 final SAXSource saxSource = new SAXSource(yaletFilter, inputSource);
                 transformer.transform(saxSource, new StreamResult(writer));
             } else {
+                response.setContentType(TEXT_XML);
                 final XMLSerializer serializer = new MyXMLSerializer(writer);
                 yaletFilter.setContentHandler(serializer);
                 yaletFilter.parse(inputSource);
             }
             final String redir = response.getRedir();
-            if (redir == null || !response.getErrors().isEmpty()) {
+            if (!response.getContentType().equals(TEXT_HTML) && !response.getContentType().equals(TEXT_XML)) {
+                final Writer nativeWriter = response.getWriter();
+                nativeWriter.flush();
+                nativeWriter.close();
+            } else if (redir == null || !response.getErrors().isEmpty()) {
                 writer.close();
                 final Writer nativeWriter = response.getWriter();
                 nativeWriter.write(writer.toCharArray());
@@ -136,13 +141,13 @@ public class YaletProcessor {
             final StreamSource streamSource = new StreamSource(realPath);
             final Source associatedStylesheet = transformerFactory.getAssociatedStylesheet(streamSource,
                     null, null, null);
-            if (associatedStylesheet==null) {
+            if (associatedStylesheet == null) {
                 return null;
             }
 
             transformer = transformerFactory.newTransformer(associatedStylesheet);
         } catch (TransformerConfigurationException e) {
-            log.info("Can't create transformer: " +  e.getMessage()); //ignored
+            log.info("Can't create transformer: " + e.getMessage()); //ignored
         }
         return transformer;
     }

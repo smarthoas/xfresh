@@ -26,6 +26,8 @@
 */
 package net.sf.xfresh.core;
 
+import org.xml.sax.SAXException;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -63,11 +65,19 @@ class SimpleInternalResponse implements InternalResponse {
     }
 
     public void addWrapped(final String name, final Object object) {
-        data.add(new DefaultSaxGenerator.ObjectWrapper(name, object));
+        data.add(new SelfSaxWriter() {
+            public void writeTo(String externalName, SaxHandler saxHandler) throws SAXException {
+                saxHandler.writeAny(name, object);
+            }
+        });
     }
 
     public void add(final Object object) {
         data.add(object);
+    }
+
+    public <K, V> void addMap(Map<K, V> map, SaxWriter<Map.Entry<K, V>> writer) {
+        data.add(new MapSelfSaxWriter<K, V>(map, writer));
     }
 
     public final List<Object> getData() {
@@ -153,5 +163,13 @@ class SimpleInternalResponse implements InternalResponse {
 
     public void setHttpStatus(final int statusCode) {
         httpResponse.setStatus(statusCode);
+    }
+
+    public void setContentType(String contentType) {
+        httpResponse.setContentType(contentType);
+    }
+
+    public String getContentType() {
+        return httpResponse.getContentType();
     }
 }

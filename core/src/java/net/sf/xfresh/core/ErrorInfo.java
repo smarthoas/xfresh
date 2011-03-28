@@ -32,7 +32,7 @@ package net.sf.xfresh.core;
  *
  * @author Nikolay Malevanny nmalevanny@yandex-team.ru
  */
-public class ErrorInfo extends Object {
+public class ErrorInfo {
     private final String messageCode;
 
     public ErrorInfo(final String messageCode) {

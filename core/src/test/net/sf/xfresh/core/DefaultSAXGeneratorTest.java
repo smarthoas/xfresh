@@ -36,7 +36,7 @@ public class DefaultSAXGeneratorTest extends TestCase {
     }
 
     public void testMap() throws Exception {
-        final Map map = new HashMap();
+        final Map<String, String> map = new HashMap<String, String>();
         map.put("k1", "v1");
         map.put("k2", "v2");
         doWrite(map);
@@ -51,33 +51,6 @@ public class DefaultSAXGeneratorTest extends TestCase {
     public void testSimpleObjectWithNull() throws Exception {
         doWrite(new A(null, 1));
         checkResult("<a c=\"1\"><b/></a>");
-    }
-
-    public void testWrappedPrimitive() throws Exception {
-        DefaultSaxGenerator.ObjectWrapper wrapped = new DefaultSaxGenerator.ObjectWrapper("testName", "testString");
-        doWrite(wrapped);
-        checkResult("<testName>testString</testName>");
-    }
-
-    public void testWrappedCollection() throws Exception {
-        DefaultSaxGenerator.ObjectWrapper wrapped = new DefaultSaxGenerator.ObjectWrapper("testName", Arrays.asList("test1", "test2"));
-        doWrite(wrapped);
-        checkResult("<testName><string>test1</string><string>test2</string></testName>");
-    }
-
-    public void testWrappedMap() throws Exception {
-        final Map map = new HashMap();
-        map.put("k1", "v1");
-        map.put("k2", "v2");
-        DefaultSaxGenerator.ObjectWrapper wrapped = new DefaultSaxGenerator.ObjectWrapper("testName", map);
-        doWrite(wrapped);
-        checkResult("<testName><k1>v1</k1><k2>v2</k2></testName>");
-    }
-
-    public void testWrappedObject() throws Exception {
-        DefaultSaxGenerator.ObjectWrapper wrapped = new DefaultSaxGenerator.ObjectWrapper("testName", new A("test", 1));
-        doWrite(wrapped);
-        checkResult("<testName c=\"1\"><b>test</b></testName>");
     }
 
     private static class A {
