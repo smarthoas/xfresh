@@ -106,7 +106,8 @@ public class YaletProcessor {
                 yaletFilter.parse(inputSource);
             }
             final String redir = response.getRedir();
-            if (!response.getContentType().equals(TEXT_HTML) && !response.getContentType().equals(TEXT_XML)) {
+            if (!response.getContentType().contains(TEXT_HTML) && !response.getContentType().contains(TEXT_XML)) {
+                log.info("Content-Type: " + response.getContentType());
                 final Writer nativeWriter = response.getWriter();
                 nativeWriter.flush();
                 nativeWriter.close();
