@@ -36,8 +36,6 @@ import org.xml.sax.helpers.XMLFilterImpl;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Date: 21.04.2007
@@ -77,7 +75,7 @@ public class YaletFilter extends XMLFilterImpl {
 
     @Override
     public void startDocument() throws SAXException {
-        userId = authHandler.getUserId(request);
+        userId = authHandler.getUserId(request, response);
         super.startDocument();
     }
 
@@ -105,7 +103,7 @@ public class YaletFilter extends XMLFilterImpl {
 
 
     protected InternalRequest wrap(final InternalRequest req, final Long userId) {
-        return (InternalRequest)Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] {InternalRequest.class}, new InvocationHandler() {
+        return (InternalRequest) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{InternalRequest.class}, new InvocationHandler() {
             public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
                 if ("getUserId".equals(method.getName())) {
                     return userId;
