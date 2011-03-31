@@ -12,8 +12,8 @@ public class AddCookieYalet implements Yalet {
     public void process(InternalRequest req, InternalResponse res) {
         res.addCookie("key", "value");
         res.addCookie("key", "value", 15);
-        res.addCookie("key", "value", 16, ".domain.com");
-        res.addCookie("key", "value", 16, ".domain.com", "/test.html");
-        res.addCookie("key", "value", 16, ".domain.com", "/test.html", true);
+        res.addCookie("key", "value", 16, "localhost");
+        res.addCookie("key", "value", 16, "localhost", "/test-addcookie.xml");
+        res.addCookie("key", "value", 16, "localhost", "/test-addcookie.xml", true);
     }
 }

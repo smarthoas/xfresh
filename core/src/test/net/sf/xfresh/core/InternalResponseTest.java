@@ -31,21 +31,18 @@ public class InternalResponseTest extends AbstractJettyTest {
         assertEquals(5, headers.length);
 
         for (int i = 0; i < 5; ++i)
-            assert headers[i].getValue().contains("key=value");
+            assertEquals(true, headers[i].getValue().contains("key=value"));
 
         for (int i = 1; i < 5; ++i)
-            assert headers[i].getValue().contains("Expires=");
+            assertEquals(true, headers[i].getValue().contains("Expires="));
 
         for (int i = 2; i < 5; ++i)
-            assert headers[i].getValue().contains("Domain=.domain.com");
+            assertEquals(true, headers[i].getValue().contains("Domain=localhost"));
 
         for (int i = 3; i < 5; ++i)
-            assert headers[i].getValue().contains("path=/test.html");
-        /*
-        //not implemented
-        ///todo: uncomment then will be implemented
+            assertEquals(true, headers[i].getValue().contains("Path=/test-addcookie.xml"));
+
         for (int i = 4; i < 5; ++i)
-            assert headers[i].getValue().contains("HttpOnly");
-        */
+            assertEquals(true, headers[i].getValue().contains("HttpOnly"));
     }
 }

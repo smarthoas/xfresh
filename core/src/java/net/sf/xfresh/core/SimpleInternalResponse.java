@@ -26,6 +26,7 @@
 */
 package net.sf.xfresh.core;
 
+import org.mortbay.jetty.HttpOnlyCookie;
 import org.xml.sax.SAXException;
 
 import javax.servlet.http.Cookie;
@@ -128,11 +129,15 @@ class SimpleInternalResponse implements InternalResponse {
     }
 
     public void addCookie(String name, String value, int maxAge, String domain, String path, boolean httpOnly) {
-        final Cookie cookie = new Cookie(name, value);
+        final Cookie cookie;
+        if (httpOnly) {
+            cookie = new HttpOnlyCookie(name, value);
+        } else {
+            cookie = new Cookie(name, value);
+        }
         cookie.setMaxAge(maxAge);
         cookie.setDomain(domain);
         cookie.setPath(path);
-//        cookie.setHttpOnly(httpOnly);         //not available in java EE 5.0
         httpResponse.addCookie(cookie);
     }
 
