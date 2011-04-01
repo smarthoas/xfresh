@@ -153,14 +153,6 @@ class SimpleInternalResponse implements InternalResponse {
         httpResponse.addCookie(cookie);
     }
 
-    public void putAttribute(final String name, final Object value) {
-        attributes.put(name, value);
-    }
-
-    public Object getAttribute(final String name) {
-        return attributes.get(name);
-    }
-
     public void clear() {
         data.clear();
         errors.clear();

@@ -26,7 +26,6 @@
 */
 package net.sf.xfresh.core;
 
-import com.sun.istack.internal.Nullable;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.Cookie;
@@ -96,10 +95,15 @@ public class SimpleInternalRequest implements InternalRequest {
         return cookiesMap;
     }
 
+    public void putAttribute(String name, Object value) {
+        httpRequest.setAttribute(name, value);
+    }
 
-    public
-    @Nullable
-    String getCookie(final String name) {
+    public Object getAttribute(String name) {
+        return httpRequest.getAttribute(name);
+    }
+
+    public String getCookie(final String name) {
         return cookiesMap.get(name);
     }
 

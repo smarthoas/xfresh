@@ -46,13 +46,9 @@ public interface InternalResponse {
 
     void addWrapped(final String name, final Object object);
 
-    void putAttribute(final String name, final Object value);
-
     List<Object> getData();
 
     String getRedir();
-
-    Object getAttribute(final String name);
 
     OutputStream getOutputStream() throws IOException;
 

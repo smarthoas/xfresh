@@ -26,8 +26,6 @@
 */
 package net.sf.xfresh.core;
 
-import com.sun.istack.internal.Nullable;
-
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +43,10 @@ public interface InternalRequest {
     String getParameter(final String name);
 
     String[] getParameters(final String name);
+
+    void putAttribute(final String name, final Object value);
+
+    Object getAttribute(final String name);
 
     Map<String, String> getCookies();
 
@@ -66,7 +68,6 @@ public interface InternalRequest {
 
     String getHeader(String name);
 
-    @Nullable
     String getCookie(String name);
 
     Long getUserId();
