@@ -14,5 +14,5 @@ public interface AuthHandler {
     void processAuth(InternalRequest req, InternalResponse res, ContentHandler handler);
 
     @Nullable
-    Long getUserId(final InternalRequest req, final InternalResponse res);
+    Long getUserId(final InternalRequest req);
 }

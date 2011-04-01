@@ -67,7 +67,7 @@ public class SimpleHttpAuthHandler implements AuthHandler {
         return Collections.singletonMap("Cookie", sb.substring(0, sb.length() - 1));
     }
 
-    public Long getUserId(final InternalRequest req, final InternalResponse res) {
+    public Long getUserId(final InternalRequest req) {
         try {
             final String result = XPathFactory.newInstance().newXPath().evaluate(userIdXpath, new InputSource(getAuthInfoStream(collectCookiesHeader(req))));
             if (result == null || result.isEmpty()) {

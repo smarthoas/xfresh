@@ -15,7 +15,7 @@ public final class AlwaysNoAuthHandler implements AuthHandler {
         Xmler.tag("no-auth").writeTo(handler);
     }
 
-    public Long getUserId(final InternalRequest req, final InternalResponse res) {
+    public Long getUserId(final InternalRequest req) {
         return null;
     }
 }

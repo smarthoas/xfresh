@@ -75,7 +75,7 @@ public class YaletFilter extends XMLFilterImpl {
 
     @Override
     public void startDocument() throws SAXException {
-        userId = authHandler.getUserId(request, response);
+        userId = authHandler.getUserId(request);
         super.startDocument();
     }
 
