@@ -92,33 +92,30 @@ public class YaletProcessor {
             yaletFilter.setParent(xmlReader);
 
             final ByteArrayOutputStream stream = new ByteArrayOutputStream(INITIAL_SIZE);
-            Transformer transformer = null;
-            if (request.needTransform()) {
-                transformer = createTransformer(realPath);
+            try {
+                Transformer transformer = null;
+                if (request.needTransform()) {
+                    transformer = createTransformer(realPath);
+                }
+                if (transformer != null) {
+                    response.setContentType(TEXT_HTML);
+                    final SAXSource saxSource = new SAXSource(yaletFilter, inputSource);
+                    transformer.transform(saxSource, new StreamResult(stream));
+                } else {
+                    response.setContentType(TEXT_XML);
+                    yaletFilter.setContentHandler(new MyXMLSerializer(stream));
+                    yaletFilter.parse(inputSource);
+                }
+            } finally {
+                stream.close();
             }
-            if (transformer != null) {
-                response.setContentType(TEXT_HTML);
-                final SAXSource saxSource = new SAXSource(yaletFilter, inputSource);
-                transformer.transform(saxSource, new StreamResult(stream));
-            } else {
-                response.setContentType(TEXT_XML);
-                final XMLSerializer serializer = new MyXMLSerializer(stream);
-                yaletFilter.setContentHandler(serializer);
-                yaletFilter.parse(inputSource);
-            }
+
             final String redir = response.getRedir();
             final String contentType = response.getContentType();
             if (contentType != null && !contentType.contains(TEXT_HTML) && !contentType.contains(TEXT_XML)) {
                 log.info("Content-Type: " + response.getContentType());
-                final OutputStream nativeStream = response.getOutputStream();
-                nativeStream.flush();
-                nativeStream.close();
             } else if (redir == null || !response.getErrors().isEmpty()) {
-                stream.close();
-                final OutputStream nativeStream = response.getOutputStream();
-                nativeStream.write(stream.toByteArray());
-                nativeStream.flush();
-                nativeStream.close();
+                response.getOutputStream().write(stream.toByteArray());
             } else if (redir != null) {
                 redirHandler.doRedirect(redir);
             }

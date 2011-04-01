@@ -2,6 +2,7 @@ package net.sf.xfresh.jetty;
 
 import net.sf.xfresh.core.YaletProcessor;
 import org.apache.log4j.Logger;
+import org.mortbay.jetty.Request;
 import org.mortbay.jetty.handler.AbstractHandler;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -36,7 +37,11 @@ public class YaletXmlPageHandler extends AbstractHandler {
                        final HttpServletRequest httpServletRequest,
                        final HttpServletResponse httpServletResponse,
                        final int i) throws IOException, ServletException {
-        if (!(""+target).endsWith(".xml")) {
+        Request baseRequest = Request.getRequest(httpServletRequest);
+        if (baseRequest.isHandled()) {
+            return;
+        }
+        if (!target.endsWith(".xml")) {
             return;
         }
         final String path = resourceBase + target;
@@ -44,5 +49,6 @@ public class YaletXmlPageHandler extends AbstractHandler {
             log.debug("handle url => {" + path + "}");
         }
         yaletProcessor.process(httpServletRequest, httpServletResponse, path);
+        baseRequest.setHandled(true);
     }
 }
