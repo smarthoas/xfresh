@@ -7,13 +7,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class DigestUtils {
-    private static final MessageDigest MD5_PROTO;
-    private static final MessageDigest SHA1_PROTO;
-
-    static {
-        MD5_PROTO = safeGetInstance("MD5");
-        SHA1_PROTO = safeGetInstance("SHA-1");
-    }
+    private static final MessageDigest MD5_PROTO = safeGetInstance("MD5");
+    private static final MessageDigest SHA1_PROTO = safeGetInstance("SHA-1");
 
     private static MessageDigest safeGetInstance(String functionName) {
         try {
@@ -50,16 +45,11 @@ public class DigestUtils {
     }
 
     public static String md5String(final String in) {
-        return new BigInteger(md5(in)).toString(16);
+        return String.format("%032x", new BigInteger(1, md5(in)));
     }
 
     public static byte[] md5(final InputStream is) throws IOException {
-        MessageDigest d;
-        try {
-            d = (MessageDigest) MD5_PROTO.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
+        MessageDigest d = cloneMessageDigest(MD5_PROTO);
 
         byte[] buf = new byte[65536];
         while (0 < (is.read(
