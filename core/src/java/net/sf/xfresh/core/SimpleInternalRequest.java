@@ -147,7 +147,7 @@ public class SimpleInternalRequest implements InternalRequest {
     public String getRequestRoot() {
         StringBuffer url = httpRequest.getRequestURL();
         url.setLength(url.length() - httpRequest.getRequestURI().length());
-        url.append(httpRequest.getContextPath());
+        url.append(httpRequest.getContextPath() == null ? "" : httpRequest.getContextPath());
         return url.toString();
     }
 
