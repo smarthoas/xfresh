@@ -1,7 +1,10 @@
-package net.sf.xfresh.ext;
+package net.sf.xfresh.ext.auth;
 
 import net.sf.xfresh.core.InternalRequest;
 import net.sf.xfresh.core.InternalResponse;
+import net.sf.xfresh.ext.AuthHandler;
+import net.sf.xfresh.ext.ContentWriter;
+import net.sf.xfresh.ext.HttpLoader;
 import org.springframework.beans.factory.annotation.Required;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -22,9 +25,11 @@ import java.util.Map;
  */
 public class SimpleHttpAuthHandler implements AuthHandler {
 
-    private String authUrl;
+    private static final int DEFAULT_TIMEOUT = 300;
 
+    private String authUrl;
     private String userIdXpath;
+    private int timeout = DEFAULT_TIMEOUT;
 
     @Required
     public void setUserIdXpath(final String userIdXpath) {
@@ -36,14 +41,18 @@ public class SimpleHttpAuthHandler implements AuthHandler {
         this.authUrl = authUrl;
     }
 
+    public void setTimeout(final int timeout) {
+        this.timeout = timeout;
+    }
+
     public void processAuth(final InternalRequest req, final InternalResponse res, final ContentHandler handler) {
         try {
             final InputStream content = getAuthInfoStream(collectCookiesHeader(req));
             final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
             parserFactory.setXIncludeAware(true);
+            parserFactory.setNamespaceAware(true);
             final SAXParser saxParser = parserFactory.newSAXParser();
             final XMLReader xmlReader = saxParser.getXMLReader();
-            xmlReader.setFeature("http://xml.org/sax/features/namespaces", true);
             xmlReader.setContentHandler(ContentWriter.wrap(handler));
             xmlReader.parse(new InputSource(content));
         } catch (Exception e) {
@@ -52,7 +61,7 @@ public class SimpleHttpAuthHandler implements AuthHandler {
     }
 
     private InputStream getAuthInfoStream(final Map<String, String> headers) throws IOException {
-        return new HttpLoader().loadAsStream(authUrl, 300, Collections.<String, List<String>>emptyMap(), headers);
+        return new HttpLoader().loadAsStream(authUrl, timeout, Collections.<String, List<String>>emptyMap(), headers);
     }
 
     private Map<String, String> collectCookiesHeader(final InternalRequest req) {

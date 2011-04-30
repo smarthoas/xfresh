@@ -33,5 +33,5 @@ package net.sf.xfresh.core;
  * @author Nikolay Malevanny nmalevanny@yandex-team.ru
  */
 public interface YaletResolver {
-    Yalet findYalet(final String id);
+    Yalet findYalet(final String id) throws YaletResolvingException;
 }

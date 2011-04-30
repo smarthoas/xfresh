@@ -1,5 +1,6 @@
-package net.sf.xfresh.core;
+package net.sf.xfresh.core.impl;
 
+import net.sf.xfresh.core.*;
 import net.sf.xfresh.util.XmlUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;

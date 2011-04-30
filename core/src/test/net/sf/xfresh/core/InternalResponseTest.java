@@ -1,5 +1,6 @@
 package net.sf.xfresh.core;
 
+import net.sf.xfresh.core.impl.SimpleInternalResponse;
 import net.sf.xfresh.jetty.AbstractJettyTest;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;

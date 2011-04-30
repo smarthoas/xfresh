@@ -1,8 +1,9 @@
-package net.sf.xfresh.ext;
+package net.sf.xfresh.ext.auth;
 
 import net.sf.xfresh.core.InternalRequest;
 import net.sf.xfresh.core.InternalResponse;
 import net.sf.xfresh.core.xml.Xmler;
+import net.sf.xfresh.ext.AuthHandler;
 import org.xml.sax.ContentHandler;
 
 /**

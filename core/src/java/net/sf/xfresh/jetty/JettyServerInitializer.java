@@ -37,7 +37,7 @@ public class JettyServerInitializer implements InitializingBean {
         this.handlers = handlers;
     }
 
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         init();
     }
 
@@ -56,19 +56,19 @@ public class JettyServerInitializer implements InitializingBean {
             final HandlerCollection handlerCollection = new HandlerCollection();
             handlerCollection.setHandlers(handlers);
 
-            server.setConnectors(new Connector[] {connector});
+            server.setConnectors(new Connector[]{connector});
             server.setThreadPool(threadPool);
             server.setHandler(handlerCollection);
 
             server.start();
 //            server.join();
-            log.info("Server started: " + (System.currentTimeMillis() - st)  + " ms");
+            log.info("Server started: " + (System.currentTimeMillis() - st) + " ms");
         } catch (Exception e) {
             log.error("Could not initialize server: ", e);
         }
     }
 
-    protected int getPort() {
+    public int getPort() {
         return port;
     }
 }

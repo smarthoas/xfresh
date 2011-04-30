@@ -58,9 +58,9 @@ public class XmlUtil {
         AttributesImpl attributes = EMPTY_ATTRIBUTES;
         if (elementAndAttributes.length > 1) {
             attributes = new AttributesImpl();
-            for (int i = 1; i + 1 < elementAndAttributes.length; ) {
-                String attributeName = elementAndAttributes[i++];
-                String attributeValue = elementAndAttributes[i++];
+            for (int i = 1; i + 1 < elementAndAttributes.length;) {
+                final String attributeName = elementAndAttributes[i++];
+                final String attributeValue = elementAndAttributes[i++];
                 attributes.addAttribute("", attributeName, attributeName, NULL_TYPE, attributeValue);
             }
         }
@@ -72,7 +72,7 @@ public class XmlUtil {
     }
 
     public static String toStandart(final String name) {
-        String result = name.replaceAll("([a-z\\d])([A-Z])", "$1-$2").replace('_','-');
+        String result = name.replaceAll("([a-z\\d])([A-Z])", "$1-$2").replace('_', '-');
         result = result.toLowerCase();
         return result;
     }

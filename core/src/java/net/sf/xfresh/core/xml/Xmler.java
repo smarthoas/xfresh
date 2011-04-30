@@ -1,5 +1,6 @@
 package net.sf.xfresh.core.xml;
 
+import net.sf.xfresh.core.SelfWriter;
 import org.jetbrains.annotations.Nullable;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -22,7 +23,7 @@ public class Xmler {
         }
     };
 
-    public static final Tag[] EMPTY_TAG_ARRAY = new Tag[]{};
+    public static final Tag[] EMPTY_TAG_ARRAY = {};
 
     private static final Attributes EMPTY_ATTRIBUTES = new AttributesImpl();
 
@@ -197,11 +198,9 @@ public class Xmler {
 
 
     public static List<Tag> tagsList(final String name, final Collection<String> values) {
-        if (values == null) {
-            return Collections.emptyList();
-        } else {
-            return Arrays.asList(tags(name, values));
-        }
+        return values == null
+                ? Collections.<Tag>emptyList()
+                : Arrays.asList(tags(name, values));
     }
 
     /**
@@ -253,7 +252,7 @@ public class Xmler {
         return attrs;
     }
 
-    public static Attribute EMPTY_ATTRS = emptyAttrs();
+    public static final Attribute EMPTY_ATTRS = emptyAttrs();
 
     public static Attribute emptyAttrs() {
         return new Attribute() {
@@ -288,7 +287,7 @@ public class Xmler {
         }
     }
 
-    public abstract static class Tag implements Tagable, Saxable { //just a convinience class, in case something is added
+    public abstract static class Tag implements Tagable, SelfWriter { //just a convenience class, in case something is added
 
         public Tag asTag() {
             return this;

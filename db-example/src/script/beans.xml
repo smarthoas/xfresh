@@ -27,17 +27,17 @@
         <property name="encoding" value="utf-8"/>
     </bean>
 
-    <bean id="yaletSupport" class="net.sf.xfresh.core.DefaultYaletSupport"/>
+    <bean id="yaletSupport" class="net.sf.xfresh.core.impl.DefaultYaletSupport"/>
 
-    <bean id="yaletResolver" class="net.sf.xfresh.core.SpringYaletResolver"/>
+    <bean id="yaletResolver" class="net.sf.xfresh.core.spring.SpringYaletResolver"/>
 
-    <bean id="saxGenerator" class="net.sf.xfresh.core.DefaultSaxGenerator"/>
+    <bean id="saxGenerator" class="net.sf.xfresh.core.sax.DefaultSaxGenerator"/>
 
-    <bean id="singleYaletProcessor" class="net.sf.xfresh.core.DefaultSingleYaletProcessor"/>
+    <bean id="singleYaletProcessor" class="net.sf.xfresh.core.impl.DefaultSingleYaletProcessor"/>
 
     <!--Yalets-->
     <bean id="checkDbYalet" class="net.sf.xfresh.dbe.CheckDbYalet"/>
-    
+
     <bean id="queryYalet" class="net.sf.xfresh.db.QueryYalet">
         <property name="query" value="select 1"/>
     </bean>

@@ -24,32 +24,47 @@
 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.sf.xfresh.core;
+package net.sf.xfresh.core.impl;
 
-import org.apache.log4j.Logger;
+import net.sf.xfresh.core.*;
+import net.sf.xfresh.ext.AuthHandler;
+import net.sf.xfresh.ext.auth.AlwaysNoAuthHandler;
+import org.springframework.beans.factory.annotation.Required;
+import org.xml.sax.XMLFilter;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * Date: 21.04.2007
- * Time: 19:54:12
+ * Time: 15:40:54
  *
  * @author Nikolay Malevanny nmalevanny@yandex-team.ru
  */
-class RedirHandler {
-    private static final Logger log = Logger.getLogger(RedirHandler.class);
+public class DefaultYaletSupport implements YaletSupport {
 
-    private final HttpServletResponse response;
+    protected SingleYaletProcessor singleYaletProcessor;
 
-    RedirHandler(final HttpServletResponse response) {
-        this.response = response;
+    protected AuthHandler authHandler = new AlwaysNoAuthHandler();
+
+    @Required
+    public void setSingleYaletProcessor(final SingleYaletProcessor singleYaletProcessor) {
+        this.singleYaletProcessor = singleYaletProcessor;
     }
 
-    void doRedirect(final String redir) throws IOException {
-        if (log.isDebugEnabled()) {
-            log.debug("Redirect to " + redir);
-        }
-        response.sendRedirect(redir);
+    public void setAuthHandler(final AuthHandler authHandler) {
+        this.authHandler = authHandler;
+    }
+
+    public InternalRequest createRequest(final HttpServletRequest httpServletRequest, final String realPath) {
+        return new SimpleInternalRequest(httpServletRequest, realPath);
+    }
+
+    public InternalResponse createResponse(final HttpServletResponse httpServletResponse) {
+        return new SimpleInternalResponse(httpServletResponse);
+    }
+
+    public XMLFilter createFilter(final InternalRequest request, final InternalResponse response) {
+        return new YaletFilter(singleYaletProcessor, authHandler, request, response);
     }
 }

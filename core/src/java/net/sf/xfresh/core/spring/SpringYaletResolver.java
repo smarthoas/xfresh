@@ -24,32 +24,42 @@
 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.sf.xfresh.core;
+package net.sf.xfresh.core.spring;
 
+import net.sf.xfresh.core.Yalet;
+import net.sf.xfresh.core.YaletResolver;
+import net.sf.xfresh.core.YaletResolvingException;
 import org.apache.log4j.Logger;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 /**
  * Date: 21.04.2007
- * Time: 19:54:12
+ * Time: 13:31:55
  *
  * @author Nikolay Malevanny nmalevanny@yandex-team.ru
  */
-class RedirHandler {
-    private static final Logger log = Logger.getLogger(RedirHandler.class);
+public class SpringYaletResolver implements YaletResolver, ApplicationContextAware {
+    private static final Logger log = Logger.getLogger(SpringYaletResolver.class);
+    private static final String YALET_SUFFIX = "Yalet";
 
-    private final HttpServletResponse response;
+    private ApplicationContext applicationContext;
 
-    RedirHandler(final HttpServletResponse response) {
-        this.response = response;
+    public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 
-    void doRedirect(final String redir) throws IOException {
-        if (log.isDebugEnabled()) {
-            log.debug("Redirect to " + redir);
+    public Yalet findYalet(final String id) throws YaletResolvingException {
+        final Object bean = applicationContext.getBean(id + YALET_SUFFIX);
+        if (bean == null) {
+            log.error("Can't find yalet by id: " + id);
+            throw new YaletResolvingException(id);
         }
-        response.sendRedirect(redir);
+        if (!(bean instanceof Yalet)) {
+            log.error("Illegal type (" + bean.getClass() + ") of bean with id: " + id);
+            throw new YaletResolvingException(id);
+        }
+        return (Yalet) bean;
     }
 }

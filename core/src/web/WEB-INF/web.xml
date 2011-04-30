@@ -5,7 +5,7 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
     <servlet>
         <servlet-name>dispatcher</servlet-name>
-        <servlet-class>net.sf.xfresh.core.Dispatcher</servlet-class>
+        <servlet-class>net.sf.xfresh.core.servlet.Dispatcher</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>

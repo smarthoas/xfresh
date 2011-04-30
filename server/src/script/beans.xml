@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
- "http://www.springframework.org/dtd/spring-beans.dtd">
+        "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans default-autowire="byName">
-	<!--Spring helpers-->
+    <!--Spring helpers-->
     <bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor"/>
 
     <bean id="resourseBase" class="java.lang.String">
@@ -35,7 +35,7 @@
         </property>
     </bean>
 
-	<!--Fresh core beans-->
+    <!--Fresh core beans-->
     <bean id="yaletProcessor" class="net.sf.xfresh.core.YaletProcessor">
         <property name="encoding" value="utf-8"/>
     </bean>
@@ -43,18 +43,18 @@
     <bean id="yaletSupport" class="net.sf.xfresh.ext.ExtYaletSupport">
         <property name="resourceBase" value="./web"/>
         <property name="authHandler">
-            <!--<bean class="net.sf.xfresh.ext.AlwaysNoAuthHandler"/>-->
-            <bean class="net.sf.xfresh.ext.SimpleHttpAuthHandler">
+            <!--<bean class="net.sf.xfresh.ext.auth.AlwaysNoAuthHandler"/>-->
+            <bean class="net.sf.xfresh.ext.auth.SimpleHttpAuthHandler">
                 <property name="authUrl" value="http://localhost:33001/userInfo"/>
                 <property name="userIdXpath" value="data/user-info/uid/text()"/>
             </bean>
         </property>
     </bean>
 
-    <bean id="yaletResolver" class="net.sf.xfresh.core.SpringYaletResolver"/>
+    <bean id="yaletResolver" class="net.sf.xfresh.core.spring.SpringYaletResolver"/>
 
-    <bean id="saxGenerator" class="net.sf.xfresh.core.DefaultSaxGenerator"/>
+    <bean id="saxGenerator" class="net.sf.xfresh.core.sax.DefaultSaxGenerator"/>
 
-    <bean id="singleYaletProcessor" class="net.sf.xfresh.core.DefaultSingleYaletProcessor"/>
+    <bean id="singleYaletProcessor" class="net.sf.xfresh.core.impl.DefaultSingleYaletProcessor"/>
 
 </beans>

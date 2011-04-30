@@ -1,5 +1,7 @@
 package net.sf.xfresh.core;
 
+import net.sf.xfresh.core.impl.SimpleInternalRequest;
+import net.sf.xfresh.core.impl.SimpleInternalResponse;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 import java.io.ByteArrayOutputStream;

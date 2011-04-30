@@ -30,11 +30,11 @@
     </bean>
 
 
-    <bean id="yaletResolver" class="net.sf.xfresh.core.SpringYaletResolver"/>
+    <bean id="yaletResolver" class="net.sf.xfresh.core.spring.SpringYaletResolver"/>
 
-    <bean id="saxGenerator" class="net.sf.xfresh.core.DefaultSaxGenerator"/>
+    <bean id="saxGenerator" class="net.sf.xfresh.core.sax.DefaultSaxGenerator"/>
 
-    <bean id="singleYaletProcessor" class="net.sf.xfresh.core.DefaultSingleYaletProcessor">
+    <bean id="singleYaletProcessor" class="net.sf.xfresh.core.impl.DefaultSingleYaletProcessor">
         <property name="addAdditionalInfo" value="false"/>
     </bean>
 
@@ -54,7 +54,8 @@
 
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" autowire="no">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql://localhost:3306/xfresh_auth?autoReconnect=true&#38;useUnicode=true&#38;characterEncoding=utf8&#38;useCompression=true&#38;useServerPrepStmts=true&#38;useCursorFetch=true"/>
+        <property name="url"
+                  value="jdbc:mysql://localhost:3306/xfresh_auth?autoReconnect=true&#38;useUnicode=true&#38;characterEncoding=utf8&#38;useCompression=true&#38;useServerPrepStmts=true&#38;useCursorFetch=true"/>
         <property name="username" value="xfresh"/>
         <property name="password" value="xfresh"/>
         <property name="maxActive" value="4"/>

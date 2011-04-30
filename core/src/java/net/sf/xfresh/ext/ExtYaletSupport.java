@@ -1,9 +1,9 @@
 package net.sf.xfresh.ext;
 
-import net.sf.xfresh.core.DefaultYaletSupport;
 import net.sf.xfresh.core.InternalRequest;
 import net.sf.xfresh.core.InternalResponse;
 import net.sf.xfresh.core.SaxGenerator;
+import net.sf.xfresh.core.impl.DefaultYaletSupport;
 import org.springframework.beans.factory.annotation.Required;
 import org.xml.sax.XMLFilter;
 
@@ -24,7 +24,7 @@ public class ExtYaletSupport extends DefaultYaletSupport {
     }
 
     @Required
-    public void setSaxGenerator(SaxGenerator saxGenerator) {
+    public void setSaxGenerator(final SaxGenerator saxGenerator) {
         this.saxGenerator = saxGenerator;
     }
 

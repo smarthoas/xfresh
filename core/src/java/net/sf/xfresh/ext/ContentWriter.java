@@ -6,10 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Node;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
+import org.xml.sax.helpers.XMLFilterImpl;
 
 /**
  * Date: Dec 1, 2010
@@ -45,8 +42,6 @@ public class ContentWriter {
             return;
         }
         try {
-//            final ToXMLSAXHandler xmlSaxHandler = new ToXMLSAXHandler(contentHandler, "UTF-8");
-//            xmlSaxHandler.serialize(node);
             final DOM2SAX dom2SAX = new DOM2SAX(node);
             dom2SAX.setContentHandler(wrap(contentHandler));
             dom2SAX.parse();
@@ -56,13 +51,24 @@ public class ContentWriter {
     }
 
     public static ContentHandler wrap(final ContentHandler req) {
-        return (ContentHandler) Proxy.newProxyInstance(req.getClass().getClassLoader(), new Class[]{ContentHandler.class}, new InvocationHandler() {
-            public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+        /*return (ContentHandler) Proxy.newProxyInstance(req.getClass().getClassLoader(), new Class[]{ContentHandler.class}, new InvocationHandler() {
+            public Object invoke(final Object proxy, final Method method, final Object[] args) throws InvocationTargetException, IllegalAccessException {
                 if ("startDocument".equals(method.getName()) || "endDocument".equals(method.getName())) {
                     return null;
                 }
                 return method.invoke(req, args);
             }
-        });
+        });*/
+        final XMLFilterImpl xmlFilter = new XMLFilterImpl() {
+            @Override
+            public void startDocument() throws SAXException {
+            }
+
+            @Override
+            public void endDocument() throws SAXException {
+            }
+        };
+        xmlFilter.setContentHandler(req);
+        return xmlFilter;
     }
 }

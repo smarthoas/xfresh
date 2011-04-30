@@ -5,6 +5,7 @@ import net.sf.xfresh.core.xml.Xmler;
 import net.sf.xfresh.util.XmlUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.Undefined;
@@ -94,8 +95,14 @@ public class ExtYaletFilter extends YaletFilter {
             final String src = atts.getValue(JS_SRC_ATTR);
             if (!StringUtils.isEmpty(src)) {
                 try {
-                    final String jsFileContent =
-                            FileCopyUtils.copyToString(new FileReader(resourceBase + File.separatorChar + src));
+                    String jsFileContent;
+                    final FileReader fileReader = new FileReader(resourceBase + File.separatorChar + src);
+                    try {
+                        jsFileContent = FileCopyUtils.copyToString(fileReader);
+                    } finally {
+                        fileReader.close();
+                    }
+
                     processJsAndWrite(jsFileContent);
                 } catch (IOException e) {
                     log.error("Can't read js from file: " + src, e); //ignored
@@ -152,6 +159,13 @@ public class ExtYaletFilter extends YaletFilter {
         }
     }
 
+    @Override
+    public void endDocument() throws SAXException {
+        super.endDocument();
+        if (jsContext != null)
+            Context.exit();
+    }
+
     private void processJs() throws SAXException {
         final String content = jsContent.toString();
         processJsAndWrite(content);
@@ -171,6 +185,7 @@ public class ExtYaletFilter extends YaletFilter {
         }
     }
 
+    @Nullable
     private String processJsContent(final String content) {
         if (!StringUtils.isEmpty(content)) {
             try {
@@ -179,7 +194,7 @@ public class ExtYaletFilter extends YaletFilter {
                 if (isCorrectReturnedValue(value)) {
                     return value.toString();
                 }
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 log.error("Error while processing JS (ignored): " + content, e); //ignored
             } finally {
                 jsScope.put(JS_OUT_NAME, jsScope, null);
@@ -269,6 +284,7 @@ public class ExtYaletFilter extends YaletFilter {
         for (final Map.Entry<String, List<String>> entry : headers.entrySet()) {
             final String headerName = entry.getKey();
             final List<String> headerValues = entry.getValue();
+            //todo change to HttpCookie.parse(...)
             if ("Set-Cookie".equals(headerName)) {
                 for (final String cookieHeader : headerValues) {
                     final String[] splittedCookieHeader = cookieHeader.split(";");

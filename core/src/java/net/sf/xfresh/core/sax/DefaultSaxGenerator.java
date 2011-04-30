@@ -24,8 +24,10 @@
 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.sf.xfresh.core;
+package net.sf.xfresh.core.sax;
 
+import net.sf.xfresh.core.SaxGenerator;
+import net.sf.xfresh.core.SaxHandler;
 import org.apache.log4j.Logger;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -41,15 +43,15 @@ import java.util.List;
 public class DefaultSaxGenerator implements SaxGenerator {
     private static final Logger log = Logger.getLogger(DefaultSaxGenerator.class);
 
-    private String charsetName;
+/*    private String charsetName;
 
     public void setCharsetName(final String charsetName) {
         this.charsetName = charsetName;
-    }
+    }*/
 
     public void writeXml(final ContentHandler handler, final List<?> data) throws SAXException {
-        SaxHandler saxHandler = new DefaultSaxHandler(handler);
-        for (Object dataItem : data) {
+        final SaxHandler saxHandler = new DefaultSaxHandler(handler);
+        for (final Object dataItem : data) {
             saxHandler.writeAny(null, dataItem);
         }
     }

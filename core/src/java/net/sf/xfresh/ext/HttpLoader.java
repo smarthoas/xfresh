@@ -1,7 +1,6 @@
 package net.sf.xfresh.ext;
 
 import org.apache.http.Header;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -35,7 +34,7 @@ public class HttpLoader {
     private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY =
             DocumentBuilderFactory.newInstance();
 
-    private HttpClient httpClient;
+    private final HttpClient httpClient;
 
     public HttpLoader() {
         httpClient = new DefaultHttpClient();

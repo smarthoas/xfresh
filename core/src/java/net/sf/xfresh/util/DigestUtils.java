@@ -34,13 +34,13 @@ public class DigestUtils {
         }
     }
 
-    private static byte[] applyHashFunction(MessageDigest digest, byte[]... parts) {
+    private static byte[] applyHashFunction(final MessageDigest digest, final byte[]... parts) {
         final MessageDigest d = cloneMessageDigest(digest);
         for (byte[] b : parts) d.update(b);
         return d.digest();
     }
 
-    public static byte[] md5(byte[]... parts) {
+    public static byte[] md5(final byte[]... parts) {
         return applyHashFunction(MD5_PROTO, parts);
     }
 
@@ -49,9 +49,9 @@ public class DigestUtils {
     }
 
     public static byte[] md5(final InputStream is) throws IOException {
-        MessageDigest d = cloneMessageDigest(MD5_PROTO);
+        final MessageDigest d = cloneMessageDigest(MD5_PROTO);
 
-        byte[] buf = new byte[65536];
+        final byte[] buf = new byte[65536];
         while (0 < (is.read(
                 buf, 0,
                 buf.length))) {
@@ -67,7 +67,7 @@ public class DigestUtils {
         return md5(s.getBytes());
     }
 
-    public static byte[] sha1(byte[]... parts) {
+    public static byte[] sha1(final byte[]... parts) {
         return applyHashFunction(SHA1_PROTO, parts);
     }
 }

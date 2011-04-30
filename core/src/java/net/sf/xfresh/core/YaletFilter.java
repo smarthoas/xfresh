@@ -34,6 +34,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.XMLFilterImpl;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
@@ -56,7 +57,7 @@ public class YaletFilter extends XMLFilterImpl {
 
     protected final AuthHandler authHandler;
 
-    private String actionId;
+    private String actionId = null;
     private boolean doingAction = false;
 
     protected Long userId = null;
@@ -70,7 +71,6 @@ public class YaletFilter extends XMLFilterImpl {
         this.singleYaletProcessor = singleYaletProcessor;
         this.request = request;
         this.response = response;
-        actionId = null;
     }
 
     @Override
@@ -79,6 +79,7 @@ public class YaletFilter extends XMLFilterImpl {
         super.startDocument();
     }
 
+    @Override
     public void startElement(final String uri, final String localName, final String qName, final Attributes atts) throws SAXException {
         if (!doingAction && YALET_ELEMENT.equalsIgnoreCase(qName)) {
             doingAction = true;
@@ -88,6 +89,7 @@ public class YaletFilter extends XMLFilterImpl {
         }
     }
 
+    @Override
     public void endElement(final String uri, final String localName, final String qName) throws SAXException {
         if (doingAction && YALET_ELEMENT.equalsIgnoreCase(qName)) {
             processYalet(actionId, getContentHandler());
@@ -104,7 +106,7 @@ public class YaletFilter extends XMLFilterImpl {
 
     protected InternalRequest wrap(final InternalRequest req, final Long userId) {
         return (InternalRequest) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{InternalRequest.class}, new InvocationHandler() {
-            public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+            public Object invoke(final Object proxy, final Method method, final Object[] args) throws InvocationTargetException, IllegalAccessException {
                 if ("getUserId".equals(method.getName())) {
                     return userId;
                 }

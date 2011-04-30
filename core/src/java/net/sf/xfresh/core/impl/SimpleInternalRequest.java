@@ -24,9 +24,11 @@
 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.sf.xfresh.core;
+package net.sf.xfresh.core.impl;
 
+import net.sf.xfresh.core.InternalRequest;
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.TestOnly;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +44,6 @@ public class SimpleInternalRequest implements InternalRequest {
     private static final Logger log = Logger.getLogger(SimpleInternalRequest.class);
 
     private static final String OFF_XSLT_PARAM_NAME = "_ox";
-    private static final String USER_ID_PARAM_NAME = "__user_id";
 
     private final HttpServletRequest httpRequest;
     private final String realPath;
@@ -50,11 +51,11 @@ public class SimpleInternalRequest implements InternalRequest {
     private Map<String, List<String>> allParams;
     private Map<String, String> cookiesMap;
 
-    protected SimpleInternalRequest(final SimpleInternalRequest src) {
+/*    public SimpleInternalRequest(final SimpleInternalRequest src) {
         this(src.httpRequest, src.realPath);
-    }
+    }*/
 
-    protected SimpleInternalRequest(final HttpServletRequest httpRequest, final String realPath) {
+    public SimpleInternalRequest(final HttpServletRequest httpRequest, final String realPath) {
         this.httpRequest = httpRequest;
         this.realPath = realPath;
         buildCookiesMap();
@@ -64,7 +65,8 @@ public class SimpleInternalRequest implements InternalRequest {
         return realPath;
     }
 
-    void setNeedTransform(final boolean needTransform) {
+    @TestOnly
+    public void setNeedTransform(final boolean needTransform) {
         this.needTransform = needTransform;
     }
 
@@ -87,19 +89,19 @@ public class SimpleInternalRequest implements InternalRequest {
         return value;
     }
 
-    public String[] getParameters(String name) {
+    public String[] getParameters(final String name) {
         return httpRequest.getParameterValues(name);
     }
 
     public Map<String, String> getCookies() {
-        return cookiesMap;
+        return new HashMap<String, String>(cookiesMap);
     }
 
-    public void putAttribute(String name, Object value) {
+    public void putAttribute(final String name, final Object value) {
         httpRequest.setAttribute(name, value);
     }
 
-    public Object getAttribute(String name) {
+    public Object getAttribute(final String name) {
         return httpRequest.getAttribute(name);
     }
 
@@ -127,7 +129,7 @@ public class SimpleInternalRequest implements InternalRequest {
 
     public Map<String, List<String>> getAllParameters() {
         if (allParams != null) {
-            return allParams;
+            return Collections.unmodifiableMap(allParams);
         }
 
         allParams = new HashMap<String, List<String>>();
@@ -137,7 +139,7 @@ public class SimpleInternalRequest implements InternalRequest {
             final List<String> values = Arrays.asList(httpRequest.getParameterValues(name));
             allParams.put(name, values);
         }
-        return allParams;
+        return Collections.unmodifiableMap(allParams);
     }
 
     public String getRequestURL() {
@@ -145,7 +147,7 @@ public class SimpleInternalRequest implements InternalRequest {
     }
 
     public String getRequestRoot() {
-        StringBuffer url = httpRequest.getRequestURL();
+        final StringBuffer url = httpRequest.getRequestURL();
         url.setLength(url.length() - httpRequest.getRequestURI().length());
         url.append(httpRequest.getContextPath() == null ? "" : httpRequest.getContextPath());
         return url.toString();
@@ -159,26 +161,26 @@ public class SimpleInternalRequest implements InternalRequest {
         return httpRequest.getHeader(name);
     }
 
-    public int getIntParameter(String name) {
+    public int getIntParameter(final String name) {
         return Integer.parseInt(getParameter(name));
     }
 
-    public int getIntParameter(String name, int defaultValue) {
+    public int getIntParameter(final String name, final int defaultValue) {
         try {
             return Integer.parseInt(getParameter(name));
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException ignored) {
             return defaultValue;
         }
     }
 
-    public long getLongParameter(String name) {
+    public long getLongParameter(final String name) {
         return Long.parseLong(getParameter(name));
     }
 
-    public long getLongParameter(String name, long defaultValue) {
+    public long getLongParameter(final String name, final long defaultValue) {
         try {
             return Long.parseLong(getParameter(name));
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException ignored) {
             return defaultValue;
         }
     }
@@ -188,7 +190,6 @@ public class SimpleInternalRequest implements InternalRequest {
     }
 
     public Long getUserId() {
-        final String userId = getParameter(USER_ID_PARAM_NAME);
-        return userId == null ? null : Long.valueOf(userId);
+        return null;
     }
 }

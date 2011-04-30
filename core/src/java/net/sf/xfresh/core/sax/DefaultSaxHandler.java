@@ -1,7 +1,11 @@
-package net.sf.xfresh.core;
+package net.sf.xfresh.core.sax;
 
+import net.sf.xfresh.core.SaxHandler;
+import net.sf.xfresh.core.SelfSaxWriter;
+import net.sf.xfresh.core.SelfWriter;
 import net.sf.xfresh.util.XmlUtil;
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -25,7 +29,7 @@ public class DefaultSaxHandler implements SaxHandler {
     private static final Logger log = Logger.getLogger(DefaultSaxHandler.class);
 
 
-    private static final Class[] PRIMITIVES = new Class[]{
+    private static final Class[] PRIMITIVES = {
             String.class,
             Long.class,
             Integer.class,
@@ -34,7 +38,7 @@ public class DefaultSaxHandler implements SaxHandler {
             Date.class,
     };
 
-    private static final Class[] ATTRIBUTES = new Class[]{
+    private static final Class[] ATTRIBUTES = {
             Long.class,
             Integer.class,
             Double.class,
@@ -42,25 +46,25 @@ public class DefaultSaxHandler implements SaxHandler {
             Date.class,
     };
 
-    private static final String[] STOP_NAMES = new String[]{
+    private static final String[] STOP_NAMES = {
             "class",
             "parent",
     };
 
     private static final Object[] EMPTY_ARGS = null;
+    private static final Object INVALID_OBJ = new Object();
 
     private static final String COLLECTION_ELEMENT = "collection";
     private static final String MAP_ELEMENT = "map";
-    private static final String ENTRY_ELEMENT = "entry";
+/*    private static final String ENTRY_ELEMENT = "entry";
     private static final String KEY_ELEMENT = "key";
-    private static final String VALUE_ELEMENT = "value";
+    private static final String VALUE_ELEMENT = "value";*/
 
     private final ContentHandler handler;
 
-    public DefaultSaxHandler(ContentHandler contentHandler) {
+    public DefaultSaxHandler(final ContentHandler contentHandler) {
         this.handler = contentHandler;
     }
-
 
     public void writeAny(final String externalName, final Object dataItem) throws SAXException {
         if (dataItem instanceof SelfWriter) {
@@ -77,20 +81,20 @@ public class DefaultSaxHandler implements SaxHandler {
     }
 
     public void writeCollection(final String externalName, final Collection<?> collection) throws SAXException {
-        String element = (externalName == null) ? COLLECTION_ELEMENT : externalName;
+        final String element = (externalName == null) ? COLLECTION_ELEMENT : externalName;
         start(handler, element);
-        for (Object dataItem : collection) {
+        for (final Object dataItem : collection) {
             writeAny(null, dataItem);
         }
         end(handler, element);
     }
 
     public void writeMap(final String externalName, final Map<?, ?> map) throws SAXException {
-        String element = (externalName == null) ? MAP_ELEMENT : externalName;
+        final String element = (externalName == null) ? MAP_ELEMENT : externalName;
         start(handler, element);
 
         for (final Map.Entry<?, ?> entry : map.entrySet()) {
-            String entryElement = entry.getKey().toString();
+            final String entryElement = entry.getKey().toString();
 
             start(handler, entryElement);
             writeShortly(entry.getValue());
@@ -103,7 +107,6 @@ public class DefaultSaxHandler implements SaxHandler {
     public ContentHandler getContentHandler() {
         return handler;
     }
-
 
     private void writeShortly(final Object dataItem) throws SAXException {
         if (isPrimitive(dataItem.getClass())) {
@@ -122,7 +125,7 @@ public class DefaultSaxHandler implements SaxHandler {
                 writePrimitive(handler, elementName, dataItem.toString());
             } else {
                 final Map<String, ValueInfo> properties = extractProperties(dataItem);
-                AttributesImpl attributes = createAttributes(properties);
+                final AttributesImpl attributes = createAttributes(properties);
                 start(handler, elementName, attributes);
                 writeContent(properties);
                 end(handler, elementName);
@@ -131,7 +134,7 @@ public class DefaultSaxHandler implements SaxHandler {
     }
 
     private void writeContent(final Map<String, ValueInfo> properties) throws SAXException {
-        for (Map.Entry<String, ValueInfo> property : properties.entrySet()) {
+        for (final Map.Entry<String, ValueInfo> property : properties.entrySet()) {
             final ValueInfo valueInfo = property.getValue();
             if (!isAttribute(valueInfo.getClazz())) {
                 writeAny(toStandart(property.getKey()), valueInfo.getValue());
@@ -141,8 +144,8 @@ public class DefaultSaxHandler implements SaxHandler {
 
 
     private AttributesImpl createAttributes(final Map<String, ValueInfo> properties) {
-        AttributesImpl attributes = new AttributesImpl();
-        for (Map.Entry<String, ValueInfo> property : properties.entrySet()) {
+        final AttributesImpl attributes = new AttributesImpl();
+        for (final Map.Entry<String, ValueInfo> property : properties.entrySet()) {
             final ValueInfo valueInfo = property.getValue();
             final Class<?> valueClass = valueInfo.getClazz();
             if (isAttribute(valueClass)) {
@@ -157,36 +160,24 @@ public class DefaultSaxHandler implements SaxHandler {
             throws SAXException {
         start(handler, xmlName);
         text(handler, encode(value));
-//        text(handler, value);
         end(handler, xmlName);
     }
 
-    //todo private?
-    public Map<String, ValueInfo> extractProperties(Object dataItem) {
+    private Map<String, ValueInfo> extractProperties(final Object dataItem) {
         Map<String, ValueInfo> result = Collections.<String, ValueInfo>emptyMap();
         try {
             final Class<?> clazz = dataItem.getClass();
-            BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
-            PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+            final BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
+            final PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
 
             result = new HashMap<String, ValueInfo>(propertyDescriptors.length);
-            for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-                String name = propertyDescriptor.getName();
-                if (!contains(STOP_NAMES, name)) {
-                    Method readMethod = propertyDescriptor.getReadMethod();
-                    if (readMethod == null) continue;
-                    try {
-                        final Object value = readMethod.invoke(dataItem, EMPTY_ARGS);
-                        if (value != dataItem) {
-                            result.put(name, new ValueInfo(propertyDescriptor.getPropertyType(), value));
-                        }
-                    } catch (IllegalAccessException e) {
-                        log.error("Error while reading value of property " + name + " in object " +
-                                dataItem, e);// ignored
-                    } catch (InvocationTargetException e) {
-                        log.error("Error while reading value of property " + name + " in object " +
-                                dataItem, e);// ignored
-                    }
+            for (final PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+                final Object propertyValue = getPropertyValue(dataItem, propertyDescriptor);
+                log.debug(propertyDescriptor.getName() + ": " + propertyValue);
+                if (propertyValue != INVALID_OBJ && propertyValue != dataItem) {
+                    result.put(
+                            propertyDescriptor.getName(),
+                            new ValueInfo(propertyDescriptor.getPropertyType(), propertyValue));
                 }
             }
         } catch (IntrospectionException e) {
@@ -195,13 +186,34 @@ public class DefaultSaxHandler implements SaxHandler {
         return result;
     }
 
+    @Nullable
+    private Object getPropertyValue(final Object dataItem, final PropertyDescriptor propertyDescriptor) {
+        final String name = propertyDescriptor.getName();
+        if (!contains(STOP_NAMES, name)) {
+            final Method readMethod = propertyDescriptor.getReadMethod();
+            if (readMethod == null) { // null if the property can't be read
+                return INVALID_OBJ;
+            }
+            try {
+                return readMethod.invoke(dataItem, EMPTY_ARGS);
+            } catch (IllegalAccessException e) {
+                log.error("Error while reading value of property " + name + " in object " +
+                        dataItem, e);// ignored
+            } catch (InvocationTargetException e) {
+                log.error("Error while reading value of property " + name + " in object " +
+                        dataItem, e);// ignored
+            }
+        }
+        return INVALID_OBJ;
+    }
+
     private static class ValueInfo {
 
         private final Class clazz;
 
         private final Object value;
 
-        public ValueInfo(final Class clazz, final Object value) {
+        private ValueInfo(final Class clazz, final Object value) {
             this.clazz = clazz;
             this.value = value;
         }
@@ -223,14 +235,8 @@ public class DefaultSaxHandler implements SaxHandler {
         return contains(ATTRIBUTES, clazz) || clazz.isPrimitive();
     }
 
-
     private String encode(final String value) {
-//        String charsetName = "Windows-1251";
-//        try {
-//            return new String(value.getBytes(charsetName)); // todo kill encoding hack
-        return new String(value); // todo kill encoding hack
-//        } catch (UnsupportedEncodingException e) {
-//            throw new RuntimeException(charsetName + " - unsupported", e);
-//        }
+        //todo encode?
+        return value;
     }
 }

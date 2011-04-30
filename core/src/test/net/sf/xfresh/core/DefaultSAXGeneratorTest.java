@@ -3,6 +3,7 @@ package net.sf.xfresh.core;
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import junit.framework.TestCase;
+import net.sf.xfresh.core.sax.DefaultSaxGenerator;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.SAXException;
 
@@ -53,7 +54,7 @@ public class DefaultSAXGeneratorTest extends TestCase {
         checkResult("<a c=\"1\"><b/></a>");
     }
 
-    private static class A {
+    public static class A {
         private final String b;
         private final int c;
 

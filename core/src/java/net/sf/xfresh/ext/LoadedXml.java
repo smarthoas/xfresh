@@ -2,7 +2,6 @@ package net.sf.xfresh.ext;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import javax.xml.xpath.XPath;
@@ -24,11 +23,11 @@ public class LoadedXml {
     private final Node content;
     private static final XPathFactory XPATH_FACTORY = XPathFactory.newInstance();
 
-    public LoadedXml(final Document content) {
+    public LoadedXml(final Node content) {
         this.content = content;
     }
 
-    protected final Node getNode() {
+    protected Node getNode() {
         return content;
     }
 

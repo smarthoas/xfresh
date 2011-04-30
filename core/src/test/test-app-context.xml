@@ -30,11 +30,11 @@
     </bean>
 
 
-    <bean id="yaletResolver" class="net.sf.xfresh.core.SpringYaletResolver"/>
+    <bean id="yaletResolver" class="net.sf.xfresh.core.spring.SpringYaletResolver"/>
 
-    <bean id="saxGenerator" class="net.sf.xfresh.core.DefaultSaxGenerator"/>
+    <bean id="saxGenerator" class="net.sf.xfresh.core.sax.DefaultSaxGenerator"/>
 
-    <bean id="singleYaletProcessor" class="net.sf.xfresh.core.DefaultSingleYaletProcessor">
+    <bean id="singleYaletProcessor" class="net.sf.xfresh.core.impl.DefaultSingleYaletProcessor">
         <property name="addAdditionalInfo" value="false"/>
     </bean>
 

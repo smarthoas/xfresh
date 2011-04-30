@@ -1,8 +1,10 @@
 package net.sf.xfresh.core;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Required;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -99,7 +101,7 @@ public class YaletProcessor {
                 }
                 if (transformer != null) {
                     response.setContentType(TEXT_HTML);
-                    final SAXSource saxSource = new SAXSource(yaletFilter, inputSource);
+                    final Source saxSource = new SAXSource(yaletFilter, inputSource);
                     transformer.transform(saxSource, new StreamResult(stream));
                 } else {
                     response.setContentType(TEXT_XML);
@@ -112,7 +114,7 @@ public class YaletProcessor {
 
             final String redir = response.getRedir();
             final String contentType = response.getContentType();
-            if (contentType != null && !contentType.contains(TEXT_HTML) && !contentType.contains(TEXT_XML)) {
+            if (!StringUtils.isEmpty(contentType) && !contentType.contains(TEXT_HTML) && !contentType.contains(TEXT_XML)) {
                 log.info("Content-Type: " + response.getContentType());
             } else if (redir == null || !response.getErrors().isEmpty()) {
                 response.getOutputStream().write(stream.toByteArray());
@@ -133,12 +135,13 @@ public class YaletProcessor {
         }
     }
 
+    @Nullable
     private Transformer createTransformer(final String realPath) {
         // use system property javax.xml.transform.TransformerFactory to define special factory  (e.g. net.sf.saxon.TransformerFactoryImpl)
         Transformer transformer = null;
         try {
             final SAXTransformerFactory transformerFactory = (SAXTransformerFactory) TransformerFactory.newInstance();
-            final StreamSource streamSource = new StreamSource(realPath);
+            final Source streamSource = new StreamSource(realPath);
             final Source associatedStylesheet = transformerFactory.getAssociatedStylesheet(streamSource,
                     null, null, null);
             if (associatedStylesheet == null) {
@@ -154,20 +157,20 @@ public class YaletProcessor {
 
     private XMLReader createReader() throws ParserConfigurationException, SAXException {
         final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+        parserFactory.setNamespaceAware(true);
         parserFactory.setXIncludeAware(true);
         final SAXParser saxParser = parserFactory.newSAXParser();
-        final XMLReader xmlReader = saxParser.getXMLReader();
-        xmlReader.setFeature("http://xml.org/sax/features/namespaces", true);
-        return xmlReader;
+        return saxParser.getXMLReader();
     }
 
     private static class MyXMLSerializer extends XMLSerializer {
         private static final String XML_STYLESHEET_PI = "xml-stylesheet";
 
-        public MyXMLSerializer(final OutputStream writer) {
+        private MyXMLSerializer(final OutputStream writer) {
             super(writer, DEFAULT_FORMAT);
         }
 
+        @Override
         public void processingInstructionIO(final String target, final String code) throws IOException {
             if (!XML_STYLESHEET_PI.equalsIgnoreCase(target)) {
                 super.processingInstructionIO(target, code);
