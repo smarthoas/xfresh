@@ -25,6 +25,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ConnectException;
+import java.net.HttpCookie;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -257,9 +258,9 @@ public class ExtYaletFilter extends YaletFilter {
         final InputStream content = result.getInputStream();
         final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
         parserFactory.setXIncludeAware(true);
+        parserFactory.setNamespaceAware(true);
         final SAXParser saxParser = parserFactory.newSAXParser();
         final XMLReader xmlReader = saxParser.getXMLReader();
-        xmlReader.setFeature("http://xml.org/sax/features/namespaces", true);
         xmlReader.setContentHandler(getContentHandler());
         xmlReader.parse(new InputSource(content));
     }
@@ -284,18 +285,11 @@ public class ExtYaletFilter extends YaletFilter {
 
     private Map<String, String> collectCookies(final Map<String, List<String>> headers) {
         final Map<String, String> cookies = new HashMap<String, String>();
-        for (final Map.Entry<String, List<String>> entry : headers.entrySet()) {
-            final String headerName = entry.getKey();
-            final List<String> headerValues = entry.getValue();
-            //todo change to HttpCookie.parse(...)
-            if ("Set-Cookie".equals(headerName)) {
-                for (final String cookieHeader : headerValues) {
-                    final String[] splittedCookieHeader = cookieHeader.split(";");
-                    final String[] splitted = splittedCookieHeader[0].split("=");
-                    if (splitted.length != 2) {
-                        continue;
-                    }
-                    cookies.put(splitted[0], splitted[1]);
+        final List<String> cookieHeaders = headers.get("Set-Cookie");
+        if (cookieHeaders != null) {
+            for (final String header : cookieHeaders) {
+                for (final HttpCookie cookie : HttpCookie.parse(header)) {
+                    cookies.put(cookie.getName(), cookie.getValue());
                 }
             }
         }
