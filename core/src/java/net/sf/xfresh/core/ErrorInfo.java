@@ -39,6 +39,10 @@ public class ErrorInfo {
         this.messageCode = messageCode;
     }
 
+    public ErrorInfo(final Throwable error) {
+        this.messageCode = error.getMessage();
+    }
+
     public String getMessageCode() {
         return messageCode;
     }
