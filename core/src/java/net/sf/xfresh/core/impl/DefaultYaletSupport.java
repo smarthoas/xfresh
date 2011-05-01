@@ -57,7 +57,9 @@ public class DefaultYaletSupport implements YaletSupport {
     }
 
     public InternalRequest createRequest(final HttpServletRequest httpServletRequest, final String realPath) {
-        return new SimpleInternalRequest(httpServletRequest, realPath);
+        final SimpleInternalRequest request = new SimpleInternalRequest(httpServletRequest, realPath);
+        request.setUserId(authHandler.getUserId(request));
+        return request;
     }
 
     public InternalResponse createResponse(final HttpServletResponse httpServletResponse) {
@@ -65,6 +67,6 @@ public class DefaultYaletSupport implements YaletSupport {
     }
 
     public XMLFilter createFilter(final InternalRequest request, final InternalResponse response) {
-        return new YaletFilter(singleYaletProcessor, authHandler, request, response);
+        return new YaletFilter(singleYaletProcessor, request, response);
     }
 }

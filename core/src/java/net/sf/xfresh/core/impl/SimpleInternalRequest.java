@@ -50,6 +50,7 @@ public class SimpleInternalRequest implements InternalRequest {
     private boolean needTransform = true;
     private Map<String, List<String>> allParams;
     private Map<String, String> cookiesMap;
+    private Long userId;
 
 /*    public SimpleInternalRequest(final SimpleInternalRequest src) {
         this(src.httpRequest, src.realPath);
@@ -189,7 +190,11 @@ public class SimpleInternalRequest implements InternalRequest {
         return httpRequest.getRemoteAddr();
     }
 
+    public void setUserId(final Long userId) {
+        this.userId = userId;
+    }
+
     public Long getUserId() {
-        return null;
+        return userId;
     }
 }

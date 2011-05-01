@@ -57,6 +57,7 @@ public class ExtYaletFilter extends YaletFilter {
     private final HttpLoader httpLoader = new HttpLoader();
     private final String resourceBase;
     private final SaxGenerator saxGenerator;
+    protected final AuthHandler authHandler;
 
     private String httpUrl;
     private StringBuilder jsContent;
@@ -68,9 +69,10 @@ public class ExtYaletFilter extends YaletFilter {
                           final AuthHandler authHandler,
                           final InternalRequest request,
                           final InternalResponse response, final String resourceBase, final SaxGenerator saxGenerator) {
-        super(singleYaletProcessor, authHandler, request, response);
+        super(singleYaletProcessor, request, response);
         this.resourceBase = resourceBase;
         this.saxGenerator = saxGenerator;
+        this.authHandler = authHandler;
     }
 
     @Override
@@ -123,7 +125,7 @@ public class ExtYaletFilter extends YaletFilter {
             jsContext = Context.enter();
             jsScope = jsContext.initStandardObjects();
             jsScope.put("writer", jsScope, new ContentWriter(getContentHandler()));
-            jsScope.put("request", jsScope, wrap(request, userId));
+            jsScope.put("request", jsScope, request);
             jsScope.put("response", jsScope, response);
             jsScope.put("httpLoader", jsScope, httpLoader);
         }
@@ -162,8 +164,9 @@ public class ExtYaletFilter extends YaletFilter {
     @Override
     public void endDocument() throws SAXException {
         super.endDocument();
-        if (jsContext != null)
+        if (jsContext != null) {
             Context.exit();
+        }
     }
 
     private void processJs() throws SAXException {
@@ -301,6 +304,7 @@ public class ExtYaletFilter extends YaletFilter {
 
     private Map<String, List<String>> constructParametersForRemoteCall() {
         final Map<String, List<String>> allParameters = new HashMap<String, List<String>>(request.getAllParameters());
+        final Long userId = request.getUserId();
         if (userId != null) {
             allParameters.put("__user_id", Collections.singletonList(Long.toString(userId)));
         }
