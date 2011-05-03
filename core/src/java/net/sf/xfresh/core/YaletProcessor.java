@@ -70,12 +70,6 @@ public class YaletProcessor {
 
         final InternalResponse internalResponse = yaletSupport.createResponse(res);
 
-        /*  if (internalRequest.needTransform()) {
-            res.setContentType(TEXT_HTML);
-        } else {
-            res.setContentType(TEXT_XML);
-        }*/
-
         process(internalRequest, internalResponse, new RedirHandler(res));
         log.info("Processing time for user request => {" + realPath + "} is " + (System.currentTimeMillis() - startTime) + " ms");
     }
@@ -95,10 +89,9 @@ public class YaletProcessor {
 
             final ByteArrayOutputStream stream = new ByteArrayOutputStream(INITIAL_SIZE);
             try {
-                Transformer transformer = null;
-                if (request.needTransform()) {
-                    transformer = createTransformer(realPath);
-                }
+                final Transformer transformer = request.needTransform()
+                        ? createTransformer(realPath)
+                        : null;
                 if (transformer != null) {
                     response.setContentType(TEXT_HTML);
                     final Source saxSource = new SAXSource(yaletFilter, inputSource);
@@ -122,7 +115,7 @@ public class YaletProcessor {
                 redirHandler.doRedirect(redir);
             }
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.error("Can't process file " + realPath, e);
             throw new ServletException("Can't process file " + realPath, e);
         } finally {
             try {
@@ -130,7 +123,7 @@ public class YaletProcessor {
                 nativeStream.flush();
                 nativeStream.close();
             } catch (IOException e) {
-                log.error("Error:", e); //ignored
+                log.error("Error: ", e);//ignored
             }
         }
     }
@@ -150,7 +143,7 @@ public class YaletProcessor {
 
             transformer = transformerFactory.newTransformer(associatedStylesheet);
         } catch (TransformerConfigurationException e) {
-            log.info("Can't create transformer: " + e.getMessage()); //ignored
+            log.info("Can't create transformer: " + e.getMessage());//ignored
         }
         return transformer;
     }

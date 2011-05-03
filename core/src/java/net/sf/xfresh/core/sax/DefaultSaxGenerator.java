@@ -31,7 +31,6 @@ import net.sf.xfresh.core.SaxHandler;
 import org.apache.log4j.Logger;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-
 import java.util.List;
 
 /**
@@ -42,12 +41,6 @@ import java.util.List;
  */
 public class DefaultSaxGenerator implements SaxGenerator {
     private static final Logger log = Logger.getLogger(DefaultSaxGenerator.class);
-
-/*    private String charsetName;
-
-    public void setCharsetName(final String charsetName) {
-        this.charsetName = charsetName;
-    }*/
 
     public void writeXml(final ContentHandler handler, final List<?> data) throws SAXException {
         final SaxHandler saxHandler = new DefaultSaxHandler(handler);

@@ -52,10 +52,6 @@ public class SimpleInternalRequest implements InternalRequest {
     private Map<String, String> cookiesMap;
     private Long userId;
 
-/*    public SimpleInternalRequest(final SimpleInternalRequest src) {
-        this(src.httpRequest, src.realPath);
-    }*/
-
     public SimpleInternalRequest(final HttpServletRequest httpRequest, final String realPath) {
         this.httpRequest = httpRequest;
         this.realPath = realPath;

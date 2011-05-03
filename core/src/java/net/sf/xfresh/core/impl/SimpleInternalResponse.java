@@ -69,7 +69,7 @@ public class SimpleInternalResponse implements InternalResponse {
 
     public void addWrapped(final String name, final Object object) {
         data.add(new SelfSaxWriter() {
-            public void writeTo(final String externalName, final SaxHandler saxHandler) throws SAXException {
+            public void writeTo(final SaxHandler saxHandler) throws SAXException {
                 saxHandler.writeAny(name, object);
             }
         });

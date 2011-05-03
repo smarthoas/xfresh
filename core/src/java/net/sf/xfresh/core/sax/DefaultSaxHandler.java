@@ -56,9 +56,6 @@ public class DefaultSaxHandler implements SaxHandler {
 
     private static final String COLLECTION_ELEMENT = "collection";
     private static final String MAP_ELEMENT = "map";
-/*    private static final String ENTRY_ELEMENT = "entry";
-    private static final String KEY_ELEMENT = "key";
-    private static final String VALUE_ELEMENT = "value";*/
 
     private final ContentHandler handler;
 
@@ -70,7 +67,7 @@ public class DefaultSaxHandler implements SaxHandler {
         if (dataItem instanceof SelfWriter) {
             ((SelfWriter) dataItem).writeTo(handler);
         } else if (dataItem instanceof SelfSaxWriter) {
-            ((SelfSaxWriter) dataItem).writeTo(externalName, this);
+            ((SelfSaxWriter) dataItem).writeTo(this);
         } else if (dataItem instanceof Collection) {
             writeCollection(externalName, (Collection<?>) dataItem);
         } else if (dataItem instanceof Map) {
@@ -236,7 +233,6 @@ public class DefaultSaxHandler implements SaxHandler {
     }
 
     private String encode(final String value) {
-        //todo encode?
         return value;
     }
 }

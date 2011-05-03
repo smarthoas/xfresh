@@ -22,11 +22,11 @@ public class MapSelfSaxWriter<K, V> implements SelfSaxWriter {
         this.writer = writer;
     }
 
-    public void writeTo(final String externalName, final SaxHandler saxHandler) throws SAXException {
-        XmlUtil.start(saxHandler.getContentHandler(), externalName);
+    public void writeTo(final SaxHandler saxHandler) throws SAXException {
+        XmlUtil.start(saxHandler.getContentHandler(), "map");
         for (final Map.Entry<K, V> entry : map.entrySet()) {
             writer.write(entry, saxHandler);
         }
-        XmlUtil.end(saxHandler.getContentHandler(), externalName);
+        XmlUtil.end(saxHandler.getContentHandler(), "map");
     }
 }

@@ -28,7 +28,7 @@ public class ContentWriter {
         try {
             contentHandler.characters(chars, 0, chars.length);
         } catch (SAXException e) {
-            log.error("ERROR", e); //ignored
+            log.error("ERROR", e);//ignored
         }
     }
 
@@ -46,26 +46,18 @@ public class ContentWriter {
             dom2SAX.setContentHandler(wrap(contentHandler));
             dom2SAX.parse();
         } catch (Exception e) {
-            log.error("Can't write node", e); //ignored
+            log.error("Can't write node", e);//ignored
         }
     }
 
     public static ContentHandler wrap(final ContentHandler req) {
-        /*return (ContentHandler) Proxy.newProxyInstance(req.getClass().getClassLoader(), new Class[]{ContentHandler.class}, new InvocationHandler() {
-            public Object invoke(final Object proxy, final Method method, final Object[] args) throws InvocationTargetException, IllegalAccessException {
-                if ("startDocument".equals(method.getName()) || "endDocument".equals(method.getName())) {
-                    return null;
-                }
-                return method.invoke(req, args);
-            }
-        });*/
         final XMLFilterImpl xmlFilter = new XMLFilterImpl() {
             @Override
-            public void startDocument() throws SAXException {
+            public void startDocument() {
             }
 
             @Override
-            public void endDocument() throws SAXException {
+            public void endDocument() {
             }
         };
         xmlFilter.setContentHandler(req);
