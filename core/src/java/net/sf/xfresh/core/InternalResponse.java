@@ -50,8 +50,6 @@ public interface InternalResponse {
 
     String getRedir();
 
-    OutputStream getOutputStream() throws IOException;
-
     void addError(ErrorInfo errorInfo);
 
     List<ErrorInfo> getErrors();
@@ -79,4 +77,10 @@ public interface InternalResponse {
     void setContentType(String contentType);
 
     String getContentType();
+
+    void setProcessed(boolean b);
+
+    boolean isProcessed();
+
+    OutputStream getOutputStream() throws IOException;
 }

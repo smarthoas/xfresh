@@ -1,6 +1,5 @@
 package net.sf.xfresh.core;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
@@ -106,8 +105,7 @@ public class YaletProcessor {
             }
 
             final String redir = response.getRedir();
-            final String contentType = response.getContentType();
-            if (!StringUtils.isEmpty(contentType) && !contentType.contains(TEXT_HTML) && !contentType.contains(TEXT_XML)) {
+            if (response.isProcessed()) {
                 log.info("Content-Type: " + response.getContentType());
             } else if (redir == null || !response.getErrors().isEmpty()) {
                 response.getOutputStream().write(stream.toByteArray());

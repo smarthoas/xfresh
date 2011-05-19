@@ -55,6 +55,7 @@ public class SimpleInternalResponse implements InternalResponse {
     private final List<Object> data = new ArrayList<Object>();
     private final List<ErrorInfo> errors = new ArrayList<ErrorInfo>();
     private OutputStream outputStream;
+    private boolean processed = false;
 
     public SimpleInternalResponse(final HttpServletResponse httpResponse) {
         this.httpResponse = httpResponse;
@@ -171,5 +172,13 @@ public class SimpleInternalResponse implements InternalResponse {
 
     public String getContentType() {
         return httpResponse == null ? null : httpResponse.getContentType();
+    }
+
+    public void setProcessed(boolean b) {
+        this.processed = b;
+    }
+
+    public boolean isProcessed() {
+        return processed;
     }
 }
