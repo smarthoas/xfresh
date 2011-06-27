@@ -106,7 +106,7 @@ public class Xmler {
 
     private static void endElement(final ContentHandler target, final String name) {
         try {
-            target.endElement("", "", name);
+            target.endElement("", name, name);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -248,7 +248,7 @@ public class Xmler {
     }
 
     private static Attributes addAttribute(final AttributesImpl attrs, final String name, final String value) {
-        attrs.addAttribute("", "", name, "string", value);
+        attrs.addAttribute("", name, name, "string", value);
         return attrs;
     }
 
