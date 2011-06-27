@@ -3,6 +3,7 @@ package net.sf.xfresh.core.sax;
 import net.sf.xfresh.core.SaxHandler;
 import net.sf.xfresh.core.SelfSaxWriter;
 import net.sf.xfresh.core.SelfWriter;
+import net.sf.xfresh.core.xml.Tagable;
 import net.sf.xfresh.util.XmlUtil;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -66,6 +67,8 @@ public class DefaultSaxHandler implements SaxHandler {
     public void writeAny(final String externalName, final Object dataItem) throws SAXException {
         if (dataItem instanceof SelfWriter) {
             ((SelfWriter) dataItem).writeTo(handler);
+        } else if (dataItem instanceof Tagable) {
+            ((Tagable) dataItem).asTag().writeTo(handler);
         } else if (dataItem instanceof SelfSaxWriter) {
             ((SelfSaxWriter) dataItem).writeTo(this);
         } else if (dataItem instanceof Collection) {
