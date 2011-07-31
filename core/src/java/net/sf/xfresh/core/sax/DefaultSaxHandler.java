@@ -118,7 +118,7 @@ public class DefaultSaxHandler implements SaxHandler {
 
     private void writeItem(final ContentHandler handler, final String externalName, final Object dataItem) throws SAXException {
         if (dataItem == null) {
-            empty(handler, externalName);
+            empty(handler, externalName != null ? externalName : "null");
         } else {
             final String elementName = externalName != null ? externalName : toStandart(dataItem.getClass().getSimpleName());
             if (isPrimitive(dataItem.getClass())) {
