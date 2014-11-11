@@ -1,0 +1,92 @@
+allprojects {
+    apply plugin: 'java'
+
+    sourceCompatibility = 1.8
+    version = '1.0'
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    dependencies {
+        compile "org.springframework:spring-core:4.1.0.RELEASE"
+        compile "org.springframework:spring-context:4.1.0.RELEASE"
+        compile "org.springframework:spring-beans:4.1.0.RELEASE"
+        compile "org.springframework:spring-web:4.1.0.RELEASE"
+        compile "javax.servlet:servlet-api:2.5"
+        compile "xerces:xercesImpl:2.11.0"
+        compile "org.mortbay.jetty:jetty:6.1.26"
+        compile "rhino:js:1.7R2"
+        compile "org.apache.commons:commons-lang3:3.3.2"
+        compile "log4j:log4j:1.2.17"
+        compile "commons-logging:commons-logging:1.1.3"
+        compile "org.apache.httpcomponents:httpclient:4.3.5"
+        compile "com.intellij:annotations:12.0"
+//        compile     "::"
+        testCompile "junit:junit:4.11"
+        testCompile "org.springframework:spring-test:4.1.0.RELEASE"
+    }
+
+    test {
+        workingDir = "${project.projectDir}/../"
+    }
+}
+
+
+project(':core') {
+    dependencies {
+        compile "xalan:xalan:2.7.1"
+        compile "net.sf.saxon:Saxon-HE:9.6.0-1"
+    }
+}
+
+project(':db') {
+    dependencies {
+        compile(project(":core"))
+//        compile     "org.springframework:spring-dao:4.1.0.RELEASE"
+        compile "org.springframework:spring-jdbc:4.1.0.RELEASE"
+//        compile     "org.springframework:spring-support:4.1.0.RELEASE"
+        compile "org.apache.commons:commons-pool2:2.2"
+        compile "org.apache.commons:commons-dbcp2:2.0.1"
+        compile "org.apache.commons:commons-collections4:4.0"
+    }
+}
+
+project(':server') {
+    dependencies {
+        compile(project(":core"))
+    }
+}
+
+project(':basket-example') {
+    dependencies {
+        compile(project(":core"))
+    }
+
+    task copyToLib(type: Copy) {
+        into "$buildDir/libs"
+        from configurations.runtime
+    }
+
+    task copyScripts(type: Copy) {
+        into "$buildDir"
+        from "src/main/scripts"
+    }
+
+    task copyWebapp(type: Copy) {
+        into "$buildDir/view"
+        from "src/main/webapp"
+    }
+
+    build.dependsOn copyToLib, copyScripts, copyWebapp
+}
+
+project(':auth') {
+    dependencies {
+        compile(project(":core"))
+        compile(project(":db"))
+        compile "com.h2database:h2:1.4.182"
+    }
+}
+
