@@ -1,4 +1,8 @@
 rootProject.name = 'xfresh'
-include 'core', 'db', 'server', 'basket-example', 'auth'
+include 'xfresh-core',
+        'xfresh-db',
+        'xfresh-server',
+        'xfresh-basket-example',
+        'xfresh-auth'
 
 

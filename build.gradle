@@ -5,7 +5,7 @@ allprojects {
     version = '1.0'
 
     repositories {
-        mavenLocal()
+//        mavenLocal()
         mavenCentral()
     }
 
@@ -31,19 +31,40 @@ allprojects {
     test {
         workingDir = "${project.projectDir}/../"
     }
+
+    task copyToLib(type: Copy) {
+        into "$buildDir/libs"
+        from configurations.runtime
+    }
 }
 
 
-project(':core') {
+project(':xfresh-core') {
+    apply plugin: 'maven-publish'
+
     dependencies {
         compile "xalan:xalan:2.7.1"
         compile "net.sf.saxon:Saxon-HE:9.6.0-1"
     }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId 'xfresh'
+                artifactId 'xfresh-core'
+                version '1.0'
+
+                from components.java
+            }
+        }
+    }
 }
 
-project(':db') {
+project(':xfresh-db') {
+    apply plugin: 'maven-publish'
+
     dependencies {
-        compile(project(":core"))
+        compile(project(":xfresh-core"))
 //        compile     "org.springframework:spring-dao:4.1.0.RELEASE"
         compile "org.springframework:spring-jdbc:4.1.0.RELEASE"
 //        compile     "org.springframework:spring-support:4.1.0.RELEASE"
@@ -51,22 +72,29 @@ project(':db') {
         compile "org.apache.commons:commons-dbcp2:2.0.1"
         compile "org.apache.commons:commons-collections4:4.0"
     }
-}
 
-project(':server') {
-    dependencies {
-        compile(project(":core"))
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId 'xfresh'
+                artifactId 'xfresh-db'
+                version '1.0'
+
+                from components.java
+            }
+        }
     }
 }
 
-project(':basket-example') {
+project(':xfresh-server') {
     dependencies {
-        compile(project(":core"))
+        compile(project(":xfresh-core"))
     }
+}
 
-    task copyToLib(type: Copy) {
-        into "$buildDir/libs"
-        from configurations.runtime
+project(':xfresh-basket-example') {
+    dependencies {
+        compile(project(":xfresh-core"))
     }
 
     task copyScripts(type: Copy) {
@@ -82,10 +110,11 @@ project(':basket-example') {
     build.dependsOn copyToLib, copyScripts, copyWebapp
 }
 
-project(':auth') {
+project(':xfresh-auth') {
+    apply plugin: 'maven-publish'
+
     dependencies {
-        compile(project(":core"))
-        compile(project(":db"))
+        compile(project(":xfresh-db"))
         compile "com.h2database:h2:1.4.182"
     }
 }
