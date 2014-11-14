@@ -13,7 +13,7 @@ import java.sql.SQLException;
 *
 * @author Nikolay Malevanny nmalevanny@yandex-team.ru
 */
-class RecordMapper implements RowMapper<Record> {
+public class RecordMapper implements RowMapper<Record> {
     public Record mapRow(final ResultSet resultSet, final int rowNumber) throws SQLException {
         final Record record = new Record();
         final ResultSetMetaData metaData = resultSet.getMetaData();
