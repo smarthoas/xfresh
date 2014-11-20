@@ -41,7 +41,7 @@ public class JettyServerInitializer implements InitializingBean {
         init();
     }
 
-    public void init() {
+    public final void init() {
         final long st = System.currentTimeMillis();
 
         try {
@@ -60,12 +60,18 @@ public class JettyServerInitializer implements InitializingBean {
             server.setThreadPool(threadPool);
             server.setHandler(handlerCollection);
 
+            beforeStart(server);
+
             server.start();
 //            server.join();
             log.info("Server started: " + (System.currentTimeMillis() - st) + " ms");
         } catch (Exception e) {
             log.error("Could not initialize server: ", e);
         }
+    }
+
+    protected void beforeStart(final Server server) {
+        // just to extends
     }
 
     public int getPort() {
