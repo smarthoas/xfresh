@@ -60,7 +60,7 @@ public class JettyServerInitializer implements InitializingBean {
             server.setThreadPool(threadPool);
             server.setHandler(handlerCollection);
 
-            beforeStart(server);
+            beforeStart(server, handlerCollection);
 
             server.start();
 //            server.join();
@@ -70,7 +70,7 @@ public class JettyServerInitializer implements InitializingBean {
         }
     }
 
-    protected void beforeStart(final Server server) {
+    protected void beforeStart(final Server server, final HandlerCollection handlerCollection) {
         // just to extends
     }
 
