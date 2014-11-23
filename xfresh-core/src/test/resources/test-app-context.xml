@@ -11,10 +11,10 @@
         <property name="handlers">
             <list>
                 <bean class="net.sf.xfresh.jetty.YaletXmlPageHandler">
-                    <property name="resourceBase" value="./core/src/test/resources"/>
+                    <property name="resourceBase" value="./xfresh-core/src/test/resources"/>
                 </bean>
                 <bean class="org.mortbay.jetty.handler.ResourceHandler">
-                    <property name="resourceBase" value="./core/src/test/resources"/>
+                    <property name="resourceBase" value="./xfresh-core/src/test/resources"/>
                 </bean>
             </list>
         </property>
@@ -26,7 +26,7 @@
     </bean>
 
     <bean id="yaletSupport" class="net.sf.xfresh.ext.ExtYaletSupport">
-        <property name="resourceBase" value="./core/src/test/resources"/>
+        <property name="resourceBase" value="./xfresh-core/src/test/resources"/>
     </bean>
 
 

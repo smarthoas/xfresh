@@ -49,7 +49,7 @@ public class YaletProcessorTest extends AbstractJettyTest {
 
     @Test
     public void testProcessFile() throws Exception {
-        request = new SimpleInternalRequest(null, "./core/src/test/resources/test.xml");
+        request = new SimpleInternalRequest(null, "./xfresh-core/src/test/resources/test.xml");
         request.setNeedTransform(false);
         yaletProcessor.process(request, response, new RedirHandler(null));
         assertEquals(TEST_CONTENT,
@@ -58,7 +58,7 @@ public class YaletProcessorTest extends AbstractJettyTest {
 
     @Test
     public void testTransformFile() throws Exception {
-        request = new SimpleInternalRequest(null, "./core/src/test/resources/test.xml");
+        request = new SimpleInternalRequest(null, "./xfresh-core/src/test/resources/test.xml");
 
         yaletProcessor.process(request, response, new RedirHandler(null));
         assertEquals(TEST_TRANSFORMED_CONTENT.toLowerCase(),
@@ -67,7 +67,7 @@ public class YaletProcessorTest extends AbstractJettyTest {
 
     @Test
     public void testTransformXFile() throws Exception {
-        request = new SimpleInternalRequest(null, "./core/src/test/resources/xtest.xml");
+        request = new SimpleInternalRequest(null, "./xfresh-core/src/test/resources/xtest.xml");
 
         yaletProcessor.process(request, response, new RedirHandler(null));
         assertEquals(TEST_CONTENT,
