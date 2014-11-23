@@ -1,12 +1,12 @@
 package net.sf.xfresh.jetty;
 
 import org.apache.log4j.Logger;
-import org.mortbay.jetty.Connector;
-import org.mortbay.jetty.Handler;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.handler.HandlerCollection;
-import org.mortbay.jetty.nio.SelectChannelConnector;
-import org.mortbay.thread.QueuedThreadPool;
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.server.NetworkTrafficServerConnector;
+import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -45,19 +45,17 @@ public class JettyServerInitializer implements InitializingBean {
         final long st = System.currentTimeMillis();
 
         try {
-            server = new Server();
-
-            final Connector connector = new SelectChannelConnector();
-            connector.setPort(port);
-
             final QueuedThreadPool threadPool = new QueuedThreadPool();
             threadPool.setMaxThreads(maxThreads);
+            server = new Server(threadPool);
+
+            final NetworkTrafficServerConnector connector = new NetworkTrafficServerConnector(server);
+            connector.setPort(port);
 
             final HandlerCollection handlerCollection = new HandlerCollection();
             handlerCollection.setHandlers(handlers);
 
             server.setConnectors(new Connector[]{connector});
-            server.setThreadPool(threadPool);
             server.setHandler(handlerCollection);
 
             beforeStart(server, handlerCollection);

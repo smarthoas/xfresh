@@ -28,7 +28,7 @@
                         </map>
                     </property>
                 </bean>
-                <bean class="org.mortbay.jetty.handler.ResourceHandler">
+                <bean class="org.eclipse.jetty.server.handler.ResourceHandler">
                     <property name="resourceBase" ref="resourseBase"/>
                 </bean>
             </list>

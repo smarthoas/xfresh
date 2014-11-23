@@ -28,8 +28,9 @@ package net.sf.xfresh.core.impl;
 
 import net.sf.xfresh.core.*;
 import net.sf.xfresh.core.sax.MapSelfSaxWriter;
+import org.apache.log4j.Logger;
 import org.jetbrains.annotations.TestOnly;
-import org.mortbay.jetty.HttpOnlyCookie;
+//import org.eclipse.jetty.HttpOnlyCookie;
 import org.xml.sax.SAXException;
 
 import javax.servlet.http.Cookie;
@@ -50,6 +51,8 @@ import java.util.Map;
  * @author Nikolay Malevanny nmalevanny@yandex-team.ru
  */
 public class SimpleInternalResponse implements InternalResponse {
+    private static final Logger log = Logger.getLogger(SimpleInternalResponse.class);
+
     private final HttpServletResponse httpResponse;
     private String redir;
     private final List<Object> data = new ArrayList<Object>();
@@ -134,9 +137,8 @@ public class SimpleInternalResponse implements InternalResponse {
 
     public void addCookie(final String name, final String value, final int maxAge, final String domain,
                           final String path, final boolean httpOnly) {
-        final Cookie cookie = httpOnly
-                ? new HttpOnlyCookie(name, value) //hard dependency on jetty 
-                : new Cookie(name, value);
+        final Cookie cookie = new Cookie(name, value);
+        cookie.setHttpOnly(httpOnly);
         cookie.setMaxAge(maxAge);
         cookie.setDomain(domain);
         cookie.setPath(path);

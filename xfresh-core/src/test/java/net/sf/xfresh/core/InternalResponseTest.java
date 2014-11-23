@@ -35,21 +35,25 @@ public class InternalResponseTest extends AbstractJettyTest {
         HttpResponse response = httpClient.execute(buildRequest("test-addcookie.xml"));
         assertEquals(200, response.getStatusLine().getStatusCode());
         Header[] headers = response.getHeaders("Set-Cookie");
-        assertEquals(5, headers.length);
+        for (int i = 0; i < headers.length; i++) {
+            Header header = headers[i];
+            System.out.println(header.getName() + " : " + header.getValue());
+        }
+        assertEquals(3, headers.length);
 
-        for (int i = 0; i < 5; ++i)
+        for (int i = 0; i < 3; ++i)
             assertEquals(true, headers[i].getValue().contains("key=value"));
 
-        for (int i = 1; i < 5; ++i)
+        for (int i = 1; i < 3; ++i)
             assertEquals(true, headers[i].getValue().contains("Expires="));
 
-        for (int i = 2; i < 5; ++i)
+        for (int i = 1; i < 3; ++i)
             assertEquals(true, headers[i].getValue().contains("Domain=localhost"));
 
-        for (int i = 3; i < 5; ++i)
+        for (int i = 2; i < 3; ++i)
             assertEquals(true, headers[i].getValue().contains("Path=test-addcookie.xml"));
 
-        for (int i = 4; i < 5; ++i)
+        for (int i = 2; i < 3; ++i)
             assertEquals(true, headers[i].getValue().contains("HttpOnly"));
     }
 }

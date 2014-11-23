@@ -13,7 +13,7 @@
                 <bean class="net.sf.xfresh.jetty.YaletXmlPageHandler">
                     <property name="resourceBase" value="./xfresh-core/src/test"/>
                 </bean>
-                <bean class="org.mortbay.jetty.handler.ResourceHandler">
+                <bean class="org.eclipse.jetty.server.handler.ResourceHandler">
                     <property name="resourceBase" value="./xfresh-core/src/test"/>
                 </bean>
             </list>

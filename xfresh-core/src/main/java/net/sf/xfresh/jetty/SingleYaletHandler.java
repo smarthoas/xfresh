@@ -4,7 +4,8 @@ import net.sf.xfresh.core.*;
 import org.apache.log4j.Logger;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
-import org.mortbay.jetty.handler.AbstractHandler;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.springframework.beans.factory.annotation.Required;
 import org.xml.sax.ContentHandler;
 
@@ -45,8 +46,11 @@ public class SingleYaletHandler extends AbstractHandler {
         this.singleYaletProcessor = singleYaletProcessor;
     }
 
-    public void handle(final String target, final HttpServletRequest req, final HttpServletResponse res, final int i) throws IOException, ServletException {
-
+    @Override
+    public void handle(final String target,
+                       final Request baseRequest,
+                       final HttpServletRequest req,
+                       final HttpServletResponse res) throws IOException, ServletException {
         final String realPath = target.substring(1);
 
         log.info("Start process yalet => {" + realPath + "}, remote ip {" + req.getRemoteAddr() + "}");

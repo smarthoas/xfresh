@@ -2,8 +2,8 @@ package net.sf.xfresh.jetty;
 
 import net.sf.xfresh.core.YaletProcessor;
 import org.apache.log4j.Logger;
-import org.mortbay.jetty.Request;
-import org.mortbay.jetty.handler.AbstractHandler;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.springframework.beans.factory.annotation.Required;
 
 import javax.servlet.ServletException;
@@ -34,10 +34,9 @@ public class YaletXmlPageHandler extends AbstractHandler {
     }
 
     public void handle(final String target,
-                       final HttpServletRequest httpServletRequest,
-                       final HttpServletResponse httpServletResponse,
-                       final int i) throws IOException, ServletException {
-        Request baseRequest = Request.getRequest(httpServletRequest);
+                       final Request baseRequest,
+                       final HttpServletRequest req,
+                       final HttpServletResponse res) throws IOException, ServletException {
         if (baseRequest.isHandled()) {
             return;
         }
@@ -48,7 +47,7 @@ public class YaletXmlPageHandler extends AbstractHandler {
         if (log.isDebugEnabled()) {
             log.debug("handle url => {" + path + "}");
         }
-        yaletProcessor.process(httpServletRequest, httpServletResponse, path);
+        yaletProcessor.process(req, res, path);
         baseRequest.setHandled(true);
     }
 }

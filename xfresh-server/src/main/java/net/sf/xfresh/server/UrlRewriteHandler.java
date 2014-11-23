@@ -1,7 +1,8 @@
 package net.sf.xfresh.server;
 
-import org.mortbay.jetty.Handler;
-import org.mortbay.jetty.handler.AbstractHandler;
+import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.springframework.beans.factory.annotation.Required;
 
 import javax.servlet.ServletException;
@@ -35,16 +36,19 @@ public class UrlRewriteHandler extends AbstractHandler {
         this.handler = handler;
     }
 
-    public void handle(final String s, final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse, final int i) throws IOException, ServletException {
+    public void handle(final String target,
+                       final Request baseRequest,
+                       final HttpServletRequest req,
+                       final HttpServletResponse res) throws IOException, ServletException {
         for (final Map.Entry<Pattern, String> entry : pathPatternToPage.entrySet()){
             final Pattern pattern = entry.getKey();
             final String page = entry.getValue();
-            final Matcher matcher = pattern.matcher(s);
+            final Matcher matcher = pattern.matcher(target);
             if (matcher.matches()) {
-                handler.handle(page, httpServletRequest, httpServletResponse, i);
+                handler.handle(page, baseRequest, req, res);
                 return;
             }
         }
-        handler.handle(s, httpServletRequest, httpServletResponse, i);
+        handler.handle(target, baseRequest, req, res);
     }
 }
